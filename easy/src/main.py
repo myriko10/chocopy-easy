@@ -13,7 +13,7 @@ FPS = 30
 
 # 表示される画面　引数((横幅pixel, 縦幅pixel), わからない, わからない)
 screen = pygame.display.set_mode((WIDTH, HEIGHT), 0, 32) # 
-# nakamura
+
 def main():
     # Pygameの初期化
     pygame.init() 
