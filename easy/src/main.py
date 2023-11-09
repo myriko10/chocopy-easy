@@ -11,7 +11,7 @@ FPS = 30
 screen = pygame.display.set_mode((WIDTH, HEIGHT), 0, 32) # 
 
 def main():
-    print("Hellow")
+    print("Hellow world")
     
     pygame.init() # Pygameの初期化
     horse_cordi = (60,300)
