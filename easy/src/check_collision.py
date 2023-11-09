@@ -1,5 +1,5 @@
-# import pygame
 
+# chatGPTの出力結果をうのみにしているので確認する必要がある11/09 by まるやま
 def check_collision(player_top_point, player_bottom_point, hurdle_top_point, hurdle_bottom_point):
     # プレイヤーの矩形の左上座標と右下座標
     player_left = player_top_point.x
