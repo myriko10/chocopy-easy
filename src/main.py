@@ -14,13 +14,19 @@ from point import Point
 WIDTH = 700 # 画面の幅ピクセル
 HEIGHT = 500 # 画面の高さピクセル 
 FPS = 30 # flame per second 1秒あたり30回画面を更新する 
+FPSCLOCK = pygame.time.Clock() # クロック
 
-# 表示される画面　引数((横幅pixel, 縦幅pixel), わからない, わからない)
-screen = pygame.display.set_mode((WIDTH, HEIGHT), 0, 32) # 
+# 表示される画面　引数((横幅pixel, 縦幅pixel))
+screen = pygame.display.set_mode((WIDTH, HEIGHT)) # 
+pygame.display.set_caption('HORSE') # 画面のタイトルかな？
 
 # ゲームの内容
-def runGame():
+def run_game():
     # 初期画面の表示文字　なかむらくん
+    # フォントの参考を書いておいた。グローバルでもいいかも 読んだら消してね　frpm　まるやま
+    # キーイベントはキューになっているらしい。たぶん。読んだら消してね　from まるやま
+    # BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
+	# BASICFONT30 = pygame.font.Font('freesansbold.ttf', 30)
 
     # キーを受け取ってゲームスタート　なかむらくん
     
@@ -36,6 +42,7 @@ def runGame():
         draw_backgroud()
 
         # プレイヤーの描画　ひょうくん
+        # キーイベントはキューになっているらしい。たぶん。読んだら消してね　from まるやま
 
         # キーが押されたらジャンプの処理 ひょうくん
 
@@ -58,6 +65,7 @@ def runGame():
     
         # 画面の更新
         pygame.display.update() 
+        FPSCLOCK.tick_busy_loop(FPS)
         
 # 背景の描画
 def draw_backgroud():
@@ -66,15 +74,29 @@ def draw_backgroud():
     # 矩形の表示：草原　引数(画面, RGBカラー, 矩形領域を座標指定)
     pygame.draw.rect(screen, (120,255,0), (0,HEIGHT*3/5,WIDTH,HEIGHT))  
 
+# なかむらくん用新規関数定義スペース
+
+# くずめくん用新規関数定義スペース
+
+# ひょうくん用新規関数定義スペース
+
+# まるやまくん用新規関数定義スペース
+# フレームを更新する。つまりコマ送りのコマを一つ進める。
+def refreshFrame():
+	pygame.event.get() 
+	pygame.display.update()
+	FPSCLOCK.tick(FPS)
+
 # 最初に実行される関数
 def main():
     # Pygameの初期化
     pygame.init() 
  
     # ゲームがスタートする
-    runGame()
+    run_game()
 
-# ファイルが実行されたときに指定した関数を実行する
+# モジュールの属性__name__は「python hoge.py」のようにコマンドで自分が実行されたら"__main__"を保持する。
+# 自分が実行されたときという条件なので、このファイルを実行するとこのif文だけが実行される。
 if __name__ == "__main__":
     main()
 
