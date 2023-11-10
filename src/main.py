@@ -9,6 +9,7 @@ from image_dict import IMAGEDICT
 from check_collision import check_collision
 # 座標のクラス
 from point import Point
+import sys # ゲームを終了するのに使う
 
 # これらはグローバル変数だと思う
 WIDTH = 700 # 画面の幅ピクセル
@@ -66,6 +67,12 @@ def run_game():
         # 画面の更新
         pygame.display.update() 
         FPSCLOCK.tick_busy_loop(FPS)
+        refreshFrame()
+
+        # 閉じるボタンを押したら終了
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                terminate()
         
 # 背景の描画
 def draw_backgroud():
@@ -86,6 +93,10 @@ def refreshFrame():
 	pygame.event.get() 
 	pygame.display.update()
 	FPSCLOCK.tick(FPS)
+     
+def terminate():
+    pygame.quit()
+    sys.exit()
 
 # 最初に実行される関数
 def main():
@@ -94,6 +105,9 @@ def main():
  
     # ゲームがスタートする
     run_game()
+
+    # ゲームを終了する
+    terminate()
 
 # モジュールの属性__name__は「python hoge.py」のようにコマンドで自分が実行されたら"__main__"を保持する。
 # 自分が実行されたときという条件なので、このファイルを実行するとこのif文だけが実行される。
