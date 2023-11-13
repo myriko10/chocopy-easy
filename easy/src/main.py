@@ -9,6 +9,7 @@ from image_dict import IMAGEDICT
 from check_collision import check_collision
 # 座標のクラス
 from point import Point
+from hurdle import Hurdle
 
 # これらはグローバル変数だと思う
 WIDTH = 700 # 画面の幅ピクセル
@@ -17,6 +18,12 @@ FPS = 30 # flame per second 1秒あたり30回画面を更新する
 
 # 表示される画面　引数((横幅pixel, 縦幅pixel), わからない, わからない)
 screen = pygame.display.set_mode((WIDTH, HEIGHT), 0, 32) # 
+
+# ハードルのシーケンス
+hurdles = []
+
+# フレームレート制御
+FPSCLOCK = pygame.time.Clock()
 
 # ゲームの内容
 def runGame():
@@ -42,9 +49,28 @@ def runGame():
         # ハードルを生成するかしないか　くずめくん
             # 乱数でなんとかしてほしい
             # ハードルを生成するならシーケンスに追加
+        if random.randint(1,100) == 1:
+            appear = random.randint(1,100)
+            if appear < 40:
+                pic = 'red'
+            elif appear < 70:
+                pic = 'yellow'
+            elif appear < 90:
+                pic = 'white'
+            else: pic = 'mole'
+            hurdles.append(Hurdle(pic,1))
 
         # ハードルを全部動かして描画　くずめくん
             # 画面外に出たハードルをシーケンスから削除
+        if hurdles:
+            for i in range(len(hurdles)):
+                hurdles[i].move()
+                screen.blit(hurdles[i].image,hurdles[i].left_top_point.get_xy())
+            if hurdles[0].left_top_point.x < 0:
+                del hurdles[0]
+                
+            
+        
 
         # 衝突判定　まるやま
         if check_collision(Point(0,0),Point(0,0),Point(0,0),Point(0,0)):
@@ -55,9 +81,14 @@ def runGame():
         # スコアを表示　まるやま
 
         # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
+        for event in pygame.event.get(): 
+            if event. type == QUIT: 
+                pygame.quit() 
+                sys. exit()
     
         # 画面の更新
         pygame.display.update() 
+        FPSCLOCK.tick(FPS)
         
 # 背景の描画
 def draw_backgroud():

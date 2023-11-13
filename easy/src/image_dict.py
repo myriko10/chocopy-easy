@@ -1,5 +1,4 @@
 import pygame
-import main
 
 IMAGEDICT = {'bird': pygame.image.load('../../images/bird.png'),
 			'calrun1': pygame.image.load('../../images/callot_horse_run1.png'),
