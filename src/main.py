@@ -89,7 +89,7 @@ def title():
         # 表示するテキスト
         title = font_title.render("Press Any Key to Start", True, (255, 255, 255))
         game_rule = font_regular.render("--- GAME RULE ---", True, (255, 255, 255))
-        control_description = font_regular.render("Press space button to jump and avoid the obstacles", True, (255, 255, 255))
+        control_description = font_regular.render("Press the space key to jump and avoid the obstacles", True, (255, 255, 255))
 
         # 画面の位置を取得。get_rect()はpygame独自のメソッドなので覚えなくてよい。
         title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 2))
