@@ -10,16 +10,20 @@ from check_collision import check_collision
 # 座標のクラス
 from point import Point
 import sys # ゲームを終了するのに使う
+from hurdle import Hurdle
 
 # これらはグローバル変数だと思う
 WIDTH = 700 # 画面の幅ピクセル
 HEIGHT = 500 # 画面の高さピクセル 
 FPS = 30 # flame per second 1秒あたり30回画面を更新する 
-FPSCLOCK = pygame.time.Clock() # クロック
+FPSCLOCK = pygame.time.Clock() # フレームレート制御
 
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
-screen = pygame.display.set_mode((WIDTH, HEIGHT)) # 
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('HORSE') # 画面のタイトルかな？
+
+# ハードルのシーケンス
+hurdles = []
 
 # ゲームの内容
 def run_game():
@@ -59,6 +63,7 @@ def run_game():
 
     score = 0 # スコア
 
+
     # ゲームスタート
     while True:
         # 背景の描画
@@ -72,9 +77,26 @@ def run_game():
         # ハードルを生成するかしないか　くずめくん
             # 乱数でなんとかしてほしい
             # ハードルを生成するならシーケンスに追加
+        if random.randint(1,100) == 1:
+            appear = random.randint(1,100)
+            if appear < 40:
+                pic = 'red'
+            elif appear < 70:
+                pic = 'yellow'
+            elif appear < 90:
+                pic = 'white'
+            else: pic = 'mole'
+            hurdles.append(Hurdle(pic,1))
 
         # ハードルを全部動かして描画　くずめくん
             # 画面外に出たハードルをシーケンスから削除
+        if hurdles:
+            for i in range(len(hurdles)):
+                hurdles[i].move()
+                screen.blit(hurdles[i].image,hurdles[i].left_top_point.get_xy())
+            if hurdles[0].left_top_point.x < 0:
+                del hurdles[0]
+                
 
         # 衝突判定　まるやま
         if check_collision(Point(0,0),Point(0,0),Point(0,0),Point(0,0)):
@@ -89,7 +111,6 @@ def run_game():
         # 画面の更新
         pygame.display.update() 
         FPSCLOCK.tick_busy_loop(FPS)
-        refreshFrame()
 
         # 閉じるボタンを押したら終了
         for event in pygame.event.get():
@@ -110,11 +131,8 @@ def draw_backgroud():
 # ひょうくん用新規関数定義スペース
 
 # まるやまくん用新規関数定義スペース
+
 # フレームを更新する。つまりコマ送りのコマを一つ進める。
-def refreshFrame():
-	pygame.event.get() 
-	pygame.display.update()
-	FPSCLOCK.tick(FPS)
      
 def terminate():
     pygame.quit()
@@ -135,4 +153,3 @@ def main():
 # 自分が実行されたときという条件なので、このファイルを実行するとこのif文だけが実行される。
 if __name__ == "__main__":
     main()
-
