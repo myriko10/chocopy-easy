@@ -23,13 +23,35 @@ pygame.display.set_caption('HORSE') # 画面のタイトルかな？
 
 # ゲームの内容
 def run_game():
-    # 初期画面の表示文字　なかむらくん
-    # フォントの参考を書いておいた。グローバルでもいいかも 読んだら消してね　frpm　まるやま
-    # キーイベントはキューになっているらしい。たぶん。読んだら消してね　from まるやま
-    # BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
-	# BASICFONT30 = pygame.font.Font('freesansbold.ttf', 30)
+    # フォントの設定
+    BASICFONT25 = pygame.font.Font('freesansbold.ttf', 25)
+    # 初期画面の表示
+    while True:
+        font = BASICFONT25
+        # 表示するテキスト
+        text = font.render("Press Any Key to Start", True, (255, 255, 255))
 
-    # キーを受け取ってゲームスタート　なかむらくん
+        # 画面の中央の位置を取得。get_rect()はpygame独自のメソッドなので覚えなくてよい。
+        text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+        # 画面の中央にテキストを描画。blit()はpygame独自のメソッドなので覚えなくてよい。
+        screen.blit(text, text_rect)
+
+        # 画面を更新
+        pygame.display.flip()
+
+        # イベント(マウスの移動やクリック、キー入力など)を検知
+        for event in pygame.event.get():
+            # イベントがキー入力だったら(=何かしらキーが押されたら)forループを抜ける
+            if event.type == pygame.KEYDOWN:
+                break
+            # 閉じるボタンを押したら終了
+            elif event.type == QUIT:
+                terminate()
+        else:
+            continue
+
+        # whileループを抜け、初期画面を閉じる
+        break
     
     # Playerをインスタンス化　ひょうくん
 
