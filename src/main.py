@@ -19,7 +19,7 @@ import time
 
 # これらはグローバル変数だと思う
 WIDTH = 700 # 画面の幅ピクセル
-HEIGHT = 500 # 画面の高さピクセル 
+HEIGHT = 450 # 画面の高さピクセル 
 FPS = 30 # flame per second 1秒あたり30回画面を更新する 
 FPSCLOCK = pygame.time.Clock() # フレームレート制御
 
@@ -65,10 +65,8 @@ def run_game():
     # Playerをインスタンス化　ひょうくん
     player = Player('walk1',0, 0)
 
-    # 時間変数の初期化とセット まるやま
-
+    # 時間変数の初期化とセット どもんくん
     score = 0 # スコア
-
 
     # ゲームスタート
     while True:
@@ -87,7 +85,6 @@ def run_game():
                 player.jump()
         # プレイヤーの座標を更新
         player.update(HEIGHT*3/5)
-
 
         # ハードルを生成するかしないか　くずめくん
             # 乱数でなんとかしてほしい
@@ -112,14 +109,13 @@ def run_game():
             if hurdles[0].left_top_point.x < 0:
                 del hurdles[0]
                 
-
         # 衝突判定　まるやま
         if check_collision(Point(0,0),Point(0,0),Point(0,0),Point(0,0)):
             pass
             # 衝突したらゲームオーバーの文字を表示
             # ボタンが押されたら初期画面へ
 
-        # スコアを表示　まるやま
+        # スコアを表示　どもんくん
 
         # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
     
