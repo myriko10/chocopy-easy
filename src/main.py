@@ -7,12 +7,15 @@ import random
 from image_dict import IMAGEDICT
 # 衝突検知
 from check_collision import check_collision
+from player import Player
 # 座標のクラス
 from point import Point
 # ゲームを終了するのに使う
 import sys 
 # 障害物のクラス
 from hurdle import Hurdle
+# 時間を扱う
+import time
 
 # これらはグローバル変数だと思う
 WIDTH = 700 # 画面の幅ピクセル
@@ -60,6 +63,7 @@ def run_game():
         break
     
     # Playerをインスタンス化　ひょうくん
+    player = Player('walk1',0, 0)
 
     # 時間変数の初期化とセット まるやま
 
@@ -72,9 +76,18 @@ def run_game():
         draw_backgroud()
 
         # プレイヤーの描画　ひょうくん
+        screen.blit(player.image, player.position.get_xy())
+
         # キーイベントはキューになっているらしい。たぶん。読んだら消してね　from まるやま
 
         # キーが押されたらジャンプの処理 ひょうくん
+        current_time = time.time()
+        if current_time - player.start_time > player.jump_delay:
+            if pygame.key.get_pressed()[pygame.K_SPACE]:
+                player.jump()
+        # プレイヤーの座標を更新
+        player.update(HEIGHT*3/5)
+
 
         # ハードルを生成するかしないか　くずめくん
             # 乱数でなんとかしてほしい
