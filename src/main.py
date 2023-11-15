@@ -1,15 +1,17 @@
+# ゲームを作りやすくするモジュール
 import pygame
 # なんかのために必要
 from pygame.locals import *
 import random
-import math
 # IMAGEDICTを引っ張ってくるためにfrom 拡張子ファイル名 import 引っ張ってきたい名前
 from image_dict import IMAGEDICT
 # 衝突検知
 from check_collision import check_collision
 # 座標のクラス
 from point import Point
-import sys # ゲームを終了するのに使う
+# ゲームを終了するのに使う
+import sys 
+# 障害物のクラス
 from hurdle import Hurdle
 
 # これらはグローバル変数だと思う
