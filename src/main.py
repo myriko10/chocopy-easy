@@ -70,6 +70,7 @@ def run_game():
         draw_backgroud()
 
         # プレイヤーの描画　ひょうくん
+        # キーイベントはキューになっているらしい。たぶん。読んだら消してね　from まるやま
 
         # キーが押されたらジャンプの処理 ひょうくん
 
@@ -115,10 +116,9 @@ def run_game():
         refreshFrame()
 
         # 閉じるボタンを押したら終了
-        for event in pygame.event.get(): 
-            if event. type == QUIT: 
-                pygame.quit() 
-                sys. exit()
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                terminate()
         
 # 背景の描画
 def draw_backgroud():
