@@ -9,33 +9,60 @@ from image_dict import IMAGEDICT
 from check_collision import check_collision
 # 座標のクラス
 from point import Point
+import sys # ゲームを終了するのに使う
 from hurdle import Hurdle
 
 # これらはグローバル変数だと思う
 WIDTH = 700 # 画面の幅ピクセル
 HEIGHT = 500 # 画面の高さピクセル 
 FPS = 30 # flame per second 1秒あたり30回画面を更新する 
+FPSCLOCK = pygame.time.Clock() # フレームレート制御
 
-# 表示される画面　引数((横幅pixel, 縦幅pixel), わからない, わからない)
-screen = pygame.display.set_mode((WIDTH, HEIGHT), 0, 32) # 
+# 表示される画面　引数((横幅pixel, 縦幅pixel))
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption('HORSE') # 画面のタイトルかな？
 
 # ハードルのシーケンス
 hurdles = []
 
-# フレームレート制御
-FPSCLOCK = pygame.time.Clock()
-
 # ゲームの内容
-def runGame():
-    # 初期画面の表示文字　なかむらくん
+def run_game():
+    # フォントの設定
+    BASICFONT25 = pygame.font.Font('freesansbold.ttf', 25)
+    # 初期画面の表示
+    while True:
+        font = BASICFONT25
+        # 表示するテキスト
+        text = font.render("Press Any Key to Start", True, (255, 255, 255))
 
-    # キーを受け取ってゲームスタート　なかむらくん
+        # 画面の中央の位置を取得。get_rect()はpygame独自のメソッドなので覚えなくてよい。
+        text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+        # 画面の中央にテキストを描画。blit()はpygame独自のメソッドなので覚えなくてよい。
+        screen.blit(text, text_rect)
+
+        # 画面を更新
+        pygame.display.flip()
+
+        # イベント(マウスの移動やクリック、キー入力など)を検知
+        for event in pygame.event.get():
+            # イベントがキー入力だったら(=何かしらキーが押されたら)forループを抜ける
+            if event.type == pygame.KEYDOWN:
+                break
+            # 閉じるボタンを押したら終了
+            elif event.type == QUIT:
+                terminate()
+        else:
+            continue
+
+        # whileループを抜け、初期画面を閉じる
+        break
     
     # Playerをインスタンス化　ひょうくん
 
     # 時間変数の初期化とセット まるやま
 
     score = 0 # スコア
+
 
     # ゲームスタート
     while True:
@@ -81,14 +108,17 @@ def runGame():
         # スコアを表示　まるやま
 
         # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
+    
+        # 画面の更新
+        pygame.display.update() 
+        FPSCLOCK.tick_busy_loop(FPS)
+        refreshFrame()
+
+        # 閉じるボタンを押したら終了
         for event in pygame.event.get(): 
             if event. type == QUIT: 
                 pygame.quit() 
                 sys. exit()
-    
-        # 画面の更新
-        pygame.display.update() 
-        FPSCLOCK.tick(FPS)
         
 # 背景の描画
 def draw_backgroud():
@@ -97,14 +127,35 @@ def draw_backgroud():
     # 矩形の表示：草原　引数(画面, RGBカラー, 矩形領域を座標指定)
     pygame.draw.rect(screen, (120,255,0), (0,HEIGHT*3/5,WIDTH,HEIGHT))  
 
+# なかむらくん用新規関数定義スペース
+
+# くずめくん用新規関数定義スペース
+
+# ひょうくん用新規関数定義スペース
+
+# まるやまくん用新規関数定義スペース
+# フレームを更新する。つまりコマ送りのコマを一つ進める。
+def refreshFrame():
+	pygame.event.get() 
+	pygame.display.update()
+	FPSCLOCK.tick(FPS)
+     
+def terminate():
+    pygame.quit()
+    sys.exit()
+
 # 最初に実行される関数
 def main():
     # Pygameの初期化
     pygame.init() 
  
     # ゲームがスタートする
-    runGame()
+    run_game()
 
-# ファイルが実行されたときに指定した関数を実行する
+    # ゲームを終了する
+    terminate()
+
+# モジュールの属性__name__は「python hoge.py」のようにコマンドで自分が実行されたら"__main__"を保持する。
+# 自分が実行されたときという条件なので、このファイルを実行するとこのif文だけが実行される。
 if __name__ == "__main__":
     main()
