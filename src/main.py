@@ -97,8 +97,6 @@ def run_game():
             if hurdles[0].left_top_point.x < 0:
                 del hurdles[0]
                 
-            
-        
 
         # 衝突判定　まるやま
         if check_collision(Point(0,0),Point(0,0),Point(0,0),Point(0,0)):
@@ -113,7 +111,6 @@ def run_game():
         # 画面の更新
         pygame.display.update() 
         FPSCLOCK.tick_busy_loop(FPS)
-        refreshFrame()
 
         # 閉じるボタンを押したら終了
         for event in pygame.event.get():
@@ -134,11 +131,8 @@ def draw_backgroud():
 # ひょうくん用新規関数定義スペース
 
 # まるやまくん用新規関数定義スペース
+
 # フレームを更新する。つまりコマ送りのコマを一つ進める。
-def refreshFrame():
-	pygame.event.get() 
-	pygame.display.update()
-	FPSCLOCK.tick(FPS)
      
 def terminate():
     pygame.quit()
