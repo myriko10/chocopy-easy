@@ -13,7 +13,7 @@ import sys # ゲームを終了するのに使う
 
 # これらはグローバル変数だと思う
 WIDTH = 700 # 画面の幅ピクセル
-HEIGHT = 500 # 画面の高さピクセル 
+HEIGHT = 450 # 画面の高さピクセル 
 FPS = 30 # flame per second 1秒あたり30回画面を更新する 
 FPSCLOCK = pygame.time.Clock() # クロック
 
@@ -27,8 +27,7 @@ def run_game():
     
     # Playerをインスタンス化　ひょうくん
 
-    # 時間変数の初期化とセット まるやま
-
+    # 時間変数の初期化とセット どもんくん
     score = 0 # スコア
 
     # ゲームスタート
@@ -40,6 +39,12 @@ def run_game():
         # キーイベントはキューになっているらしい。たぶん。読んだら消してね　from まるやま
 
         # キーが押されたらジャンプの処理 ひょうくん
+        current_time = time.time()
+        if current_time - player.start_time > player.jump_delay:
+            if pygame.key.get_pressed()[pygame.K_SPACE]:
+                player.jump()
+        # プレイヤーの座標を更新
+        player.update(HEIGHT*3/5)
 
         # ハードルを生成するかしないか　くずめくん
             # 乱数でなんとかしてほしい
@@ -47,14 +52,20 @@ def run_game():
 
         # ハードルを全部動かして描画　くずめくん
             # 画面外に出たハードルをシーケンスから削除
-
+        if hurdles:
+            for i in range(len(hurdles)):
+                hurdles[i].move()
+                screen.blit(hurdles[i].image,hurdles[i].left_top_point.get_xy())
+            if hurdles[0].left_top_point.x < 0:
+                del hurdles[0]
+                
         # 衝突判定　まるやま
         if check_collision(Point(0,0),Point(0,0),Point(0,0),Point(0,0)):
             pass
             # 衝突したらゲームオーバーの文字を表示
             # ボタンが押されたら初期画面へ
 
-        # スコアを表示　まるやま
+        # スコアを表示　どもんくん
 
         # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
     
