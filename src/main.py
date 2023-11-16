@@ -2,6 +2,7 @@
 import pygame
 # なんかのために必要
 from pygame.locals import *
+# 乱数生成
 import random
 # IMAGEDICTを引っ張ってくるためにfrom 拡張子ファイル名 import 引っ張ってきたい名前
 from image_dict import IMAGEDICT
@@ -32,8 +33,8 @@ hurdles = []
 
 # ゲームの内容
 def run_game():
-    # フォントの設定
-    BASICFONT25 = pygame.font.Font('freesansbold.ttf', 25)
+    # グローバル変数として使うという宣言
+    global BASICFONT25, BASICFONT50
     # 初期画面の表示
     while True:
         font = BASICFONT25
@@ -76,8 +77,6 @@ def run_game():
         # プレイヤーの描画　ひょうくん
         screen.blit(player.image, player.position.get_xy())
 
-        # キーイベントはキューになっているらしい。たぶん。読んだら消してね　from まるやま
-
         # キーが押されたらジャンプの処理 ひょうくん
         current_time = time.time()
         if current_time - player.start_time > player.jump_delay:
@@ -109,11 +108,24 @@ def run_game():
             if hurdles[0].left_top_point.x < 0:
                 del hurdles[0]
                 
-        # 衝突判定　まるやま
-        if check_collision(Point(0,0),Point(0,0),Point(0,0),Point(0,0)):
-            pass
-            # 衝突したらゲームオーバーの文字を表示
-            # ボタンが押されたら初期画面へ
+            # 衝突判定　まるやま
+            # 生存しているハードル全てに対して
+            for h in hurdles:
+                # プレイヤーの右端の座標をハードルが右に超えていたら
+                if h.left_top_point.x <= player.position.x + player.image.get_width():
+                    # プレイヤーとハードルの左上と右下の座標をそれぞれ求めて変数に格納
+                    player_left_top_point = player.position
+                    player_right_bottom_point = Point(player.position.x + player.image.get_width(), 
+                                                    player.position.y + player.image.get_height())
+                    hurdle_left_top_point = h.left_top_point
+                    hurdle_right_bottom_point = Point(h.left_top_point.x + h.image.get_width(),
+                                                    h.left_top_point.y + h.image.get_height())
+                    # 衝突検知
+                    if check_collision(player_left_top_point, player_right_bottom_point,
+                                    hurdle_left_top_point, hurdle_right_bottom_point):
+                        # 衝突したらゲームオーバーの文字を表示
+                        is_game_over = True
+                        game_over()
 
         # スコアを表示　どもんくん
 
@@ -142,9 +154,29 @@ def draw_backgroud():
 # ひょうくん用新規関数定義スペース
 
 # まるやまくん用新規関数定義スペース
+# テキストの設定はこれで一回で済ませておく。
+def make_texts():
+    # グローバル変数として使うという宣言
+    global BASICFONT25, BASICFONT50, text_game_over, text_press_key, text_game_over_center_point, text_press_key_center_point
+    # フォントの代入　pygame.init()の後でないと定義できない
+    BASICFONT25 = pygame.font.Font('freesansbold.ttf', 25)
+    BASICFONT50 = pygame.font.Font('freesansbold.ttf', 50)
+    # ゲームオーバー表示用のテキストを代入。
+    text_game_over = BASICFONT50.render("Game Over", True, (75, 40, 20))
+    text_press_key = BASICFONT25.render("Press Any Key To Retry", True, (75, 40, 20))
+    # 画面の中央の位置を取得。
+    text_game_over_center_point = text_game_over.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+    # 画面の中央の少し下の位置を取得。
+    text_press_key_center_point = text_press_key.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 30))
 
-# フレームを更新する。つまりコマ送りのコマを一つ進める。
-     
+# ゲームオーバー表示
+def game_over():
+    # blit(表示するテキスト, 座標(テキストの中心位置が配置される)) 。
+    # 画面の中央にテキストを描画。
+    screen.blit(text_game_over, text_game_over_center_point)
+    screen.blit(text_press_key, text_press_key_center_point)
+
+# ゲームを終了する
 def terminate():
     pygame.quit()
     sys.exit()
@@ -152,11 +184,11 @@ def terminate():
 # 最初に実行される関数
 def main():
     # Pygameの初期化
-    pygame.init() 
- 
+    pygame.init()
+    # テキストの設定
+    make_texts()    
     # ゲームがスタートする
     run_game()
-
     # ゲームを終了する
     terminate()
 
