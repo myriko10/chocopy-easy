@@ -123,7 +123,8 @@ def draw_backgroud():
 def title():
     # 初期画面の表示
     while True:
-        # 画面の中央にテキストを描画。blit()はpygame独自のメソッドなので覚えなくてよい。
+        # blit(表示するテキスト, 座標(テキストの中心位置が配置される)) 
+        # 画面の中央に開始方法のテキスト、下の方に操作説明のテキストを描画
         screen.blit(text_title, text_title_center_point)
         screen.blit(text_game_rule, text_game_rule_center_point)
         screen.blit(text_instructions, text_instructions_center_point)
