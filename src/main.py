@@ -1,3 +1,4 @@
+# ゲームを作りやすくするモジュール
 import pygame
 # なんかのために必要
 from pygame.locals import *
@@ -11,7 +12,8 @@ from check_collision import check_collision
 from player import Player
 # 座標のクラス
 from point import Point
-import sys # ゲームを終了するのに使う
+# ゲームを終了するのに使う
+import sys 
 # 障害物のクラス
 from hurdle import Hurdle
 # 時間を扱う
@@ -21,10 +23,10 @@ import time
 WIDTH = 700 # 画面の幅ピクセル
 HEIGHT = 450 # 画面の高さピクセル 
 FPS = 30 # flame per second 1秒あたり30回画面を更新する 
-FPSCLOCK = pygame.time.Clock() # クロック
+FPSCLOCK = pygame.time.Clock() # フレームレート制御
 
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
-screen = pygame.display.set_mode((WIDTH, HEIGHT)) # 
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('HORSE') # 画面のタイトルかな？
 
 # ハードルのシーケンス
@@ -47,8 +49,6 @@ def run_game():
 
         # プレイヤーの描画　ひょうくん
         screen.blit(player.image, player.position.get_xy())
-
-        # キーイベントはキューになっているらしい。たぶん。読んだら消してね　from まるやま
 
         # キーが押されたらジャンプの処理 ひょうくん
         current_time = time.time()
@@ -107,7 +107,6 @@ def run_game():
         # 画面の更新
         pygame.display.update() 
         FPSCLOCK.tick_busy_loop(FPS)
-        refreshFrame()
 
         # 閉じるボタンを押したら終了
         for event in pygame.event.get():
@@ -152,10 +151,6 @@ def title():
 
 # まるやまくん用新規関数定義スペース
 # フレームを更新する。つまりコマ送りのコマを一つ進める。
-def refreshFrame():
-	pygame.event.get() 
-	pygame.display.update()
-	FPSCLOCK.tick(FPS)
      
 # テキストの設定はこれで一回で済ませておく。
 def make_texts():
