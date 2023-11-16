@@ -33,36 +33,8 @@ hurdles = []
 
 # ゲームの内容
 def run_game():
-    # グローバル変数として使うという宣言
-    global BASICFONT25, BASICFONT50
-    # 初期画面の表示
-    while True:
-        font = BASICFONT25
-        # 表示するテキスト
-        text = font.render("Press Any Key to Start", True, (255, 255, 255))
+    title()
 
-        # 画面の中央の位置を取得。get_rect()はpygame独自のメソッドなので覚えなくてよい。
-        text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
-        # 画面の中央にテキストを描画。blit()はpygame独自のメソッドなので覚えなくてよい。
-        screen.blit(text, text_rect)
-
-        # 画面を更新
-        pygame.display.flip()
-
-        # イベント(マウスの移動やクリック、キー入力など)を検知
-        for event in pygame.event.get():
-            # イベントがキー入力だったら(=何かしらキーが押されたら)forループを抜ける
-            if event.type == pygame.KEYDOWN:
-                break
-            # 閉じるボタンを押したら終了
-            elif event.type == QUIT:
-                terminate()
-        else:
-            continue
-
-        # whileループを抜け、初期画面を閉じる
-        break
-    
     # Playerをインスタンス化　ひょうくん
     player = Player('walk1',0, 0)
 
@@ -148,19 +120,57 @@ def draw_backgroud():
     pygame.draw.rect(screen, (120,255,0), (0,HEIGHT*3/5,WIDTH,HEIGHT))  
 
 # なかむらくん用新規関数定義スペース
+def title():
+    # 初期画面の表示
+    while True:
+        # blit(表示するテキスト, 座標(テキストの中心位置が配置される)) 
+        # 画面の中央に開始方法のテキスト、下の方に操作説明のテキストを描画
+        screen.blit(text_title, text_title_center_point)
+        screen.blit(text_game_rule, text_game_rule_center_point)
+        screen.blit(text_instructions, text_instructions_center_point)
 
+        # 画面を更新
+        pygame.display.flip()
+
+        # イベント(マウスの移動やクリック、キー入力など)を検知
+        for event in pygame.event.get():
+            # イベントがキー入力だったら(=何かしらキーが押されたら)forループを抜ける
+            if event.type == pygame.KEYDOWN:
+                break
+            # 閉じるボタンを押したら終了
+            elif event.type == QUIT:
+                terminate()
+        else:
+            continue
+
+        # whileループを抜け、初期画面を閉じる
+        break
 # くずめくん用新規関数定義スペース
 
 # ひょうくん用新規関数定義スペース
 
 # まるやまくん用新規関数定義スペース
+     
 # テキストの設定はこれで一回で済ませておく。
 def make_texts():
     # グローバル変数として使うという宣言
-    global BASICFONT25, BASICFONT50, text_game_over, text_press_key, text_game_over_center_point, text_press_key_center_point
+    global BASICFONT20, BASICFONT25, BASICFONT50,text_title,text_game_rule,text_instructions, text_game_over,text_press_key,\
+        text_title_center_point, text_game_rule_center_point,text_instructions_center_point, text_game_over_center_point, text_press_key_center_point
     # フォントの代入　pygame.init()の後でないと定義できない
+    BASICFONT20 = pygame.font.Font('freesansbold.ttf', 20)
     BASICFONT25 = pygame.font.Font('freesansbold.ttf', 25)
     BASICFONT50 = pygame.font.Font('freesansbold.ttf', 50)
+
+    # タイトル画面用のテキストを代入。
+    text_title = BASICFONT25.render("Press Any Key to Start", True, (255, 255, 255))
+    text_game_rule = BASICFONT20.render("--- GAME RULE ---", True, (255, 255, 255))
+    text_instructions = BASICFONT20.render("Press the space key to jump and avoid obstacles.", True, (255, 255, 255))
+    # 画面の中央の位置を取得。
+    text_title_center_point = text_title.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+    # 画面の中央の少し下の位置を取得。
+    text_game_rule_center_point = text_game_rule.get_rect(center=(WIDTH // 2, HEIGHT - 60))
+    text_instructions_center_point = text_instructions.get_rect(center=(WIDTH // 2, HEIGHT - 30))
+
     # ゲームオーバー表示用のテキストを代入。
     text_game_over = BASICFONT50.render("Game Over", True, (75, 40, 20))
     text_press_key = BASICFONT25.render("Press Any Key To Retry", True, (75, 40, 20))
@@ -196,3 +206,4 @@ def main():
 # 自分が実行されたときという条件なので、このファイルを実行するとこのif文だけが実行される。
 if __name__ == "__main__":
     main()
+
