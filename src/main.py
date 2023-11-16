@@ -4,7 +4,6 @@ import pygame
 from pygame.locals import *
 # 乱数生成
 import random
-import math
 # IMAGEDICTを引っ張ってくるためにfrom 拡張子ファイル名 import 引っ張ってきたい名前
 from image_dict import IMAGEDICT
 # 衝突検知
@@ -150,7 +149,6 @@ def title():
 # ひょうくん用新規関数定義スペース
 
 # まるやまくん用新規関数定義スペース
-# フレームを更新する。つまりコマ送りのコマを一つ進める。
      
 # テキストの設定はこれで一回で済ませておく。
 def make_texts():
