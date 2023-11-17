@@ -100,7 +100,7 @@ def run_game():
                         game_over()
 
         # スコアを表示　どもんくん
-
+        score_display()
         # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
     
         # 画面の更新
@@ -155,7 +155,8 @@ def title():
 def make_texts():
     # グローバル変数として使うという宣言
     global BASICFONT20, BASICFONT25, BASICFONT50,text_title,text_game_rule,text_instructions, text_game_over,text_press_key,\
-        text_title_center_point, text_game_rule_center_point,text_instructions_center_point, text_game_over_center_point, text_press_key_center_point
+        text_title_center_point, text_game_rule_center_point,text_instructions_center_point, text_game_over_center_point, text_press_key_center_point,\
+        text_score, text_score_center_point
     # フォントの代入　pygame.init()の後でないと定義できない
     BASICFONT20 = pygame.font.Font('freesansbold.ttf', 20)
     BASICFONT25 = pygame.font.Font('freesansbold.ttf', 25)
@@ -179,12 +180,21 @@ def make_texts():
     # 画面の中央の少し下の位置を取得。
     text_press_key_center_point = text_press_key.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 30))
 
+    # スコア表示用のテキストを代入。
+    text_score = BASICFONT20.render("score : ", True, (0, 0, 0))
+    # 画面右上の位置を取得。
+    text_score_center_point = text_score.get_rect(center = (WIDTH, 0))
+
 # ゲームオーバー表示
 def game_over():
     # blit(表示するテキスト, 座標(テキストの中心位置が配置される)) 。
     # 画面の中央にテキストを描画。
     screen.blit(text_game_over, text_game_over_center_point)
     screen.blit(text_press_key, text_press_key_center_point)
+
+# スコア表示
+def score_display():
+    screen.blit(text_score, text_score_center_point)
 
 # ゲームを終了する
 def terminate():
