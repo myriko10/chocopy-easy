@@ -149,8 +149,7 @@ def title():
 
 # ひょうくん用新規関数定義スペース
 
-# まるやまくん用新規関数定義スペース
-     
+# まるやまくん用新規関数定義スペース     
 # テキストの設定はこれで一回で済ませておく。
 def make_texts():
     # グローバル変数として使うという宣言
@@ -183,7 +182,7 @@ def make_texts():
     # スコア表示用のテキストを代入。
     text_score = BASICFONT20.render("score : ", True, (0, 0, 0))
     # 画面右上の位置を取得。
-    text_score_center_point = text_score.get_rect(center = (WIDTH, 0))
+    text_score_center_point = text_score.get_rect(center = (WIDTH-100, 20))
 
 # ゲームオーバー表示
 def game_over():
@@ -191,7 +190,8 @@ def game_over():
     # 画面の中央にテキストを描画。
     screen.blit(text_game_over, text_game_over_center_point)
     screen.blit(text_press_key, text_press_key_center_point)
-
+    
+# どもんくん用新規関数定義スペース
 # スコア表示
 def score_display():
     screen.blit(text_score, text_score_center_point)
