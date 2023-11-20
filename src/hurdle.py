@@ -3,7 +3,7 @@ from image_dict import IMAGEDICT
 from point import Point 
 
 class Hurdle:
-    speed = 5
+    speed = 20
 
     def __init__(self,image_key,scale):
         self.image = IMAGEDICT[image_key]
