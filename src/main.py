@@ -36,7 +36,8 @@ def run_game():
     title()
 
     # Playerをインスタンス化　ひょうくん
-    player = Player('walk1',0, 0)
+    # Playerの初期画像、ｘｙ座標を設定
+    player = Player('run1',40, 250) # 画像のキー、x座標、y座標
 
     # 時間変数の初期化とセット どもんくん
     score = 0 # スコア
@@ -51,11 +52,18 @@ def run_game():
 
         # キーが押されたらジャンプの処理 ひょうくん
         current_time = time.time()
+        keys = pygame.key.get_pressed()
+        # 無効時間を過ぎていたらジャンプ
         if current_time - player.start_time > player.jump_delay:
-            if pygame.key.get_pressed()[pygame.K_SPACE]:
+            # 押されたキーの状態を判定
+            if  keys[pygame.K_SPACE] and player.on_ground:
                 player.jump()
+        
         # プレイヤーの座標を更新
-        player.update(HEIGHT*3/5)
+        # インスタンスを画面の高さの3/5に設定
+        player.update(HEIGHT*4/7)
+        player.draw(screen)
+        pygame.display.flip()
 
         # ハードルを生成するかしないか　くずめくん
             # 乱数でなんとかしてほしい
