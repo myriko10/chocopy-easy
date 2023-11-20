@@ -23,6 +23,7 @@ WIDTH = 700 # 画面の幅ピクセル
 HEIGHT = 450 # 画面の高さピクセル 
 FPS = 30 # flame per second 1秒あたり30回画面を更新する 
 FPSCLOCK = pygame.time.Clock() # フレームレート制御
+PLAYER_DEFAULT_TOP = HEIGHT*4/7
 
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -36,7 +37,8 @@ def run_game():
     title()
 
     # Playerをインスタンス化　ひょうくん
-    player = Player('walk1',0, 0)
+    # Playerの初期画像、ｘｙ座標を設定
+    player = Player('run1',40, 250) # 画像のキー、x座標、y座標
 
     # 時間変数の初期化とセット どもんくん
     score = 0 # スコア
@@ -51,11 +53,18 @@ def run_game():
 
         # キーが押されたらジャンプの処理 ひょうくん
         current_time = time.time()
+        keys = pygame.key.get_pressed()
+        # 無効時間を過ぎていたらジャンプ
         if current_time - player.start_time > player.jump_delay:
-            if pygame.key.get_pressed()[pygame.K_SPACE]:
+            # 押されたキーの状態を判定
+            if  keys[pygame.K_SPACE] and player.on_ground:
                 player.jump()
+        
         # プレイヤーの座標を更新
-        player.update(HEIGHT*3/5)
+        # インスタンスを画面の高さの4／7に設定
+        player.update(PLAYER_DEFAULT_TOP)
+        player.draw(screen)
+        pygame.display.flip()
 
         # ハードルを生成するかしないか　くずめくん
             # 乱数でなんとかしてほしい
@@ -100,7 +109,7 @@ def run_game():
                         game_over()
 
         # スコアを表示　どもんくん
-
+        score_display()
         # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
     
         # 画面の更新
@@ -149,13 +158,13 @@ def title():
 
 # ひょうくん用新規関数定義スペース
 
-# まるやまくん用新規関数定義スペース
-     
+# まるやまくん用新規関数定義スペース     
 # テキストの設定はこれで一回で済ませておく。
 def make_texts():
     # グローバル変数として使うという宣言
     global BASICFONT20, BASICFONT25, BASICFONT50,text_title,text_game_rule,text_instructions, text_game_over,text_press_key,\
-        text_title_center_point, text_game_rule_center_point,text_instructions_center_point, text_game_over_center_point, text_press_key_center_point
+        text_title_center_point, text_game_rule_center_point,text_instructions_center_point, text_game_over_center_point, text_press_key_center_point,\
+        text_score, text_score_center_point
     # フォントの代入　pygame.init()の後でないと定義できない
     BASICFONT20 = pygame.font.Font('freesansbold.ttf', 20)
     BASICFONT25 = pygame.font.Font('freesansbold.ttf', 25)
@@ -179,12 +188,22 @@ def make_texts():
     # 画面の中央の少し下の位置を取得。
     text_press_key_center_point = text_press_key.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 30))
 
+    # スコア表示用のテキストを代入。
+    text_score = BASICFONT20.render("score : ", True, (0, 0, 0))
+    # 画面右上の位置を取得。
+    text_score_center_point = text_score.get_rect(center = (WIDTH-100, 20))
+
 # ゲームオーバー表示
 def game_over():
     # blit(表示するテキスト, 座標(テキストの中心位置が配置される)) 。
     # 画面の中央にテキストを描画。
     screen.blit(text_game_over, text_game_over_center_point)
     screen.blit(text_press_key, text_press_key_center_point)
+    
+# どもんくん用新規関数定義スペース
+# スコア表示
+def score_display():
+    screen.blit(text_score, text_score_center_point)
 
 # ゲームを終了する
 def terminate():
