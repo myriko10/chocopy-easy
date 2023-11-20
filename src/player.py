@@ -19,24 +19,33 @@ class Player:
         self.start_time = time.time() # インスタンス化時の時間
         self.jump_delay = 1 # ゲーム開始後ジャンプまでの無効時間
 
+    # ジャンプ処理
     def jump(self):
+        # ジャンプ
         self.y_velocity += self.jump_height
+        # 地面にいない状態にする
         self.on_ground = False
+        # Spaceキーが押されたj状態を記録
         self.space_pressed = True
 
     def update(self, height_limit):
+        # 重力を加える
         self.y_velocity += self.gravity
+        # 位置を更新
         self.position.y += self.y_velocity
 
+        # 地面にいるかどうか判定
         if self.position.y >= height_limit - self.size:
             self.position.y = height_limit - self.size
             self.on_ground = True
             self.y_velocity = 0
 
+        # 地面にいるときは走る画像を変更
         if self.on_ground:
             self.current_image = self.image_running1
         else:
             self.current_image = self.image_running2
 
+    # 画像を描画
     def draw(self, screen):
             screen.blit(self.current_image, (self.position.x, self.position.y))
