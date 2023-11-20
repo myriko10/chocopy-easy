@@ -42,6 +42,7 @@ def run_game():
 
     # 時間変数の初期化とセット どもんくん
     score = 0 # スコア
+    is_game_over = False # ゲームオーバーならTrue
 
     # ゲームスタート
     while True:
@@ -102,10 +103,10 @@ def run_game():
                     hurdle_right_bottom_point = Point(h.left_top_point.x + h.image.get_width(),
                                                     h.left_top_point.y + h.image.get_height())
                     # 衝突検知
-                    if check_collision(player_left_top_point, player_right_bottom_point,
-                                    hurdle_left_top_point, hurdle_right_bottom_point):
-                        # 衝突したらゲームオーバーの文字を表示
-                        is_game_over = True
+                    is_game_over = check_collision(player_left_top_point, player_right_bottom_point,
+                                    hurdle_left_top_point, hurdle_right_bottom_point)
+                    # 衝突したらゲームオーバーの文字を表示
+                    if is_game_over:
                         game_over()
 
         # スコアを表示　どもんくん
