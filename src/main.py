@@ -103,7 +103,7 @@ def run_game():
         # スコアを表示　どもんくん
         now_time = time.time() # 現在の時刻を取得
         score = int(now_time - start_time) # 現在の時刻からスタート時の時刻を引くことでプレイ時間を算出。プレイ時間をスコアとする
-        score_display(score) # 
+        score_display(score) 
         # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
     
         # 画面の更新
