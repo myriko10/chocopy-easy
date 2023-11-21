@@ -41,6 +41,7 @@ def run_game():
     player = Player('run1',40, 250) # 画像のキー、x座標、y座標
 
     # 時間変数の初期化とセット どもんくん
+    start_time = time.time() # ゲーム開始時の時刻を取得
     score = 0 # スコア
     is_game_over = False # ゲームオーバーならTrue
 
@@ -110,7 +111,9 @@ def run_game():
                         game_over()
 
         # スコアを表示　どもんくん
-        score_display()
+        now_time = time.time() # 現在の時刻を取得
+        score = int(now_time - start_time) # 現在の時刻からスタート時の時刻を引くことでプレイ時間を算出。プレイ時間をスコアとする
+        score_display(score) 
         # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
     
         # 画面の更新
@@ -189,11 +192,6 @@ def make_texts():
     # 画面の中央の少し下の位置を取得。
     text_press_key_center_point = text_press_key.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 30))
 
-    # スコア表示用のテキストを代入。
-    text_score = BASICFONT20.render("score : ", True, (0, 0, 0))
-    # 画面右上の位置を取得。
-    text_score_center_point = text_score.get_rect(center = (WIDTH-100, 20))
-
 # ゲームオーバー表示
 def game_over():
     # blit(表示するテキスト, 座標(テキストの中心位置が配置される)) 。
@@ -203,7 +201,12 @@ def game_over():
     
 # どもんくん用新規関数定義スペース
 # スコア表示
-def score_display():
+def score_display(score):
+    # スコア表示用のテキストを代入。
+    text_score = BASICFONT20.render("score : " + str(score).zfill(8), True, (0, 0, 0))
+    # スコア表示用の画像位置を取得(テキストの中心座標)
+    text_score_center_point = text_score.get_rect(center = (WIDTH-100, 20))
+
     screen.blit(text_score, text_score_center_point)
 
 # ゲームを終了する
