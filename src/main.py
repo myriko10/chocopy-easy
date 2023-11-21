@@ -194,7 +194,7 @@ def game_over():
 def score_display(score):
     # スコア表示用のテキストを代入。
     text_score = BASICFONT20.render("score : " + str(score).zfill(8), True, (0, 0, 0))
-    # 画面右上の位置を取得。
+    # スコア表示用の画像位置を取得(テキストの中心座標)
     text_score_center_point = text_score.get_rect(center = (WIDTH-100, 20))
 
     screen.blit(text_score, text_score_center_point)
