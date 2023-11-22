@@ -9,8 +9,8 @@ class Hurdle:
     
     def __init__(self,image_key,scale,point_x,player_default_top):
         self.image = IMAGEDICT[image_key]
-        self.width = self.image.get_width() * scale   # self.width = 32
-        self.height = self.image.get_height() * scale # self.height = 45
+        self.width = self.image.get_width() * scale   
+        self.height = self.image.get_height() * scale 
         self.left_top_point = Point(point_x,(player_default_top - 50 + PLAYER_HEIGHT - self.height))
         self.image = pygame.transform.scale(self.image,(self.width,self.height))
 
