@@ -48,4 +48,4 @@ class Player:
 
     # 画像を描画
     def draw(self, screen):
-            screen.blit(self.current_image, (self.position.x, self.position.y))
+        screen.blit(self.current_image, (self.position.x, self.position.y))

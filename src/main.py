@@ -50,23 +50,25 @@ def run_game():
         # 背景の描画
         draw_backgroud()
 
-        # プレイヤーの描画　ひょうくん
-        screen.blit(player.image, player.position.get_xy())
-
         # キーが押されたらジャンプの処理 ひょうくん
         current_time = time.time()
         keys = pygame.key.get_pressed()
-        # 無効時間を過ぎていたらジャンプ
-        if current_time - player.start_time > player.jump_delay:
+        # 無効時間を過ぎており、ゲームオーバーでないならジャンプ
+        if not is_game_over and (current_time - player.start_time > player.jump_delay):
             # 押されたキーの状態を判定
             if  keys[pygame.K_SPACE] and player.on_ground:
                 player.jump()
+        # ゲームオーバーの時、ゲームオーバー用の画像をセット
+        else:
+            pass
+        
+        # プレイヤーの描画　ひょうくん
+        # screen.blit(player.image, player.position.get_xy())
         
         # プレイヤーの座標を更新
         # インスタンスを画面の高さの4／7に設定
         player.update(PLAYER_DEFAULT_TOP)
         player.draw(screen)
-        pygame.display.flip()
 
         # ハードルを生成するかしないか　くずめくん
             # 乱数でなんとかしてほしい
@@ -83,12 +85,11 @@ def run_game():
             hurdles.append(Hurdle(pic,1))
 
         # ハードルを全部動かして描画　くずめくん
-            # 画面外に出たハードルをシーケンスから削除
-        if hurdles:
+        if not is_game_over and hurdles:
             for i in range(len(hurdles)):
                 hurdles[i].move()
-                screen.blit(hurdles[i].image,hurdles[i].left_top_point.get_xy())
             if hurdles[0].left_top_point.x < 0:
+                # 画面外に出たハードルをシーケンスから削除
                 del hurdles[0]
                 
             # 衝突判定　まるやま
@@ -103,12 +104,18 @@ def run_game():
                     hurdle_left_top_point = h.left_top_point
                     hurdle_right_bottom_point = Point(h.left_top_point.x + h.image.get_width(),
                                                     h.left_top_point.y + h.image.get_height())
-                    # 衝突検知
+                    # 衝突検知：戻り値はTrueかFalse
                     is_game_over = check_collision(player_left_top_point, player_right_bottom_point,
                                     hurdle_left_top_point, hurdle_right_bottom_point)
-                    # 衝突したらゲームオーバーの文字を表示
-                    if is_game_over:
-                        game_over()
+                    
+        
+        # ハードルを描画
+        for h in hurdles:
+            screen.blit(h.image,h.left_top_point.get_xy())
+            
+        # ゲームオーバーなら文字を表示
+        if is_game_over:
+            game_over()
 
         # スコアを表示　どもんくん
         now_time = time.time() # 現在の時刻を取得
