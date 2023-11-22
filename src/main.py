@@ -30,7 +30,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('HORSE') # 画面のタイトルかな？
 
 # ハードルのシーケンス
-hurdles = [Hurdle('red',1,WIDTH)]
+hurdles = []
 
 # ゲームの内容
 def run_game():
@@ -79,16 +79,16 @@ def run_game():
 
         if hurdles:
             if hurdles[-1].left_top_point.x < WIDTH / 3: # 一番新しいハードルが画面の1/3を超えたら
-                if random.random() < 0.05:
+                if random.random() < 0.04:
                     create_hurdle()
 
         # ハードルを全部動かして描画　くずめくん
         if not is_game_over and hurdles:
-            for i in range(len(hurdles)):
-                hurdles[i].move()
-            if hurdles[0].left_top_point.x < 0:
-                # 画面外に出たハードルをシーケンスから削除
-                del hurdles[0]
+            for h in hurdles:
+                h.move()
+                if h.left_top_point.x < 0:
+                    # 画面外に出たハードルをシーケンスから削除
+                    hurdles.remove(h)
                 
             # 衝突判定　まるやま
             # 生存しているハードル全てに対して
@@ -175,7 +175,7 @@ def create_hurdle():
         pic = 'white'
     else: pic = 'mole'
     for i in range(num_create):
-        hurdles.append(Hurdle(pic,1,(WIDTH + (32 * (i-1)))))
+        hurdles.append(Hurdle(pic,1,(WIDTH + (32 * (i-1))),PLAYER_DEFAULT_TOP))
 
 # ひょうくん用新規関数定義スペース
 
