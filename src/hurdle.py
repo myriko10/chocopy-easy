@@ -2,10 +2,6 @@ import pygame
 from image_dict import IMAGEDICT
 from point import Point 
 
-# mainに記載しているグローバル変数をまとめて別のファイルに記述するのもありかなと思う
-# ↓これはとりあえず
-# WIDTH = 700
-# HEIGHT = 500
 PLAYER_HEIGHT = IMAGEDICT['run1'].get_height()
 
 class Hurdle:
