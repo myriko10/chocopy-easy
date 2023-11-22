@@ -17,6 +17,8 @@ import sys
 from hurdle import Hurdle
 # 時間を扱う
 import time
+# テキストのインポート
+from text import make_texts
 
 # これらはグローバル変数だと思う
 WIDTH = 700 # 画面の幅ピクセル
@@ -28,6 +30,14 @@ PLAYER_DEFAULT_TOP = HEIGHT*4/7
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('HORSE') # 画面のタイトルかな？
+
+# テキストオブジェクトの作成
+# WIDTH と HEIGHT を渡して make_texts を呼び出し
+(BASICFONT20, BASICFONT25, BASICFONT50,
+text_title, text_game_rule, text_instructions,
+text_game_over, text_press_key, text_title_center_point,
+text_game_rule_center_point, text_instructions_center_point,
+text_game_over_center_point, text_press_key_center_point) = make_texts(WIDTH,HEIGHT)
 
 # ハードルのシーケンス
 hurdles = []
@@ -170,34 +180,7 @@ def title():
 # ひょうくん用新規関数定義スペース
 
 # まるやまくん用新規関数定義スペース     
-# テキストの設定はこれで一回で済ませておく。
-def make_texts():
-    # グローバル変数として使うという宣言
-    global BASICFONT20, BASICFONT25, BASICFONT50,text_title,text_game_rule,text_instructions, text_game_over,text_press_key,\
-        text_title_center_point, text_game_rule_center_point,text_instructions_center_point, text_game_over_center_point, text_press_key_center_point,\
-        text_score, text_score_center_point
-    # フォントの代入　pygame.init()の後でないと定義できない
-    BASICFONT20 = pygame.font.Font('freesansbold.ttf', 20)
-    BASICFONT25 = pygame.font.Font('freesansbold.ttf', 25)
-    BASICFONT50 = pygame.font.Font('freesansbold.ttf', 50)
 
-    # タイトル画面用のテキストを代入。
-    text_title = BASICFONT25.render("Press Any Key to Start", True, (255, 255, 255))
-    text_game_rule = BASICFONT20.render("--- GAME RULE ---", True, (255, 255, 255))
-    text_instructions = BASICFONT20.render("Press the space key to jump and avoid obstacles.", True, (255, 255, 255))
-    # 画面の中央の位置を取得。
-    text_title_center_point = text_title.get_rect(center=(WIDTH // 2, HEIGHT // 2))
-    # 画面の中央の少し下の位置を取得。
-    text_game_rule_center_point = text_game_rule.get_rect(center=(WIDTH // 2, HEIGHT - 60))
-    text_instructions_center_point = text_instructions.get_rect(center=(WIDTH // 2, HEIGHT - 30))
-
-    # ゲームオーバー表示用のテキストを代入。
-    text_game_over = BASICFONT50.render("Game Over", True, (75, 40, 20))
-    text_press_key = BASICFONT25.render("Press Any Key To Retry", True, (75, 40, 20))
-    # 画面の中央の位置を取得。
-    text_game_over_center_point = text_game_over.get_rect(center=(WIDTH // 2, HEIGHT // 2))
-    # 画面の中央の少し下の位置を取得。
-    text_press_key_center_point = text_press_key.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 30))
 
 # ゲームオーバー表示
 def game_over():
@@ -226,7 +209,7 @@ def main():
     # Pygameの初期化
     pygame.init()
     # テキストの設定
-    make_texts()    
+    make_texts(WIDTH, HEIGHT)    
     # ゲームがスタートする
     run_game()
     # ゲームを終了する
