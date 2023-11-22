@@ -17,12 +17,15 @@ import sys
 from hurdle import Hurdle
 # 時間を扱う
 import time
+# フォントの設定 なかむらくん
+
 
 # これらはグローバル変数だと思う
 WIDTH = 700 # 画面の幅ピクセル
 HEIGHT = 450 # 画面の高さピクセル 
 FPS = 30 # flame per second 1秒あたり30回画面を更新する 
 FPSCLOCK = pygame.time.Clock() # フレームレート制御
+ # インスタンスを画面の高さの4／7に設定
 PLAYER_DEFAULT_TOP = HEIGHT*4/7
 
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
@@ -51,7 +54,9 @@ def run_game():
         draw_backgroud()
 
         # キーが押されたらジャンプの処理 ひょうくん
+        # 現在の時刻を取得
         current_time = time.time()
+        # キー入力を取得
         keys = pygame.key.get_pressed()
         # 無効時間を過ぎており、ゲームオーバーでないならジャンプ
         if not is_game_over and (current_time - player.start_time > player.jump_delay):
@@ -62,12 +67,9 @@ def run_game():
         else:
             pass
         
-        # プレイヤーの描画　ひょうくん
-        # screen.blit(player.image, player.position.get_xy())
-        
         # プレイヤーの座標を更新
-        # インスタンスを画面の高さの4／7に設定
         player.update(PLAYER_DEFAULT_TOP)
+        # プレイヤーの描画　ひょうくん
         player.draw(screen)
 
         # ハードルを生成するかしないか　くずめくん
@@ -108,7 +110,6 @@ def run_game():
                     is_game_over = check_collision(player_left_top_point, player_right_bottom_point,
                                     hurdle_left_top_point, hurdle_right_bottom_point)
                     
-        
         # ハードルを描画
         for h in hurdles:
             screen.blit(h.image,h.left_top_point.get_xy())
@@ -118,8 +119,7 @@ def run_game():
             game_over()
 
         # スコアを表示　どもんくん
-        now_time = time.time() # 現在の時刻を取得
-        score = int(now_time - start_time) # 現在の時刻からスタート時の時刻を引くことでプレイ時間を算出。プレイ時間をスコアとする
+        score = int(current_time - start_time) # 現在の時刻からスタート時の時刻を引くことでプレイ時間を算出。プレイ時間をスコアとする
         score_display(score) 
         # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
     
