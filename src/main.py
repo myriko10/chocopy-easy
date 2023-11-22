@@ -23,7 +23,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('HORSE') # 画面のタイトルかな？
 
 # ハードルのシーケンス
-hurdles = []
+hurdles = [Hurdle('red',1,WIDTH)]
 
 # ゲームの内容
 def run_game():
@@ -77,16 +77,14 @@ def run_game():
         # ハードルを生成するかしないか　くずめくん
             # 乱数でなんとかしてほしい
             # ハードルを生成するならシーケンスに追加
-        if random.randint(1,100) == 1:
-            appear = random.randint(1,100)
-            if appear < 40:
-                pic = 'red'
-            elif appear < 70:
-                pic = 'yellow'
-            elif appear < 90:
-                pic = 'white'
-            else: pic = 'mole'
-            hurdles.append(Hurdle(pic,1))
+        if len(hurdles) == 0: # 画面にハードルがないときの生成条件
+            if random.random() < 0.05:
+                create_hurdle()
+
+        if hurdles:
+            if hurdles[-1].left_top_point.x < WIDTH / 3: # 一番新しいハードルが画面の1/3を超えたら
+                if random.random() < 0.05:
+                    create_hurdle()
 
         # ハードルを全部動かして描画　くずめくん
             # 画面外に出たハードルをシーケンスから削除
@@ -127,6 +125,18 @@ def draw_backgroud():
 # なかむらくん用新規関数定義スペース
 
 # くずめくん用新規関数定義スペース
+def create_hurdle():
+    num_create = random.randint(1,3)
+    appear = random.randint(1,100)
+    if appear < 40:
+        pic = 'red'
+    elif appear < 70:
+        pic = 'yellow'
+    elif appear < 90:
+        pic = 'white'
+    else: pic = 'mole'
+    for i in range(num_create):
+        hurdles.append(Hurdle(pic,1,(WIDTH + (32 * (i-1)))))
 
 # ひょうくん用新規関数定義スペース
 
