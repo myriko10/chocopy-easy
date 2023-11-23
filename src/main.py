@@ -66,6 +66,7 @@ def run_game():
         # キーが押されたらジャンプの処理 ひょうくん
         # 現在の時刻を取得
         current_time = time.time()
+        # for eventで書くと上手くいかない泣　中村
         # キー入力を取得
         keys = pygame.key.get_pressed()
         # 無効時間を過ぎており、ゲームオーバーでないならジャンプ
