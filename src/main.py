@@ -97,19 +97,12 @@ def run_game():
             # 衝突判定　まるやま
             # 生存しているハードル全てに対して
             for h in hurdles:
-                # プレイヤーの右端の座標をハードルが右に超えていたら
-                if h.left_top_point.x <= player.position.x + player.image.get_width():
-                    # プレイヤーとハードルの左上と右下の座標をそれぞれ求めて変数に格納
-                    player_left_top_point = player.position
-                    player_right_bottom_point = Point(player.position.x + player.image.get_width(), 
-                                                    player.position.y + player.image.get_height())
-                    hurdle_left_top_point = h.left_top_point
-                    hurdle_right_bottom_point = Point(h.left_top_point.x + h.image.get_width(),
-                                                    h.left_top_point.y + h.image.get_height())
-                    # 衝突検知：戻り値はTrueかFalse
-                    is_game_over = check_collision(player_left_top_point, player_right_bottom_point,
-                                    hurdle_left_top_point, hurdle_right_bottom_point)
-                    
+                # プレイヤーの右端のx座標をハードルが左に超えていたら
+                if h.left_top_point.x <= player.left_top_point.x + player.image.get_width():
+                    # 衝突検知：戻り値は衝突していたらTrue、していなかったらFalse
+                    is_game_over = check_collision(player.left_top_point, player.right_bottom_point,
+                                    h.left_top_point, h.right_bottom_point)
+    
         # ハードルを描画
         for h in hurdles:
             screen.blit(h.image,h.left_top_point.get_xy())
