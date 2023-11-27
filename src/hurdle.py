@@ -15,3 +15,4 @@ class Hurdle:
 
     def move(self):
         self.left_top_point.x -= self.speed
+        self.right_bottom_point.x = self.left_top_point.x + self.width

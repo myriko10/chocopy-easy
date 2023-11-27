@@ -24,7 +24,7 @@ HEIGHT = 450 # 画面の高さピクセル
 FPS = 30 # flame per second 1秒あたり30回画面を更新する 
 FPSCLOCK = pygame.time.Clock() # フレームレート制御
  # インスタンスを画面の高さの4／7に設定
-PLAYER_DEFAULT_TOP = HEIGHT*4/7
+PLAYER_DEFAULT_POINT = Point(WIDTH*4/70, HEIGHT*3/7)
 
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -38,8 +38,15 @@ def run_game():
     title()
 
     # Playerをインスタンス化　ひょうくん
-    # Playerの初期画像、ｘｙ座標を設定
-    player = Player('run1',40, 250) # 画像のキー、x座標、y座標
+    # Playerの初期位置の座標を指定
+    '''
+    ここでPointオブジェクトをそのまま引数に渡す仕様にすると、参照渡しになる。
+    Pointオブジェクトをinit関数内でdefault_left_top_pointとleft_top_point属性の両方に代入すると、
+    片方の値を書き替えたらもう一方の値も書き換わってしまう。
+    *はリストを展開してx,yの数値(not参照型)ふたつを渡している。
+    '''
+    # Pointオブジェクトを更新すると
+    player = Player(PLAYER_DEFAULT_POINT)
 
     # 時間変数の初期化とセット どもんくん
     start_time = time.time() # ゲーム開始時の時刻を取得
@@ -57,18 +64,23 @@ def run_game():
         # キー入力を取得
         keys = pygame.key.get_pressed()
         # 無効時間を過ぎており、ゲームオーバーでないならジャンプ
-        if not is_game_over and (current_time - player.start_time > player.jump_delay):
+        if not is_game_over:
             # 押されたキーの状態を判定
             if  keys[pygame.K_SPACE] and player.on_ground:
-                player.jump()
+                player.init_jump()
         # ゲームオーバーの時、ゲームオーバー用の画像をセット
         else:
             pass
         
         # プレイヤーの座標を更新
-        player.update(PLAYER_DEFAULT_TOP)
-        # プレイヤーの描画　ひょうくん
-        player.draw(screen)
+        player.jump()
+        
+        # プレイヤーの画像を切り替え
+        player.switch_image()
+        
+        # 画像を描画
+        screen.blit(player.current_image, (player.left_top_point.x, player.left_top_point.y))
+
 
         # ハードルを生成するかしないか　くずめくん
             # 乱数でなんとかしてほしい
@@ -96,7 +108,7 @@ def run_game():
             # 生存しているハードル全てに対して
             for h in hurdles:
                 # プレイヤーの右端のx座標をハードルが左に超えていたら
-                if h.left_top_point.x <= player.left_top_point.x + player.image.get_width():
+                if h.left_top_point.x <= player.left_top_point.x + player.current_image.get_width():
                     # 衝突検知：戻り値は衝突していたらTrue、していなかったらFalse
                     is_game_over = check_collision(player.left_top_point, player.right_bottom_point,
                                     h.left_top_point, h.right_bottom_point)
