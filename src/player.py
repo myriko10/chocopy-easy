@@ -3,29 +3,29 @@ from image_dict import IMAGEDICT
 from point import Point 
 
 class Player:
-    def __init__(self, x, y):
+    def __init__(self, point):
         self.image_running1 = IMAGEDICT['run1'] # 走り画像1
         self.image_running2 = IMAGEDICT['run2'] # 走り画像2
         self.image = self.image_running1 # 初期画像
         self.current_image = self.image # 現在の画像
-        self.default_left_top_point = Point(x,y) # プレイヤーが地面に着地しているときの座標
-        self.position = Point(x,y) # プレイヤーの位置
+        self.default_left_top_point = Point(*point.get_xy()) # point # プレイヤーが地面に着地しているときの座標
+        self.position = Point(*point.get_xy()) # プレイヤーの位置
         self.y_velocity = 0 # y方向の速度
         self.on_ground = True # 地面にいるかどうか
-        self.gravity = 0.5  # 重力
-        self.jump_height = -15 # ジャンプの高さ
+        self.GRAVITY = 0.5  # 重力
+        self.INITIAL_VELOCITY = -15 # ジャンプの初速
 
     # ジャンプ処理
     def init_jump(self):
         # 速さを更新
-        self.y_velocity += self.jump_height
+        self.y_velocity = self.INITIAL_VELOCITY
         # 地面にいない状態にする
         self.on_ground = False
 
     # ジャンプしている間の画像の更新
     def jump(self):
         # 重力を加える
-        self.y_velocity += self.gravity
+        self.y_velocity += self.GRAVITY
         # 位置を更新
         self.position.y += self.y_velocity
 
@@ -39,13 +39,15 @@ class Player:
             self.y_velocity = 0
 
     # 画像を描画
-    def draw(self, screen):
+    def switch_image(self):
         # 画像の変更
         if self.on_ground:
             self.current_image = self.image_running1
+            # 時間が等間隔で馬の画像を切り替え、走っているように見せる
+            if True:
+                pass
         # ジャンプしている時
         else:
             self.current_image = self.image_running2
             
-        # 画像を描画
-        screen.blit(self.current_image, (self.position.x, self.position.y))
+        

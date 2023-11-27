@@ -48,7 +48,7 @@ def run_game():
     *はリストを展開してx,yの数値(not参照型)ふたつを渡している。
     '''
     # Pointオブジェクトを更新すると
-    player = Player(*PLAYER_DEFAULT_POINT.get_xy())
+    player = Player(PLAYER_DEFAULT_POINT)
 
     # 時間変数の初期化とセット どもんくん
     start_time = time.time() # ゲーム開始時の時刻を取得
@@ -76,8 +76,13 @@ def run_game():
         
         # プレイヤーの座標を更新
         player.jump()
-        # プレイヤーの描画　ひょうくん
-        player.draw(screen)
+        
+        # プレイヤーの画像を切り替え
+        player.switch_image()
+        
+        # 画像を描画
+        screen.blit(player.current_image, (player.position.x, player.position.y))
+
 
         # ハードルを生成するかしないか　くずめくん
             # 乱数でなんとかしてほしい
