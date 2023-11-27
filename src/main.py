@@ -17,8 +17,6 @@ import sys
 from hurdle import Hurdle
 # 時間を扱う
 import time
-# スコアクラス
-from score import Score
 
 # これらはグローバル変数だと思う
 WIDTH = 700 # 画面の幅ピクセル
@@ -44,7 +42,7 @@ def run_game():
 
     # 時間変数の初期化とセット どもんくん
     start_time = time.time() # ゲーム開始時の時刻を取得
-    score = Score(start_time) # スコアクラスの初期化
+    score = 0 # スコアクラスの初期化
     is_game_over = False # ゲームオーバーならTrue
 
     # ゲームスタート
@@ -120,7 +118,8 @@ def run_game():
             game_over()
 
         # スコアを表示　どもんくん
-        score.score_display(screen)
+        score = score_calc(start_time, current_time, score, is_game_over)
+        score_display(score, screen)
         
         # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
     
@@ -208,6 +207,21 @@ def game_over():
     screen.blit(text_press_key, text_press_key_center_point)
     
 # どもんくん用新規関数定義スペース
+def score_calc(start_time, current_time, score, is_game_over):
+        if is_game_over:
+            return score
+        else:
+            score = int(current_time - start_time) * 100 
+            return score
+        
+# スコア表示
+def score_display(score, screen):
+    # スコア表示用のテキストを代入。
+    text_score = BASICFONT20.render("score : " + str(score).zfill(8), True, (0, 0, 0))
+    # スコア表示用の画像位置を取得(テキストの中心座標)
+    text_score_center_point = text_score.get_rect(center = (WIDTH-100, 20))
+
+    screen.blit(text_score, text_score_center_point)
 
 # ゲームを終了する
 def terminate():
