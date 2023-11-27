@@ -180,11 +180,14 @@ def title():
         for event in pygame.event.get():
             # イベントがキー入力だったら(=何かしらキーが押されたら)forループを抜ける
             if event.type == pygame.KEYDOWN:
+                pygame.event.clear()
                 break
             # 閉じるボタンを押したら終了
             elif event.type == QUIT:
                 terminate()
+        # forのin句が空だったら
         else:
+            # whileループを続ける
             continue
 
         # whileループを抜け、初期画面を閉じる
