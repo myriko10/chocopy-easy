@@ -13,8 +13,6 @@ class Player:
         self.on_ground = True # 地面にいるかどうか
         self.gravity = 0.5  # 重力
         self.jump_height = -15 # ジャンプの高さ
-        self.start_time = time.time() # インスタンス化時の時間
-        self.jump_delay = 1 # ゲーム開始後ジャンプまでの無効時間
 
     # ジャンプ処理
     def jump(self):

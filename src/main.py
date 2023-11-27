@@ -59,7 +59,7 @@ def run_game():
         # キー入力を取得
         keys = pygame.key.get_pressed()
         # 無効時間を過ぎており、ゲームオーバーでないならジャンプ
-        if not is_game_over and (current_time - player.start_time > player.jump_delay):
+        if not is_game_over:# and (current_time - player.start_time > player.jump_delay):
             # 押されたキーの状態を判定
             if  keys[pygame.K_SPACE] and player.on_ground:
                 player.jump()
