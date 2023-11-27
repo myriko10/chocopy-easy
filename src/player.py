@@ -28,6 +28,7 @@ class Player:
         # Spaceキーが押されたj状態を記録
         self.space_pressed = True
 
+    # ジャンプしている間の画像の更新
     def update(self, height_limit):
         # 重力を加える
         self.y_velocity += self.gravity
@@ -40,9 +41,10 @@ class Player:
             self.on_ground = True
             self.y_velocity = 0
 
-        # 地面にいるときは走る画像を変更
+        # 画像の変更
         if self.on_ground:
             self.current_image = self.image_running1
+        # ジャンプしている時
         else:
             self.current_image = self.image_running2
 
