@@ -15,8 +15,8 @@ class Player:
         self.jump_height = -15 # ジャンプの高さ
 
     # ジャンプ処理
-    def jump(self):
-        # ジャンプ
+    def init_jump(self):
+        # 速さを更新
         self.y_velocity += self.jump_height
         # 地面にいない状態にする
         self.on_ground = False
@@ -24,7 +24,7 @@ class Player:
         self.space_pressed = True
 
     # ジャンプしている間の画像の更新
-    def update_position(self, height_limit):
+    def jump(self, height_limit):
         # 重力を加える
         self.y_velocity += self.gravity
         # 位置を更新

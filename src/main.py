@@ -59,16 +59,16 @@ def run_game():
         # キー入力を取得
         keys = pygame.key.get_pressed()
         # 無効時間を過ぎており、ゲームオーバーでないならジャンプ
-        if not is_game_over:# and (current_time - player.start_time > player.jump_delay):
+        if not is_game_over:
             # 押されたキーの状態を判定
             if  keys[pygame.K_SPACE] and player.on_ground:
-                player.jump()
+                player.init_jump()
         # ゲームオーバーの時、ゲームオーバー用の画像をセット
         else:
             pass
         
         # プレイヤーの座標を更新
-        player.update_position(PLAYER_DEFAULT_TOP)
+        player.jump(PLAYER_DEFAULT_TOP)
         # プレイヤーの描画　ひょうくん
         player.draw(screen)
 
