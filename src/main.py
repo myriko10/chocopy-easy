@@ -26,7 +26,7 @@ HEIGHT = 450 # 画面の高さピクセル
 FPS = 30 # flame per second 1秒あたり30回画面を更新する 
 FPSCLOCK = pygame.time.Clock() # フレームレート制御
  # インスタンスを画面の高さの4／7に設定
-PLAYER_DEFAULT_TOP = HEIGHT*4/7
+PLAYER_DEFAULT_TOP = HEIGHT*3/7
 
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -68,7 +68,7 @@ def run_game():
             pass
         
         # プレイヤーの座標を更新
-        player.update(PLAYER_DEFAULT_TOP)
+        player.update_position(PLAYER_DEFAULT_TOP)
         # プレイヤーの描画　ひょうくん
         player.draw(screen)
 

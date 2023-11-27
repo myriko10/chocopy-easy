@@ -1,6 +1,4 @@
 import time
-
-import pygame
 from image_dict import IMAGEDICT
 from point import Point 
 
@@ -12,7 +10,6 @@ class Player:
         self.current_image = self.image # 現在の画像
         self.position = Point(x, y) # 位置
         self.y_velocity = 0 # y方向の速度
-        self.size = 50 # 大きさ
         self.on_ground = True # 地面にいるかどうか
         self.gravity = 0.5  # 重力
         self.jump_height = -15 # ジャンプの高さ
@@ -29,25 +26,27 @@ class Player:
         self.space_pressed = True
 
     # ジャンプしている間の画像の更新
-    def update(self, height_limit):
+    def update_position(self, height_limit):
         # 重力を加える
         self.y_velocity += self.gravity
         # 位置を更新
         self.position.y += self.y_velocity
 
-        # 地面にいるかどうか判定
-        if self.position.y >= height_limit - self.size:
-            self.position.y = height_limit - self.size
+        # 地面に着地したか判定
+        if self.position.y >= height_limit:
+            # フラグを切り替える
             self.on_ground = True
+            # 
+            self.position.y = height_limit
+            # 
             self.y_velocity = 0
 
+    # 画像を描画
+    def draw(self, screen):
         # 画像の変更
         if self.on_ground:
             self.current_image = self.image_running1
         # ジャンプしている時
         else:
             self.current_image = self.image_running2
-
-    # 画像を描画
-    def draw(self, screen):
         screen.blit(self.current_image, (self.position.x, self.position.y))
