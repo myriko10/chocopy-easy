@@ -12,6 +12,7 @@ class Player:
         self.current_image = self.image # 現在の画像
         # プレイヤー画像の左上の座標
         self.left_top_point = Point(x, y)
+        print("player top",str(self.right_bottom_point))
         self.y_velocity = 0 # y方向の速度
         self.size = 50 # 大きさ
         self.on_ground = True # 地面にいるかどうか
@@ -25,6 +26,7 @@ class Player:
         # プレイヤー画像の右下の座標
         self.right_bottom_point = Point(self.left_top_point.x + self.width, 
                                         self.left_top_point.y + self.height)
+        print("player bottom",str(self.right_bottom_point))
 
     # ジャンプ処理
     def jump(self):

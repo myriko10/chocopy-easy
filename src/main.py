@@ -8,6 +8,7 @@ import random
 from image_dict import IMAGEDICT
 # 衝突検知
 from check_collision import check_collision
+# Playerクラス
 from player import Player
 # 座標のクラス
 from point import Point
@@ -17,10 +18,7 @@ import sys
 from hurdle import Hurdle
 # 時間を扱う
 import time
-# フォントの設定 なかむらくん
 
-
-# これらはグローバル変数だと思う
 WIDTH = 700 # 画面の幅ピクセル
 HEIGHT = 450 # 画面の高さピクセル 
 FPS = 30 # flame per second 1秒あたり30回画面を更新する 
