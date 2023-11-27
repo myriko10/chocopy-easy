@@ -17,12 +17,16 @@ import sys
 from hurdle import Hurdle
 # 時間を扱う
 import time
+# フォントの設定 なかむらくん
+
 
 # これらはグローバル変数だと思う
 WIDTH = 700 # 画面の幅ピクセル
 HEIGHT = 450 # 画面の高さピクセル 
 FPS = 30 # flame per second 1秒あたり30回画面を更新する 
 FPSCLOCK = pygame.time.Clock() # フレームレート制御
+ # インスタンスを画面の高さの4／7に設定
+PLAYER_DEFAULT_POINT = Point(WIDTH*4/70, HEIGHT*3/7)
 
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -36,34 +40,49 @@ def run_game():
     title()
 
     # Playerをインスタンス化　ひょうくん
-    # Playerの初期画像、ｘｙ座標を設定
-    player = Player('run1',40, 250) # 画像のキー、x座標、y座標
+    # Playerの初期位置の座標を指定
+    '''
+    ここでPointオブジェクトをそのまま引数に渡す仕様にすると、参照渡しになる。
+    Pointオブジェクトをinit関数内でdefault_left_top_pointとposition属性の両方に代入すると、
+    片方の値を書き替えたらもう一方の値も書き換わってしまう。
+    *はリストを展開してx,yの数値(not参照型)ふたつを渡している。
+    '''
+    # Pointオブジェクトを更新すると
+    player = Player(PLAYER_DEFAULT_POINT)
 
     # 時間変数の初期化とセット どもんくん
+    start_time = time.time() # ゲーム開始時の時刻を取得
     score = 0 # スコア
+    is_game_over = False # ゲームオーバーならTrue
 
     # ゲームスタート
     while True:
         # 背景の描画
         draw_backgroud()
 
-        # プレイヤーの描画　ひょうくん
-        screen.blit(player.image, player.position.get_xy())
-
         # キーが押されたらジャンプの処理 ひょうくん
+        # 現在の時刻を取得
         current_time = time.time()
+        # キー入力を取得
         keys = pygame.key.get_pressed()
-        # 無効時間を過ぎていたらジャンプ
-        if current_time - player.start_time > player.jump_delay:
+        # 無効時間を過ぎており、ゲームオーバーでないならジャンプ
+        if not is_game_over:
             # 押されたキーの状態を判定
             if  keys[pygame.K_SPACE] and player.on_ground:
-                player.jump()
+                player.init_jump()
+        # ゲームオーバーの時、ゲームオーバー用の画像をセット
+        else:
+            pass
         
         # プレイヤーの座標を更新
-        # インスタンスを画面の高さの3/5に設定
-        player.update(HEIGHT*4/7)
-        player.draw(screen)
-        pygame.display.flip()
+        player.jump()
+        
+        # プレイヤーの画像を切り替え
+        player.switch_image()
+        
+        # 画像を描画
+        screen.blit(player.current_image, (player.position.x, player.position.y))
+
 
         # ハードルを生成するかしないか　くずめくん
             # 乱数でなんとかしてほしい
@@ -80,12 +99,11 @@ def run_game():
             hurdles.append(Hurdle(pic,1))
 
         # ハードルを全部動かして描画　くずめくん
-            # 画面外に出たハードルをシーケンスから削除
-        if hurdles:
+        if not is_game_over and hurdles:
             for i in range(len(hurdles)):
                 hurdles[i].move()
-                screen.blit(hurdles[i].image,hurdles[i].left_top_point.get_xy())
             if hurdles[0].left_top_point.x < 0:
+                # 画面外に出たハードルをシーケンスから削除
                 del hurdles[0]
                 
             # 衝突判定　まるやま
@@ -100,15 +118,21 @@ def run_game():
                     hurdle_left_top_point = h.left_top_point
                     hurdle_right_bottom_point = Point(h.left_top_point.x + h.image.get_width(),
                                                     h.left_top_point.y + h.image.get_height())
-                    # 衝突検知
-                    if check_collision(player_left_top_point, player_right_bottom_point,
-                                    hurdle_left_top_point, hurdle_right_bottom_point):
-                        # 衝突したらゲームオーバーの文字を表示
-                        is_game_over = True
-                        game_over()
+                    # 衝突検知：戻り値はTrueかFalse
+                    is_game_over = check_collision(player_left_top_point, player_right_bottom_point,
+                                    hurdle_left_top_point, hurdle_right_bottom_point)
+                    
+        # ハードルを描画
+        for h in hurdles:
+            screen.blit(h.image,h.left_top_point.get_xy())
+            
+        # ゲームオーバーなら文字を表示
+        if is_game_over:
+            game_over()
 
         # スコアを表示　どもんくん
-        score_display()
+        score = int(current_time - start_time) # 現在の時刻からスタート時の時刻を引くことでプレイ時間を算出。プレイ時間をスコアとする
+        score_display(score) 
         # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
     
         # 画面の更新
@@ -187,11 +211,6 @@ def make_texts():
     # 画面の中央の少し下の位置を取得。
     text_press_key_center_point = text_press_key.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 30))
 
-    # スコア表示用のテキストを代入。
-    text_score = BASICFONT20.render("score : ", True, (0, 0, 0))
-    # 画面右上の位置を取得。
-    text_score_center_point = text_score.get_rect(center = (WIDTH-100, 20))
-
 # ゲームオーバー表示
 def game_over():
     # blit(表示するテキスト, 座標(テキストの中心位置が配置される)) 。
@@ -201,7 +220,12 @@ def game_over():
     
 # どもんくん用新規関数定義スペース
 # スコア表示
-def score_display():
+def score_display(score):
+    # スコア表示用のテキストを代入。
+    text_score = BASICFONT20.render("score : " + str(score).zfill(8), True, (0, 0, 0))
+    # スコア表示用の画像位置を取得(テキストの中心座標)
+    text_score_center_point = text_score.get_rect(center = (WIDTH-100, 20))
+
     screen.blit(text_score, text_score_center_point)
 
 # ゲームを終了する
