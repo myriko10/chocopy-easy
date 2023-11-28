@@ -5,47 +5,64 @@ from image_dict import IMAGEDICT
 from point import Point 
 
 class Player:
-    def __init__(self, image_key, x, y):
-        self.image = IMAGEDICT[image_key] # 初期画像
-        self.image_running1 = IMAGEDICT['run1'] # 走り画像1
-        self.image_running2 = IMAGEDICT['run2'] # 走り画像2
-        self.current_image = self.image # 現在の画像
-        self.position = Point(x, y) # 位置
+    def __init__(self, point):
+        self.image = IMAGEDICT['run1'] # 現在の画像
+        self.default_left_top_point = Point(*point.get_xy()) # point # プレイヤーが地面に着地しているときの座標
+
+        self.left_top_point = Point(*point.get_xy()) # プレイヤーの位置
+
         self.y_velocity = 0 # y方向の速度
-        self.size = 50 # 大きさ
         self.on_ground = True # 地面にいるかどうか
-        self.gravity = 0.5  # 重力
-        self.jump_height = -15 # ジャンプの高さ
-        self.start_time = time.time() # インスタンス化時の時間
-        self.jump_delay = 1 # ゲーム開始後ジャンプまでの無効時間
+        self.GRAVITY = 0.5  # 重力
+        self.INITIAL_VELOCITY = -15 # ジャンプの初速
+        self.right_bottom_point = Point(self.left_top_point.x + self.image.get_width(), 
+                                        self.left_top_point.y + self.image.get_height()) # 右下の座標
 
     # ジャンプ処理
-    def jump(self):
-        # ジャンプ
-        self.y_velocity += self.jump_height
+    def init_jump(self):
+        # 速さを更新
+        self.y_velocity = self.INITIAL_VELOCITY
         # 地面にいない状態にする
         self.on_ground = False
         # Spaceキーが押されたj状態を記録
         self.space_pressed = True
 
-    def update(self, height_limit):
+    # ジャンプしている間の画像の更新
+    def jump(self):
         # 重力を加える
-        self.y_velocity += self.gravity
+        self.y_velocity += self.GRAVITY
         # 位置を更新
-        self.position.y += self.y_velocity
+        self.left_top_point.y += self.y_velocity
+        self.right_bottom_point.x = self.left_top_point.x + self.image.get_width()
+        self.right_bottom_point.y = self.left_top_point.y + self.image.get_height()
 
-        # 地面にいるかどうか判定
-        if self.position.y >= height_limit - self.size:
-            self.position.y = height_limit - self.size
+        # 地面に着地したか判定
+        if self.left_top_point.y > self.default_left_top_point.y:
+            # フラグを切り替える
             self.on_ground = True
+            # 地面に着地したときの位置に矯正
+            self.left_top_point.y = self.default_left_top_point.y
+            # 速度を0にしてプレイヤーが動かないようにする
             self.y_velocity = 0
 
-        # 地面にいるときは走る画像を変更
-        if self.on_ground:
-            self.current_image = self.image_running1
-        else:
-            self.current_image = self.image_running2
-
     # 画像を描画
-    def draw(self, screen):
-        screen.blit(self.current_image, (self.position.x, self.position.y))
+    def switch_image(self, is_game_over):
+        # 画像の変更
+        # ゲームオーバーのとき
+        if is_game_over:
+            self.image = IMAGEDICT['error']
+        
+        # ゲーム中で着地しているとき
+        elif self.on_ground:
+            self.image = IMAGEDICT['run1']
+            # 時間が等間隔で馬の画像を切り替え、走っているように見せる
+            if True:
+                time_now = time.time()
+                if int(time_now) % 2 == 0:
+                    self.image = IMAGEDICT['run1']
+                else:
+                    self.image = IMAGEDICT['run2']
+        # ジャンプしている時
+        else:
+            self.image = IMAGEDICT['run2']
+
