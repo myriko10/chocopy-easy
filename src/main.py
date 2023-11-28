@@ -69,17 +69,10 @@ def run_game():
         player.jump()
         
         # プレイヤーの画像を切り替え
-        player.switch_image()
-        
-        # 画像を描画
-        screen.blit(player.current_image, (player.left_top_point.x, player.left_top_point.y))
-
-        # ゲームオーバーの時、ゲームオーバー用の画像をセット
-        if is_game_over:
-            player.game_over() # 中身ヲX_Xの画像ニ変エレバ良イ
+        player.switch_image(is_game_over)
         
         # プレイヤーの画像を描画
-        screen.blit(player.current_image, player.position.get_xy())
+        screen.blit(player.image, player.left_top_point.get_xy())
 
         # ハードルを生成するかしないか　くずめくん
             # 乱数でなんとかしてほしい
@@ -108,7 +101,7 @@ def run_game():
             for h in hurdles:
 
                 # プレイヤーの右端のx座標をハードルが左に超えていたら
-                if h.left_top_point.x <= player.left_top_point.x + player.current_image.get_width():
+                if h.left_top_point.x <= player.left_top_point.x + player.image.get_width():
                     # 衝突検知：戻り値は衝突していたらTrue、していなかったらFalse
                     is_game_over = check_collision(player.left_top_point, player.right_bottom_point,
                                     h.left_top_point, h.right_bottom_point)
