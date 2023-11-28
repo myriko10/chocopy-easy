@@ -19,7 +19,7 @@ from hurdle import Hurdle
 # 時間を扱う
 import time
 # テキストのインポート
-from text import make_texts
+from text import *
 
 WIDTH = 700 # 画面の幅ピクセル
 HEIGHT = 450 # 画面の高さピクセル 
@@ -30,14 +30,6 @@ PLAYER_DEFAULT_POINT = Point(WIDTH*4/70, HEIGHT*3/7)
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('HORSE') # 画面のタイトルかな？
-
-# テキストオブジェクトの作成
-# WIDTH と HEIGHT を渡して make_texts を呼び出し
-(BASICFONT20, BASICFONT25, BASICFONT50,
-text_title, text_game_rule, text_instructions,
-text_game_over, text_press_key, text_title_center_point,
-text_game_rule_center_point, text_instructions_center_point,
-text_game_over_center_point, text_press_key_center_point) = make_texts(WIDTH,HEIGHT)
 
 # ハードルのシーケンス
 hurdles = []
@@ -214,8 +206,6 @@ def terminate():
 def main():
     # Pygameの初期化
     pygame.init()
-    # テキストの設定
-    make_texts(WIDTH, HEIGHT)    
     # ゲームがスタートする
     run_game()
     # ゲームを終了する
