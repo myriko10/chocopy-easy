@@ -77,8 +77,8 @@ feature_keyeventブランチ
 9-1
 18-1
 ------ひょう+.(≧∀≦)ﾟ+.ﾟ
-7-1
-10-1
+7-1   (完)
+10-1 （完了）
 12-1
 ...player = Player('run1',40, 250)をWIDTH,HEIGHT依存で書く。
 ...positionをleft_top_pointに変更

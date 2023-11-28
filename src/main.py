@@ -39,6 +39,11 @@ hurdles = []
 def run_game():
     title()
 
+    # 時間変数の初期化とセット どもんくん
+    start_time = time.time() # ゲーム開始時の時刻を取得
+    score = 0 # スコア
+    is_game_over = False # ゲームオーバーならTrue
+
     # Playerをインスタンス化　ひょうくん
     # Playerの初期位置の座標を指定
     '''
@@ -49,11 +54,6 @@ def run_game():
     '''
     # Pointオブジェクトを更新すると
     player = Player(PLAYER_DEFAULT_POINT)
-
-    # 時間変数の初期化とセット どもんくん
-    start_time = time.time() # ゲーム開始時の時刻を取得
-    score = 0 # スコア
-    is_game_over = False # ゲームオーバーならTrue
 
     # ゲームスタート
     while True:
@@ -70,15 +70,17 @@ def run_game():
             # 押されたキーの状態を判定
             if  keys[pygame.K_SPACE] and player.on_ground:
                 player.init_jump()
-        # ゲームオーバーの時、ゲームオーバー用の画像をセット
-        else:
-            pass
         
+
         # プレイヤーの座標を更新
         player.jump()
         
         # プレイヤーの画像を切り替え
         player.switch_image()
+
+        # ゲームオーバーの時、ゲームオーバー用の画像をセット
+        if is_game_over:
+            player.game_over() # 中身ヲX_Xの画像ニ変エレバ良イ
         
         # 画像を描画
         screen.blit(player.current_image, (player.position.x, player.position.y))

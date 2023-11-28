@@ -11,6 +11,7 @@ class Player:
         self.image = self.image_running1 # 初期画像
         self.current_image = self.image # 現在の画像
         self.default_left_top_point = Point(*point.get_xy()) # point # プレイヤーが地面に着地しているときの座標
+        self.default_right_bottom_point = Point(point.x + self.image.get_width(), point.y + self.image.get_height())
         self.position = Point(*point.get_xy()) # プレイヤーの位置
         self.y_velocity = 0 # y方向の速度
         self.on_ground = True # 地面にいるかどうか
@@ -49,9 +50,16 @@ class Player:
             self.current_image = self.image_running1
             # 時間が等間隔で馬の画像を切り替え、走っているように見せる
             if True:
-                pass
+                time_now = time.time()
+                if int(time_now) % 2 == 0:
+                    self.current_image = self.image_running1
+                else:
+                    self.current_image = self.image_running2
         # ジャンプしている時
         else:
             self.current_image = self.image_running2
-            
+    
+    # ゲームオーバー時の画像に切り替え
+    def game_over(self):
+            self.current_image = IMAGEDICT['stop']
         
