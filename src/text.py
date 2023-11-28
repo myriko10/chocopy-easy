@@ -2,7 +2,7 @@ import pygame
 from main import WIDTH, HEIGHT
 
 # pygame を初期化
-pygame.init()
+# pygame.init()
 
 # フォントの代入　pygame.init()の後でないと定義できない
 BASICFONT20 = pygame.font.Font('freesansbold.ttf', 20)

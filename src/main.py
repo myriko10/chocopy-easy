@@ -1,6 +1,6 @@
 # ゲームを作りやすくするモジュール
 import pygame
-# なんかのために必要
+# QUITために必要
 from pygame.locals import *
 # 乱数生成
 import random
@@ -18,9 +18,11 @@ import sys
 from hurdle import Hurdle
 # 時間を扱う
 import time
+# Pygameの初期化
+pygame.init()
 # テキストのインポート
 from text import *
-
+    
 WIDTH = 700 # 画面の幅ピクセル
 HEIGHT = 450 # 画面の高さピクセル 
 FPS = 30 # flame per second 1秒あたり30回画面を更新する 
@@ -186,7 +188,6 @@ def score_calc(start_time):
 # スコア表示
 def score_display(is_game_over, start_time):
     global score # スコア保持用の変数
-
     # ゲームが続く限りスコアを更新
     if is_game_over == False:
         score = score_calc(start_time)
@@ -194,7 +195,7 @@ def score_display(is_game_over, start_time):
     text_score = BASICFONT20.render("score : " + str(score).zfill(8), True, (0, 0, 0))
     # スコア表示用の画像位置を取得(テキストの中心座標)
     text_score_center_point = text_score.get_rect(center = (WIDTH-100, 20))
-
+    # スコアを描画
     screen.blit(text_score, text_score_center_point)
 
 # ゲームを終了する
@@ -204,15 +205,12 @@ def terminate():
 
 # 最初に実行される関数
 def main():
-    # Pygameの初期化
-    pygame.init()
     # ゲームがスタートする
     run_game()
     # ゲームを終了する
     terminate()
 
 # モジュールの属性__name__は「python hoge.py」のようにコマンドで自分が実行されたら"__main__"を保持する。
-# 自分が実行されたときという条件なので、このファイルを実行するとこのif文だけが実行される。
-if __name__ == "__main__":
+# 自分が実行されたときという条件なので、このファイルを実行するとこのif文が実行される。
+if __name__ == '__main__':
     main()
-

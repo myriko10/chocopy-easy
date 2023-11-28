@@ -1,6 +1,4 @@
 import time
-
-import pygame
 from image_dict import IMAGEDICT
 from point import Point 
 
