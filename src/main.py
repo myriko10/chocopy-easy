@@ -42,7 +42,6 @@ def run_game():
 
     # 時間変数の初期化とセット どもんくん
     start_time = time.time() # ゲーム開始時の時刻を取得
-    score = 0 # スコアクラスの初期化
     is_game_over = False # ゲームオーバーならTrue
 
     # ゲームスタート
@@ -118,8 +117,7 @@ def run_game():
             game_over()
 
         # スコアを表示　どもんくん
-        score = score_calc(start_time, current_time, score, is_game_over)
-        score_display(score, screen)
+        score_display(is_game_over, start_time)
         
         # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
     
@@ -207,15 +205,18 @@ def game_over():
     screen.blit(text_press_key, text_press_key_center_point)
     
 # どもんくん用新規関数定義スペース
-def score_calc(start_time, current_time, score, is_game_over):
-        if is_game_over:
-            return score
-        else:
-            score = int(current_time - start_time) * 100 
-            return score
+# スコア計算
+def score_calc(start_time):
+        score = int(time.time() - start_time) * 100 
+        return score
         
 # スコア表示
-def score_display(score, screen):
+def score_display(is_game_over, start_time):
+    global score # スコア保持用の変数
+
+    # ゲームが続く限りスコアを更新
+    if is_game_over == False:
+        score = score_calc(start_time)
     # スコア表示用のテキストを代入。
     text_score = BASICFONT20.render("score : " + str(score).zfill(8), True, (0, 0, 0))
     # スコア表示用の画像位置を取得(テキストの中心座標)
