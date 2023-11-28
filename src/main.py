@@ -23,7 +23,6 @@ WIDTH = 700 # 画面の幅ピクセル
 HEIGHT = 450 # 画面の高さピクセル 
 FPS = 30 # flame per second 1秒あたり30回画面を更新する 
 FPSCLOCK = pygame.time.Clock() # フレームレート制御
- # インスタンスを画面の高さの4／7に設定
 PLAYER_DEFAULT_POINT = Point(WIDTH*4/70, HEIGHT*3/7)
 
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
@@ -37,6 +36,10 @@ hurdles = []
 def run_game():
     title()
 
+    # 時間変数の初期化とセット どもんくん
+    start_time = time.time() # ゲーム開始時の時刻を取得
+    is_game_over = False # ゲームオーバーならTrue
+
     # Playerをインスタンス化　ひょうくん
     # Playerの初期位置の座標を指定
     '''
@@ -48,29 +51,19 @@ def run_game():
     # Pointオブジェクトを更新すると
     player = Player(PLAYER_DEFAULT_POINT)
 
-    # 時間変数の初期化とセット どもんくん
-    start_time = time.time() # ゲーム開始時の時刻を取得
-    score = 0 # スコア
-    is_game_over = False # ゲームオーバーならTrue
-
     # ゲームスタート
     while True:
         # 背景の描画
         draw_backgroud()
 
         # キーが押されたらジャンプの処理 ひょうくん
-        # 現在の時刻を取得
         current_time = time.time()
-        # キー入力を取得
         keys = pygame.key.get_pressed()
         # 無効時間を過ぎており、ゲームオーバーでないならジャンプ
         if not is_game_over:
             # 押されたキーの状態を判定
             if  keys[pygame.K_SPACE] and player.on_ground:
                 player.init_jump()
-        # ゲームオーバーの時、ゲームオーバー用の画像をセット
-        else:
-            pass
         
         # プレイヤーの座標を更新
         player.jump()
@@ -81,6 +74,12 @@ def run_game():
         # 画像を描画
         screen.blit(player.current_image, (player.left_top_point.x, player.left_top_point.y))
 
+        # ゲームオーバーの時、ゲームオーバー用の画像をセット
+        if is_game_over:
+            player.game_over() # 中身ヲX_Xの画像ニ変エレバ良イ
+        
+        # プレイヤーの画像を描画
+        screen.blit(player.current_image, player.position.get_xy())
 
         # ハードルを生成するかしないか　くずめくん
             # 乱数でなんとかしてほしい
@@ -107,6 +106,7 @@ def run_game():
             # 衝突判定　まるやま
             # 生存しているハードル全てに対して
             for h in hurdles:
+
                 # プレイヤーの右端のx座標をハードルが左に超えていたら
                 if h.left_top_point.x <= player.left_top_point.x + player.current_image.get_width():
                     # 衝突検知：戻り値は衝突していたらTrue、していなかったらFalse
@@ -122,8 +122,8 @@ def run_game():
             game_over()
 
         # スコアを表示　どもんくん
-        score = int(current_time - start_time) # 現在の時刻からスタート時の時刻を引くことでプレイ時間を算出。プレイ時間をスコアとする
-        score_display(score) 
+        score_display(is_game_over, start_time)
+        
         # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
     
         # 画面の更新
@@ -210,8 +210,18 @@ def game_over():
     screen.blit(text_press_key, text_press_key_center_point)
     
 # どもんくん用新規関数定義スペース
+# スコア計算
+def score_calc(start_time):
+        score = int(time.time() - start_time) * 100 
+        return score
+        
 # スコア表示
-def score_display(score):
+def score_display(is_game_over, start_time):
+    global score # スコア保持用の変数
+
+    # ゲームが続く限りスコアを更新
+    if is_game_over == False:
+        score = score_calc(start_time)
     # スコア表示用のテキストを代入。
     text_score = BASICFONT20.render("score : " + str(score).zfill(8), True, (0, 0, 0))
     # スコア表示用の画像位置を取得(テキストの中心座標)

@@ -1,4 +1,6 @@
 import time
+
+import pygame
 from image_dict import IMAGEDICT
 from point import Point 
 
@@ -8,7 +10,9 @@ class Player:
         self.image_running2 = IMAGEDICT['run2'] # 走り画像2
         self.current_image = self.image_running1 # 現在の画像
         self.default_left_top_point = Point(*point.get_xy()) # point # プレイヤーが地面に着地しているときの座標
+
         self.left_top_point = Point(*point.get_xy()) # プレイヤーの位置
+
         self.y_velocity = 0 # y方向の速度
         self.on_ground = True # 地面にいるかどうか
         self.GRAVITY = 0.5  # 重力
@@ -22,6 +26,8 @@ class Player:
         self.y_velocity = self.INITIAL_VELOCITY
         # 地面にいない状態にする
         self.on_ground = False
+        # Spaceキーが押されたj状態を記録
+        self.space_pressed = True
 
     # ジャンプしている間の画像の更新
     def jump(self):
@@ -48,10 +54,16 @@ class Player:
             self.current_image = self.image_running1
             # 時間が等間隔で馬の画像を切り替え、走っているように見せる
             if True:
-                pass
+                time_now = time.time()
+                if int(time_now) % 2 == 0:
+                    self.current_image = self.image_running1
+                else:
+                    self.current_image = self.image_running2
         # ジャンプしている時
         else:
             self.current_image = self.image_running2
+
     # 画像を描画
     def draw(self, screen):
         screen.blit(self.current_image, (self.left_top_point.x, self.left_top_point.y))
+
