@@ -18,12 +18,11 @@ from hurdle import Hurdle
 # 時間を扱う
 import time
 
-# これらはグローバル変数だと思う
 WIDTH = 700 # 画面の幅ピクセル
 HEIGHT = 450 # 画面の高さピクセル 
 FPS = 30 # flame per second 1秒あたり30回画面を更新する 
 FPSCLOCK = pygame.time.Clock() # フレームレート制御
-PLAYER_DEFAULT_TOP = HEIGHT*4/7
+PLAYER_DEFAULT_POINT = Point(WIDTH*4/70, HEIGHT*3/7)
 
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -36,13 +35,20 @@ hurdles = []
 def run_game():
     title()
 
-    # Playerをインスタンス化　ひょうくん
-    # Playerの初期画像、ｘｙ座標を設定
-    player = Player('run1',40, 250) # 画像のキー、x座標、y座標
-
     # 時間変数の初期化とセット どもんくん
     start_time = time.time() # ゲーム開始時の時刻を取得
     is_game_over = False # ゲームオーバーならTrue
+
+    # Playerをインスタンス化　ひょうくん
+    # Playerの初期位置の座標を指定
+    '''
+    ここでPointオブジェクトをそのまま引数に渡す仕様にすると、参照渡しになる。
+    Pointオブジェクトをinit関数内でdefault_left_top_pointとposition属性の両方に代入すると、
+    片方の値を書き替えたらもう一方の値も書き換わってしまう。
+    *はリストを展開してx,yの数値(not参照型)ふたつを渡している。
+    '''
+    # Pointオブジェクトを更新すると
+    player = Player(PLAYER_DEFAULT_POINT)
 
     # ゲームスタート
     while True:
@@ -53,21 +59,23 @@ def run_game():
         current_time = time.time()
         keys = pygame.key.get_pressed()
         # 無効時間を過ぎており、ゲームオーバーでないならジャンプ
-        if not is_game_over and (current_time - player.start_time > player.jump_delay):
+        if not is_game_over:
             # 押されたキーの状態を判定
             if  keys[pygame.K_SPACE] and player.on_ground:
-                player.jump()
-        # ゲームオーバーの時、ゲームオーバー用の画像をセット
-        else:
-            pass
-        
-        # プレイヤーの描画　ひょうくん
-        # screen.blit(player.image, player.position.get_xy())
+                player.init_jump()
         
         # プレイヤーの座標を更新
-        # インスタンスを画面の高さの4／7に設定
-        player.update(PLAYER_DEFAULT_TOP)
-        player.draw(screen)
+        player.jump()
+        
+        # プレイヤーの画像を切り替え
+        player.switch_image()
+
+        # ゲームオーバーの時、ゲームオーバー用の画像をセット
+        if is_game_over:
+            player.game_over() # 中身ヲX_Xの画像ニ変エレバ良イ
+        
+        # プレイヤーの画像を描画
+        screen.blit(player.current_image, player.position.get_xy())
 
         # ハードルを生成するかしないか　くずめくん
             # 乱数でなんとかしてほしい
