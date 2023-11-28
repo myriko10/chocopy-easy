@@ -74,27 +74,25 @@ def run_game():
         # プレイヤーの画像を描画
         screen.blit(player.image, player.left_top_point.get_xy())
 
-        # ハードルを生成するかしないか　くずめくん
-            # 乱数でなんとかしてほしい
-            # ハードルを生成するならシーケンスに追加
-        if random.randint(1,100) == 1:
-            appear = random.randint(1,100)
-            if appear < 40:
-                pic = 'red'
-            elif appear < 70:
-                pic = 'yellow'
-            elif appear < 90:
-                pic = 'white'
-            else: pic = 'mole'
-            hurdles.append(Hurdle(pic,1))
+        # ハードルを生成するかしないか
+        # 画面にハードルがないときの生成条件
+        if len(hurdles) == 0: 
+            if random.random() < 0.05:
+                create_hurdle()
 
-        # ハードルを全部動かして描画　くずめくん
+        # 一番新しいハードルが画面の1/3を超えたら
+        if hurdles:
+            if hurdles[-1].left_top_point.x < WIDTH / 3: 
+                if random.random() < 0.04:
+                    create_hurdle()
+
+        # ハードルを全部動かして描画
         if not is_game_over and hurdles:
-            for i in range(len(hurdles)):
-                hurdles[i].move()
-            if hurdles[0].left_top_point.x < 0:
-                # 画面外に出たハードルをシーケンスから削除
-                del hurdles[0]
+            for h in hurdles:
+                h.move()
+                if h.left_top_point.x < 0:
+                    # 画面外に出たハードルをシーケンスから削除
+                    hurdles.remove(h)
                 
             # 衝突判定　まるやま
             # 生存しているハードル全てに対して
@@ -162,6 +160,19 @@ def title():
         # whileループを抜け、初期画面を閉じる
         break
 # くずめくん用新規関数定義スペース
+def create_hurdle():
+    num_create = random.randint(1,3) # ハードルを連続していくつ出すか
+    appear = random.randint(1,100)
+    if appear < 40:
+        pic = 'red'
+    elif appear < 70:
+        pic = 'yellow'
+    elif appear < 90:
+        pic = 'white'
+    else: pic = 'mole'
+    for i in range(num_create):
+        point_x = WIDTH + (32 * (i-1)) # 32は花のデフォルト画像サイズ、サイズが変わったときこの値も変わるようにしたい
+        hurdles.append(Hurdle(pic,1,point_x,PLAYER_DEFAULT_TOP))
 
 # ひょうくん用新規関数定義スペース
 
