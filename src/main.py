@@ -55,6 +55,9 @@ def run_game():
     # Pointオブジェクトを更新すると
     player = Player(PLAYER_DEFAULT_POINT)
 
+    # スコアクラスを宣言
+    score = Score()
+
     # ゲームスタート
     while True:
         # 背景の描画
@@ -117,7 +120,8 @@ def run_game():
             game_over()
 
         # スコアを表示　どもんくん
-        score_display(is_game_over, start_time)
+        score.score_update(is_game_over, start_time)
+        score.score_display(screen)
         
         # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
     
@@ -178,23 +182,6 @@ def game_over():
     screen.blit(text_press_key, text_press_key_center_point)
     
 # どもんくん用新規関数定義スペース
-# スコア計算
-def score_calc(start_time):
-        score = int(time.time() - start_time) * 100 
-        return score
-        
-# スコア表示
-def score_display(is_game_over, start_time):
-    global score # スコア保持用の変数
-    # ゲームが続く限りスコアを更新
-    if is_game_over == False:
-        score = score_calc(start_time)
-    # スコア表示用のテキストを代入。
-    text_score = BASICFONT20.render("score : " + str(score).zfill(8), True, (0, 0, 0))
-    # スコア表示用の画像位置を取得(テキストの中心座標)
-    text_score_center_point = text_score.get_rect(center = (WIDTH-100, 20))
-    # スコアを描画
-    screen.blit(text_score, text_score_center_point)
 
 # ゲームを終了する
 def terminate():
