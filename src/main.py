@@ -55,6 +55,10 @@ def run_game():
     # Pointオブジェクトを更新すると
     player = Player(PLAYER_DEFAULT_POINT)
 
+    jump_frame = -(player.INITIAL_VELOCITY) / player.GRAVITY * 2
+    collision_area = (player.image.get_width() + IMAGEDICT['red'].get_width()) / Hurdle.speed
+    creatable_frame = jump_frame - collision_area
+
     # ゲームスタート
     while True:
         # 背景の描画
@@ -92,25 +96,23 @@ def run_game():
 
         # ハードルを全部動かして描画
         if not is_game_over and hurdles:
+                
+            # 衝突判定　まるやま
+            # 生存しているハードル全てに対して
             for h in hurdles:
                 h.move()
                 if h.left_top_point.x < 0:
                     # 画面外に出たハードルをシーケンスから削除
                     hurdles.remove(h)
-                
-            # 衝突判定　まるやま
-            # 生存しているハードル全てに対して
-            for h in hurdles:
 
                 # プレイヤーの右端のx座標をハードルが左に超えていたら
                 if h.left_top_point.x <= player.left_top_point.x + player.image.get_width():
                     # 衝突検知：戻り値は衝突していたらTrue、していなかったらFalse
                     is_game_over = check_collision(player.left_top_point, player.right_bottom_point,
                                     h.left_top_point, h.right_bottom_point)
-    
-        # ハードルを描画
-        for h in hurdles:
-            screen.blit(h.image,h.left_top_point.get_xy())
+
+                # ハードルを描画
+                screen.blit(h.image,h.left_top_point.get_xy())
             
         # ゲームオーバーなら文字を表示
         if is_game_over:
@@ -177,6 +179,7 @@ def create_hurdle():
     for i in range(num_create):
         #point_x = WIDTH + (32 * (i-1)) # 32は花のデフォルト画像サイズ、サイズが変わったときこの値も変わるようにしたい
         hurdles.append(Hurdle(pic,1))
+
 
 # ひょうくん用新規関数定義スペース
 
