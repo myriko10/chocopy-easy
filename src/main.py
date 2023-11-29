@@ -55,9 +55,11 @@ def run_game():
     # Pointオブジェクトを更新すると
     player = Player(PLAYER_DEFAULT_POINT)
 
-    jump_frame = -(player.INITIAL_VELOCITY) / player.GRAVITY * 2
+    jumping_frame = -(player.INITIAL_VELOCITY) / player.GRAVITY * 2
     collision_area = (player.image.get_width() + IMAGEDICT['red'].get_width()) / Hurdle.speed
-    creatable_frame = jump_frame - collision_area
+    creatable_frame = jumping_frame - collision_area
+    frame_counter = 0
+    state = 1
 
     # ゲームスタート
     while True:
@@ -84,15 +86,32 @@ def run_game():
 
         # ハードルを生成するかしないか
         # 画面にハードルがないときの生成条件
-        if len(hurdles) == 0: 
-            if random.random() < 0.05:
-                create_hurdle()
+        # if len(hurdles) == 0: 
+        #     create_hurdle()
 
-        # 一番新しいハードルが画面の1/3を超えたら
-        if hurdles:
-            if hurdles[-1].left_top_point.x < WIDTH / 3: 
-                if random.random() < 0.04:
-                    create_hurdle()
+        # # 一番新しいハードルが画面の1/3を超えたら
+        # if hurdles:
+        #     if hurdles[-1].left_top_point.x < WIDTH / 3: 
+        #         if random.random() < 0.04:
+        #             create_hurdle()
+
+        # 生成条件
+        frame_counter += 1
+        if state == 1:
+            if create_hurdle():
+                state = 2
+                frame_counter = 0
+        elif state == 2:
+            create_hurdle()
+            if frame_counter == creatable_frame:
+                state = 3
+                frame_counter = 0
+        else:
+            if frame_counter == collision_area:
+                state = 1
+                frame_counter = 0
+
+            
 
         # ハードルを全部動かして描画
         if not is_game_over and hurdles:
@@ -167,19 +186,24 @@ def title():
         break
 # くずめくん用新規関数定義スペース
 def create_hurdle():
-    num_create = random.randint(1,3) # ハードルを連続していくつ出すか
-    appear = random.randint(1,100)
-    if appear < 40:
-        pic = 'red'
-    elif appear < 70:
-        pic = 'yellow'
-    elif appear < 90:
-        pic = 'white'
-    else: pic = 'mole'
-    for i in range(num_create):
-        #point_x = WIDTH + (32 * (i-1)) # 32は花のデフォルト画像サイズ、サイズが変わったときこの値も変わるようにしたい
-        hurdles.append(Hurdle(pic,1))
+    if random.random() < 0.05:
+        num_create = 1 #random.randint(1,3) # ハードルを連続していくつ出すか
+        appear = random.randint(1,100)
+        if appear < 40:
+            pic = 'red'
+        elif appear < 70:
+            pic = 'yellow'
+        elif appear < 90:
+            pic = 'white'
+        else: pic = 'mole'
+        for i in range(num_create):
+            #point_x = WIDTH + (32 * (i-1)) # 32は花のデフォルト画像サイズ、サイズが変わったときこの値も変わるようにしたい
+            hurdles.append(Hurdle(pic,1))
+        return True
+    else:
+        return False
 
+# def judge_create_hurdle():
 
 # ひょうくん用新規関数定義スペース
 
