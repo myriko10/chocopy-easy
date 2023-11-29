@@ -171,8 +171,8 @@ def create_hurdle():
         pic = 'white'
     else: pic = 'mole'
     for i in range(num_create):
-        point_x = WIDTH + (32 * (i-1)) # 32は花のデフォルト画像サイズ、サイズが変わったときこの値も変わるようにしたい
-        hurdles.append(Hurdle(pic,1,point_x,PLAYER_DEFAULT_TOP))
+        #point_x = WIDTH + (32 * (i-1)) # 32は花のデフォルト画像サイズ、サイズが変わったときこの値も変わるようにしたい
+        hurdles.append(Hurdle(pic,1))
 
 # ひょうくん用新規関数定義スペース
 
