@@ -1,6 +1,6 @@
 # ゲームを作りやすくするモジュール
 import pygame
-# なんかのために必要
+# QUITために必要
 from pygame.locals import *
 # 乱数生成
 import random
@@ -18,7 +18,11 @@ import sys
 from hurdle import Hurdle
 # 時間を扱う
 import time
-
+# Pygameの初期化
+pygame.init()
+# テキストのインポート
+from text import *
+    
 WIDTH = 700 # 画面の幅ピクセル
 HEIGHT = 450 # 画面の高さピクセル 
 FPS = 30 # flame per second 1秒あたり30回画面を更新する 
@@ -166,34 +170,7 @@ def title():
 # ひょうくん用新規関数定義スペース
 
 # まるやまくん用新規関数定義スペース     
-# テキストの設定はこれで一回で済ませておく。
-def make_texts():
-    # グローバル変数として使うという宣言
-    global BASICFONT20, BASICFONT25, BASICFONT50,text_title,text_game_rule,text_instructions, text_game_over,text_press_key,\
-        text_title_center_point, text_game_rule_center_point,text_instructions_center_point, text_game_over_center_point, text_press_key_center_point,\
-        text_score, text_score_center_point
-    # フォントの代入　pygame.init()の後でないと定義できない
-    BASICFONT20 = pygame.font.Font('freesansbold.ttf', 20)
-    BASICFONT25 = pygame.font.Font('freesansbold.ttf', 25)
-    BASICFONT50 = pygame.font.Font('freesansbold.ttf', 50)
 
-    # タイトル画面用のテキストを代入。
-    text_title = BASICFONT25.render("Press Any Key to Start", True, (255, 255, 255))
-    text_game_rule = BASICFONT20.render("--- GAME RULE ---", True, (255, 255, 255))
-    text_instructions = BASICFONT20.render("Press the space key to jump and avoid obstacles.", True, (255, 255, 255))
-    # 画面の中央の位置を取得。
-    text_title_center_point = text_title.get_rect(center=(WIDTH // 2, HEIGHT // 2))
-    # 画面の中央の少し下の位置を取得。
-    text_game_rule_center_point = text_game_rule.get_rect(center=(WIDTH // 2, HEIGHT - 60))
-    text_instructions_center_point = text_instructions.get_rect(center=(WIDTH // 2, HEIGHT - 30))
-
-    # ゲームオーバー表示用のテキストを代入。
-    text_game_over = BASICFONT50.render("Game Over", True, (75, 40, 20))
-    text_press_key = BASICFONT25.render("Press Any Key To Retry", True, (75, 40, 20))
-    # 画面の中央の位置を取得。
-    text_game_over_center_point = text_game_over.get_rect(center=(WIDTH // 2, HEIGHT // 2))
-    # 画面の中央の少し下の位置を取得。
-    text_press_key_center_point = text_press_key.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 30))
 
 # ゲームオーバー表示
 def game_over():
@@ -211,7 +188,6 @@ def score_calc(start_time):
 # スコア表示
 def score_display(is_game_over, start_time):
     global score # スコア保持用の変数
-
     # ゲームが続く限りスコアを更新
     if is_game_over == False:
         score = score_calc(start_time)
@@ -219,7 +195,7 @@ def score_display(is_game_over, start_time):
     text_score = BASICFONT20.render("score : " + str(score).zfill(8), True, (0, 0, 0))
     # スコア表示用の画像位置を取得(テキストの中心座標)
     text_score_center_point = text_score.get_rect(center = (WIDTH-100, 20))
-
+    # スコアを描画
     screen.blit(text_score, text_score_center_point)
 
 # ゲームを終了する
@@ -229,17 +205,12 @@ def terminate():
 
 # 最初に実行される関数
 def main():
-    # Pygameの初期化
-    pygame.init()
-    # テキストの設定
-    make_texts()    
     # ゲームがスタートする
     run_game()
     # ゲームを終了する
     terminate()
 
 # モジュールの属性__name__は「python hoge.py」のようにコマンドで自分が実行されたら"__main__"を保持する。
-# 自分が実行されたときという条件なので、このファイルを実行するとこのif文だけが実行される。
-if __name__ == "__main__":
+# 自分が実行されたときという条件なので、このファイルを実行するとこのif文が実行される。
+if __name__ == '__main__':
     main()
-
