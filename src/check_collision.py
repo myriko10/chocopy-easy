@@ -6,7 +6,7 @@ def check_collision(player_left_top_point, player_right_bottom_point,
     player_left, player_top = player_left_top_point.get_xy()
     player_right, player_bottom = player_right_bottom_point.get_xy()
 
-    # 障害物の矩形の左上座標と右下座標
+    # ハードルの矩形の左上座標と右下座標
     hurdle_left, hurdle_top = hurdle_left_top_point.get_xy()
     hurdle_right, hurdle_bottom = hurdle_right_bottom_point.get_xy()
 

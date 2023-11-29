@@ -60,8 +60,6 @@ def run_game():
         # 背景の描画
         draw_backgroud()
 
-        # キーが押されたらジャンプの処理 ひょうくん
-        current_time = time.time()
         keys = pygame.key.get_pressed()
         # 無効時間を過ぎており、ゲームオーバーでないならジャンプ
         if not is_game_over:
