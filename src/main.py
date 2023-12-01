@@ -22,6 +22,8 @@ from point import Point
 import sys 
 # 障害物のクラス
 from hurdle import Hurdle
+# スコアクラス
+from score import Score
     
 WIDTH = 700 # 画面の幅ピクセル
 HEIGHT = 450 # 画面の高さピクセル 
@@ -54,9 +56,6 @@ def run_game():
     '''
     # Pointオブジェクトを更新すると
     player = Player(PLAYER_DEFAULT_POINT)
-
-    # スコアクラスを宣言
-    score = Score()
 
     # スコアクラスを宣言
     score = Score()
