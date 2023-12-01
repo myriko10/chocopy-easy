@@ -18,6 +18,8 @@ import sys
 from hurdle import Hurdle
 # 時間を扱う
 import time
+# 雲
+from cloud import Cloud
 
 WIDTH = 700 # 画面の幅ピクセル
 HEIGHT = 450 # 画面の高さピクセル 
@@ -31,6 +33,8 @@ pygame.display.set_caption('HORSE') # 画面のタイトルかな？
 
 # ハードルのシーケンス
 hurdles = []
+
+cloud=[]
 
 # ゲームの内容
 def run_game():
@@ -101,7 +105,7 @@ def run_game():
             for h in hurdles:
 
                 # プレイヤーの右端のx座標をハードルが左に超えていたら
-                if h.left_top_point.x <= player.left_top_point.x + player.image.get_width():
+                if h.left_top_point.x <= player.left_top_point.x + player.image.get_width()-10:
                     # 衝突検知：戻り値は衝突していたらTrue、していなかったらFalse
                     is_game_over = check_collision(player.left_top_point, player.right_bottom_point,
                                     h.left_top_point, h.right_bottom_point)
@@ -109,6 +113,21 @@ def run_game():
         # ハードルを描画
         for h in hurdles:
             screen.blit(h.image,h.left_top_point.get_xy())
+
+        # 雲の描画　
+        if random.randint(1,100) == 1:
+            appear = random.randint(1,100)
+            if appear < 70:
+                print(appear)
+                cloud.append(Cloud("cloud",1))
+        if not is_game_over and cloud:
+            for j in range(len(cloud)):
+                cloud[j].move()
+            if cloud[0].left_top_point.x < 0:
+                # 画面外に出た雲をシーケンスから削除
+                del cloud[0]
+        for j in cloud:
+            screen.blit(j.image,j.left_top_point.get_xy())
             
         # ゲームオーバーなら文字を表示
         if is_game_over:
@@ -127,6 +146,7 @@ def run_game():
         for event in pygame.event.get():
             if event.type == QUIT:
                 terminate()
+
         
 # 背景の描画
 def draw_backgroud():
@@ -134,6 +154,7 @@ def draw_backgroud():
     pygame.draw.rect(screen, (160,255,255), (0,0,WIDTH,HEIGHT*3/5))
     # 矩形の表示：草原　引数(画面, RGBカラー, 矩形領域を座標指定)
     pygame.draw.rect(screen, (120,255,0), (0,HEIGHT*3/5,WIDTH,HEIGHT))  
+    
 
 # なかむらくん用新規関数定義スペース
 def title():
