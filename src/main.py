@@ -8,6 +8,12 @@ import random
 from image_dict import IMAGEDICT
 # 衝突検知
 from check_collision import check_collision
+# 時間を扱う
+import time
+# Pygameの初期化
+pygame.init()
+# テキストのインポート
+from text import *
 # Playerクラス
 from player import Player
 # 座標のクラス
@@ -16,12 +22,6 @@ from point import Point
 import sys 
 # 障害物のクラス
 from hurdle import Hurdle
-# 時間を扱う
-import time
-# Pygameの初期化
-pygame.init()
-# テキストのインポート
-from text import *
     
 WIDTH = 700 # 画面の幅ピクセル
 HEIGHT = 450 # 画面の高さピクセル 
@@ -70,8 +70,6 @@ def run_game():
         # 背景の描画
         draw_backgroud()
 
-        # キーが押されたらジャンプの処理 ひょうくん
-        current_time = time.time()
         keys = pygame.key.get_pressed()
         # 無効時間を過ぎており、ゲームオーバーでないならジャンプ
         if not is_game_over:
