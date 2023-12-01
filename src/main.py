@@ -141,7 +141,7 @@ def run_game():
         if random.randint(1,100) == 1:
             appear = random.randint(1,100)
             if appear < 70:
-                print(appear)
+                # print(appear)
                 cloud.append(Cloud("cloud",1))
         if not is_game_over and cloud:
             for j in range(len(cloud)):
