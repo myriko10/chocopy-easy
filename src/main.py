@@ -55,6 +55,16 @@ def run_game():
     # Pointオブジェクトを更新すると
     player = Player(PLAYER_DEFAULT_POINT)
 
+    # ハードル生成用の定数
+    jumping_frame = -(player.INITIAL_VELOCITY) / player.GRAVITY * 2
+    # collision_area = (player.image.get_width() + IMAGEDICT['red'].get_width()) / Hurdle.speed
+    frame_counter = 0
+    state = 1
+    step_on_frame = IMAGEDICT['red'].get_height() / Hurdle.speed # 着地の時に踏んでしまう可能性のあるフレーム数の計算
+    COLLISION_MARGIN = IMAGEDICT['red'].get_width() * 3 # 難易度調整用マージン(係数2と3で大分体感が変わる)
+    collision_area = (player.image.get_width() + step_on_frame + COLLISION_MARGIN) / Hurdle.speed
+    creatable_frame = jumping_frame - collision_area
+    
     # ゲームスタート
     while True:
         # 背景の描画
@@ -76,40 +86,51 @@ def run_game():
         # プレイヤーの画像を描画
         screen.blit(player.image, player.left_top_point.get_xy())
 
-        # ハードルを生成するかしないか　くずめくん
-            # 乱数でなんとかしてほしい
-            # ハードルを生成するならシーケンスに追加
-        if random.randint(1,100) == 1:
-            appear = random.randint(1,100)
-            if appear < 40:
-                pic = 'red'
-            elif appear < 70:
-                pic = 'yellow'
-            elif appear < 90:
-                pic = 'white'
-            else: pic = 'mole'
-            hurdles.append(Hurdle(pic,1))
+        # ハードルを生成するかしないか
+        # 画面にハードルがないときの生成条件
+        # if len(hurdles) == 0: 
+        #     create_hurdle()
 
-        # ハードルを全部動かして描画　くずめくん
+        # # 一番新しいハードルが画面の1/3を超えたら
+        # if hurdles:
+        #     if hurdles[-1].left_top_point.x < WIDTH / 3: 
+        #         if random.random() < 0.04:
+        #             create_hurdle()
+
+        # 生成条件
+        frame_counter += 1
+        if state == 1:
+            if create_hurdle():
+                state = 2
+                frame_counter = 0
+        elif state == 2:
+            create_hurdle()
+            if frame_counter >= creatable_frame:
+                state = 3
+                frame_counter = 0
+        else:
+            if frame_counter >= collision_area:
+                state = 1
+                frame_counter = 0            
+
+        # ハードルを全部動かして描画
         if not is_game_over and hurdles:
-            for i in range(len(hurdles)):
-                hurdles[i].move()
-            if hurdles[0].left_top_point.x < 0:
-                # 画面外に出たハードルをシーケンスから削除
-                del hurdles[0]
-                
             # 衝突判定　まるやま
             # 生存しているハードル全てに対して
             for h in hurdles:
+                h.move()
+                if h.left_top_point.x < 0:
+                    # 画面外に出たハードルをシーケンスから削除
+                    hurdles.remove(h)
 
                 # プレイヤーの右端のx座標をハードルが左に超えていたら
                 if h.left_top_point.x <= player.left_top_point.x + player.image.get_width():
                     # 衝突検知：戻り値は衝突していたらTrue、していなかったらFalse
                     is_game_over = check_collision(player.left_top_point, player.right_bottom_point,
                                     h.left_top_point, h.right_bottom_point)
-    
+                    
         # ハードルを描画
-        for h in hurdles:
+        for h in hurdles: 
             screen.blit(h.image,h.left_top_point.get_xy())
             
         # ゲームオーバーなら文字を表示
@@ -118,8 +139,6 @@ def run_game():
 
         # スコアを表示　どもんくん
         score_display(is_game_over, start_time)
-        
-        # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
     
         # 画面の更新
         pygame.display.update() 
@@ -164,6 +183,25 @@ def title():
         # whileループを抜け、初期画面を閉じる
         break
 # くずめくん用新規関数定義スペース
+def create_hurdle():
+    if random.random() < 0.05:
+        num_create = 1 #random.randint(1,3) # ハードルを連続していくつ出すか
+        appear = random.randint(1,100)
+        if appear < 40:
+            pic = 'red'
+        elif appear < 70:
+            pic = 'yellow'
+        elif appear < 90:
+            pic = 'white'
+        else: pic = 'mole'
+        for i in range(num_create):
+            #point_x = WIDTH + (32 * (i-1)) # 32は花のデフォルト画像サイズ、サイズが変わったときこの値も変わるようにしたい
+            hurdles.append(Hurdle(pic,1))
+        return True
+    else:
+        return False
+
+# def judge_create_hurdle():
 
 # ひょうくん用新規関数定義スペース
 
