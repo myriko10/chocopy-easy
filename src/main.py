@@ -184,7 +184,7 @@ def title():
         break
 # くずめくん用新規関数定義スペース
 def create_hurdle():
-    if random.random() < 0.05:
+    if random.random() < 0.03:
         num_create = 1 #random.randint(1,3) # ハードルを連続していくつ出すか
         appear = random.randint(1,100)
         if appear < 40:
