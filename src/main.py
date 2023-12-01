@@ -209,9 +209,13 @@ def create_hurdle():
 
 
 # ゲームオーバー表示
-def game_over():
+def game_over(player, hurdles):
     # blit(表示するテキスト, 座標(テキストの中心位置が配置される)) 。
     # 画面の中央にテキストを描画。
+    draw_backgroud()
+    screen.blit(player.image, player.left_top_point.get_xy())
+    for h in hurdles:
+        screen.blit(h.image)
     screen.blit(text_game_over, text_game_over_center_point)
     screen.blit(text_press_key, text_press_key_center_point)
     
