@@ -55,12 +55,16 @@ def run_game():
     # Pointオブジェクトを更新すると
     player = Player(PLAYER_DEFAULT_POINT)
 
+    # ハードル生成用の定数
     jumping_frame = -(player.INITIAL_VELOCITY) / player.GRAVITY * 2
-    collision_area = (player.image.get_width() + IMAGEDICT['red'].get_width()) / Hurdle.speed
-    creatable_frame = jumping_frame - collision_area
+    # collision_area = (player.image.get_width() + IMAGEDICT['red'].get_width()) / Hurdle.speed
     frame_counter = 0
     state = 1
-
+    step_on_frame = IMAGEDICT['red'].get_height() / Hurdle.speed # 着地の時に踏んでしまう可能性のあるフレーム数の計算
+    COLLISION_MARGIN = IMAGEDICT['red'].get_width() * 3 # 難易度調整用マージン(係数2と3で大分体感が変わる)
+    collision_area = (player.image.get_width() + step_on_frame + COLLISION_MARGIN) / Hurdle.speed
+    creatable_frame = jumping_frame - collision_area
+    
     # ゲームスタート
     while True:
         # 背景の描画
@@ -103,19 +107,16 @@ def run_game():
                 frame_counter = 0
         elif state == 2:
             create_hurdle()
-            if frame_counter == creatable_frame:
+            if frame_counter >= creatable_frame:
                 state = 3
                 frame_counter = 0
         else:
-            if frame_counter == collision_area:
+            if frame_counter >= collision_area:
                 state = 1
-                frame_counter = 0
-
-            
+                frame_counter = 0            
 
         # ハードルを全部動かして描画
         if not is_game_over and hurdles:
-                
             # 衝突判定　まるやま
             # 生存しているハードル全てに対して
             for h in hurdles:
@@ -129,9 +130,10 @@ def run_game():
                     # 衝突検知：戻り値は衝突していたらTrue、していなかったらFalse
                     is_game_over = check_collision(player.left_top_point, player.right_bottom_point,
                                     h.left_top_point, h.right_bottom_point)
-
-                # ハードルを描画
-                screen.blit(h.image,h.left_top_point.get_xy())
+                    
+        # ハードルを描画
+        for h in hurdles: 
+            screen.blit(h.image,h.left_top_point.get_xy())
             
         # ゲームオーバーなら文字を表示
         if is_game_over:
@@ -139,8 +141,6 @@ def run_game():
 
         # スコアを表示　どもんくん
         score_display(is_game_over, start_time)
-        
-        # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
     
         # 画面の更新
         pygame.display.update() 
