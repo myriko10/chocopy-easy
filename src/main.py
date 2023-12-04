@@ -53,7 +53,7 @@ def run_game():
     *はリストを展開してx,yの数値(not参照型)ふたつを渡している。
     '''
     # Pointオブジェクトを更新すると
-    player = Player(PLAYER_DEFAULT_POINT)
+    player = Player(PLAYER_DEFAULT_POINT, HEIGHT)
 
     # ハードル生成用の定数
     jumping_frame = -(player.INITIAL_VELOCITY) / player.GRAVITY * 2
