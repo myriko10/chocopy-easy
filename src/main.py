@@ -140,7 +140,7 @@ def run_game():
 
         # スコアを表示　どもんくん
         score.score_update(is_game_over, start_time)
-        score.score_display(screen)
+        score.display_score(screen)
         
         # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
     
