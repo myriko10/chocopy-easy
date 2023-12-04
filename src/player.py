@@ -63,5 +63,5 @@ class Player:
     
     # ゲームオーバー時の画像に切り替え
     def game_over(self):
-            self.current_image = IMAGEDICT['stop']
+            self.current_image = IMAGEDICT['error']
         
