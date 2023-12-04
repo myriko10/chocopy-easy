@@ -51,7 +51,10 @@ def run_game():
     *はリストを展開してx,yの数値(not参照型)ふたつを渡している。
     '''
     # Pointオブジェクトを更新すると
-    player = Player(PLAYER_DEFAULT_POINT)
+    player = Player(PLAYER_DEFAULT_POINT, HEIGHT)
+
+    # スコアクラスを宣言
+    score = Score()
 
     # スコアクラスを宣言
     score = Score()
@@ -83,9 +86,6 @@ def run_game():
         
         # プレイヤーの画像を切り替え
         player.switch_image(is_game_over)
-        
-        # プレイヤーの画像を描画
-        screen.blit(player.image, player.left_top_point.get_xy())
 
         # ハードルを生成するかしないか
         # 画面にハードルがないときの生成条件
@@ -138,6 +138,9 @@ def run_game():
         if is_game_over:
             game_over()
 
+        # プレイヤーの画像を描画
+        screen.blit(player.image, player.left_top_point.get_xy())
+        
         # スコアを表示　どもんくん
         score.score_update(is_game_over, start_time)
         score.display_score(screen)
