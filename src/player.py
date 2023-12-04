@@ -59,9 +59,10 @@ class Player:
             self.current_image = self.IMAGE_RUNNIG1
             # 時間が等間隔で馬の画像を切り替え、走っているように見せる
             if True:
-                time_now = time.time()
-                if int(time_now) % 2 == 0:
-                    self.image = self.IMAGE_RUNNIG1
+                time_now = time.time() * 1000
+                if int(time_now) % 500 < 250: # 0.5秒ごとに画像を切り替える
+                # if int(time_now) % 100 < 50: # 0.1秒ごとに画像を切り替える
+                    self.current_image = self.IMAGE_RUNNIG1
                 else:
                     self.image = self.IMAGE_RUNNIG2
         # ジャンプしている時
