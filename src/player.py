@@ -1,7 +1,5 @@
 from ast import main
 import time
-
-import pygame
 from image_dict import IMAGEDICT
 from point import Point 
 
@@ -37,16 +35,16 @@ class Player:
         self.position.y += self.Y_VELOCITY
 
         # 地面に着地したか判定
-        if self.position.y > self.default_left_top_point.y:
+        if self.left_top_point.y > self.default_left_top_point.y:
             # フラグを切り替える
             self.on_ground = True
             # 地面に着地したときの位置に矯正
-            self.position.y = self.default_left_top_point.y
+            self.left_top_point.y = self.default_left_top_point.y
             # 速度を0にしてプレイヤーが動かないようにする
             self.Y_VELOCITY = 0
 
     # 画像を描画
-    def switch_image(self):
+    def switch_image(self, is_game_over):
         # 画像の変更
         if self.on_ground:
             time_now = time.time() * 1000
