@@ -82,9 +82,6 @@ def run_game():
         
         # プレイヤーの画像を切り替え
         player.switch_image(is_game_over)
-        
-        # プレイヤーの画像を描画
-        screen.blit(player.image, player.left_top_point.get_xy())
 
         # ハードルを生成するかしないか
         # 画面にハードルがないときの生成条件
@@ -137,6 +134,9 @@ def run_game():
         if is_game_over:
             game_over()
 
+        # プレイヤーの画像を描画
+        screen.blit(player.image, player.left_top_point.get_xy())
+        
         # スコアを表示　どもんくん
         score_display(is_game_over, start_time)
     
