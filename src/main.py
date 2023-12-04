@@ -140,8 +140,8 @@ def run_game():
         # 雲の描画　
         if random.randint(1,100) == 1:
             appear = random.randint(1,100)
-            if appear < 70:
-                print(appear)
+            if appear < 40:
+                # print(appear)
                 cloud.append(Cloud("cloud",1))
         if not is_game_over and cloud:
             for j in range(len(cloud)):
