@@ -87,16 +87,6 @@ def run_game():
         screen.blit(player.image, player.left_top_point.get_xy())
 
         # ハードルを生成するかしないか
-        # 画面にハードルがないときの生成条件
-        # if len(hurdles) == 0: 
-        #     create_hurdle()
-
-        # # 一番新しいハードルが画面の1/3を超えたら
-        # if hurdles:
-        #     if hurdles[-1].left_top_point.x < WIDTH / 3: 
-        #         if random.random() < 0.04:
-        #             create_hurdle()
-
         # 生成条件
         frame_counter += 1
         if state == 1:
@@ -119,7 +109,7 @@ def run_game():
             # 生存しているハードル全てに対して
             for h in hurdles:
                 h.move()
-                if h.left_top_point.x < 0:
+                if h.right_bottom_point.x < 0:
                     # 画面外に出たハードルをシーケンスから削除
                     hurdles.remove(h)
 
@@ -184,7 +174,7 @@ def title():
         break
 # くずめくん用新規関数定義スペース
 def create_hurdle():
-    if random.random() < 0.05:
+    if random.random() < 0.03:
         num_create = 1 #random.randint(1,3) # ハードルを連続していくつ出すか
         appear = random.randint(1,100)
         if appear < 40:
