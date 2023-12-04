@@ -1,5 +1,5 @@
 import pygame
-from main import WIDTH, HEIGHT
+from game_settings import WIDTH, HEIGHT
 
 # pygame を初期化
 # pygame.init()
