@@ -24,12 +24,8 @@ import sys
 from hurdle import Hurdle
 # スコアクラス
 from score import Score
-    
-WIDTH = 700 # 画面の幅ピクセル
-HEIGHT = 450 # 画面の高さピクセル 
-FPS = 30 # flame per second 1秒あたり30回画面を更新する 
-FPSCLOCK = pygame.time.Clock() # フレームレート制御
-PLAYER_DEFAULT_POINT = Point(WIDTH*4/70, HEIGHT*3/7)
+# ゲームの設定
+from game_settings import *
 
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -122,7 +118,7 @@ def run_game():
         if not is_game_over and hurdles:
             # 衝突判定　まるやま
             # 生存しているハードル全てに対して
-            for h in hurdles:
+            for h in hurdles.copy():
                 h.move()
                 if h.left_top_point.x < 0:
                     # 画面外に出たハードルをシーケンスから削除

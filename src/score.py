@@ -1,8 +1,6 @@
-import pygame
 import time
-
-BASICFONT20 = pygame.font.Font('freesansbold.ttf', 20)
-WIDTH = 700
+from text import BASICFONT20
+from game_settings import WIDTH
 
 class Score:
     def __init__(self):
