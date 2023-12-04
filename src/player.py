@@ -1,3 +1,4 @@
+from ast import main
 import time
 
 import pygame
@@ -5,7 +6,7 @@ from image_dict import IMAGEDICT
 from point import Point 
 
 class Player:
-    def __init__(self, point):
+    def __init__(self, point, HEIGHT):
         self.IMAGE_RUNNIG1 = IMAGEDICT['run1'] # 走り画像1
         self.IMAGE_RUNNIG2 = IMAGEDICT['run2'] # 走り画像2
         self.image = self.IMAGE_RUNNIG1 # 初期画像
@@ -16,7 +17,8 @@ class Player:
         self.Y_VELOCITY = 0 # y方向の速度
         self.on_ground = True # 地面にいるかどうか
         self.GRAVITY = 0.5  # 重力
-        self.INITIAL_VELOCITY = -15 # ジャンプの初速
+        self.INITIAL_VELOCITY = -(HEIGHT / 40) # ジャンプの初速
+    
 
     # ジャンプ処理
     def init_jump(self):
