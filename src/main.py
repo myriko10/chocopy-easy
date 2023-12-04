@@ -56,6 +56,9 @@ def run_game():
     # スコアクラスを宣言
     score = Score()
 
+    # スコアクラスを宣言
+    score = Score()
+
     # ハードル生成用の定数
     jumping_frame = -(player.INITIAL_VELOCITY) / player.GRAVITY * 2
     # collision_area = (player.image.get_width() + IMAGEDICT['red'].get_width()) / Hurdle.speed
