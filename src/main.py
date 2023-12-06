@@ -1,14 +1,11 @@
 # ゲームを作りやすくするモジュール
 import pygame
-# QUITために必要
-from pygame.locals import *
-
+# キーイベント判定のために必要
+from pygame.locals import QUIT, K_SPACE
 # 乱数生成
 import random
-
 # IMAGEDICTを引っ張ってくるためにfrom 拡張子ファイル名 import 引っ張ってきたい名前
 from image_dict import IMAGEDICT
-
 # 衝突検知
 from check_collision import check_collision
 # 時間を扱う
@@ -19,24 +16,19 @@ pygame.init()
 from text import *
 # Playerクラス
 from player import Player
-
 # 座標のクラス
 from point import Point
-
 # ゲームを終了するのに使う
 import sys
-
 # 障害物のクラス
 from hurdle import Hurdle
 # スコアクラス
 from score import Score
 # ゲームの設定
 from game_settings import *
-
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("HORSE")  # 画面のタイトルかな？
-
 # ハードルのシーケンス
 hurdles = []
 
@@ -78,12 +70,13 @@ def run_game():
         # 背景の描画
         draw_backgroud()
 
-        keys = pygame.key.get_pressed()
+    
         # 無効時間を過ぎており、ゲームオーバーでないならジャンプ
         if not is_game_over:
             # 押されたキーの状態を判定
-            if  keys[pygame.K_SPACE] and player.on_ground:
-                player.init_jump()
+            for event in pygame.event.get():
+                if get_key_event(event)=='space' and player.on_ground:
+                    player.init_jump()
         
         # プレイヤーの座標を更新
         player.jump()
@@ -140,7 +133,9 @@ def run_game():
             
         # ゲームオーバーなら文字を表示
         if is_game_over:
-            game_over()
+            if not game_over():
+                is_game_over = False
+                init_game()
 
         # プレイヤーの画像を描画
         screen.blit(player.image, player.left_top_point.get_xy())
@@ -159,7 +154,6 @@ def run_game():
         for event in pygame.event.get():
             if event.type == QUIT:
                 terminate()
-
 
 # 背景の描画
 def draw_backgroud():
@@ -184,13 +178,8 @@ def title():
 
         # イベント(マウスの移動やクリック、キー入力など)を検知
         for event in pygame.event.get():
-            # イベントがキー入力だったら(=何かしらキーが押されたら)forループを抜ける
-            if event.type == pygame.KEYDOWN:
-                pygame.event.clear()
+            if get_key_event(event) == 'anykey':
                 break
-            # 閉じるボタンを押したら終了
-            elif event.type == QUIT:
-                terminate()
         # forのin句が空だったら
         else:
             # whileループを続ける
@@ -198,7 +187,6 @@ def title():
 
         # whileループを抜け、初期画面を閉じる
         break
-
 
 # くずめくん用新規関数定義スペース
 def create_hurdle():
@@ -224,8 +212,30 @@ def create_hurdle():
 # ひょうくん用新規関数定義スペース
 
 
-# まるやまくん用新規関数定義スペース     
+# まるやまくん用新規関数定義スペース    
+    """キーイベントを処理する関数
+    
+    eventを引数にとる。
+    """
+def get_key_event(event, is_game_over = True):
+    # キー入力の場合
+    if event.type == pygame.KEYDOWN:
+        if event.key == K_SPACE and is_game_over:
+            pygame.event.clear()
+            return('space')
+        # その他のキー入力、ゲームオーバーの時はSPACEはこちらを通る
+        else:
+            # イベントキューを空にする
+            pygame.event.clear()
+            return('anykey')
+    # 閉じるボタンを押したら終了
+    elif event.type == QUIT:
+        terminate()
 
+# ゲームの初期化
+def init_game():
+    Score.__init__()
+    pygame.init()
 
 # ゲームオーバー表示
 def game_over():
@@ -233,6 +243,10 @@ def game_over():
     # 画面の中央にテキストを描画。
     screen.blit(text_game_over, text_game_over_center_point)
     screen.blit(text_press_key, text_press_key_center_point)
+    for event in pygame.event.get():
+        if get_key_event(event) == 'anykey':
+            pygame.event.clear()
+            return False
 
 
 # どもんくん用新規関数定義スペース
@@ -243,14 +257,12 @@ def terminate():
     pygame.quit()
     sys.exit()
 
-
 # 最初に実行される関数
 def main():
     # ゲームがスタートする
     run_game()
     # ゲームを終了する
     terminate()
-
 
 # モジュールの属性__name__は「python hoge.py」のようにコマンドで自分が実行されたら"__main__"を保持する。
 # 自分が実行されたときという条件なので、このファイルを実行するとこのif文が実行される。
