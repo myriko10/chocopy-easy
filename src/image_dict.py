@@ -17,8 +17,9 @@ IMAGEDICT = {'bird': pygame.image.load('../images/bird.png'),
 	    	'mole': pygame.image.load('../images/mole.png'),
 	    	'title': pygame.image.load('../images/title_horse_goes_home.png'),
 	    	'town': pygame.image.load('../images/town.png'),
+			'error': pygame.image.load('../images/horse_error.png'),
 	    	#'crun1R': pygame.transform.scale(pygame.image.load('images/callot_horse_run1.png'), (int(main.WIDTH*0.8), int(main.HEIGHT*0.8))),
 	    	#'crun2R': pygame.transform.scale(pygame.image.load('images/callot_horse_run2.png'), (int(main.WIDTH*0.8), int(main.HEIGHT*0.8)))
-	    		}
+	    	}
 	#IMAGEDICT['crun1L'] = pygame.transform.flip(IMAGEDICT['crun1R'], True, False)
 	#IMAGEDICT['crun2L'] = pygame.transform.flip(IMAGEDICT['crun2R'], True, False)
