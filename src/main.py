@@ -7,7 +7,7 @@ import random
 # IMAGEDICTを引っ張ってくるためにfrom 拡張子ファイル名 import 引っ張ってきたい名前
 from image_dict import IMAGEDICT
 # 衝突検知
-from check_collision import check_collision
+from is_collision import Is_collision
 # 時間を扱う
 import time
 # Pygameの初期化
@@ -130,7 +130,7 @@ def run_game():
                 # プレイヤーの右端のx座標をハードルが左に超えていたら
                 if h.left_top_point.x <= player.left_top_point.x + player.image.get_width()-10:
                     # 衝突検知：戻り値は衝突していたらTrue、していなかったらFalse
-                    is_game_over = check_collision(player.left_top_point, player.right_bottom_point,
+                    is_game_over = Is_collision(player.left_top_point, player.right_bottom_point,
                                     h.left_top_point, h.right_bottom_point)
                     
         # ハードルを描画
