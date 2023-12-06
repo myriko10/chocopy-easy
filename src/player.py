@@ -6,13 +6,12 @@ class Player:
     def __init__(self, point, HEIGHT):
         self.image = IMAGEDICT['run1'] # 現在の画像
         self.default_left_top_point = Point(*point.get_xy()) # point # プレイヤーが地面に着地しているときの座標
-
         self.left_top_point = Point(*point.get_xy()) # プレイヤーの位置
-
         self.Y_VELOCITY = 0 # y方向の速度
         self.on_ground = True # 地面にいるかどうか
         self.GRAVITY = 0.5  # 重力
-        self.INITIAL_VELOCITY = -(HEIGHT / 40) # ジャンプの初速
+        # ジャンプの初速　説明が必要
+        self.INITIAL_VELOCITY = -(HEIGHT / 40) 
         self.right_bottom_point = Point(self.left_top_point.x + self.image.get_width(), 
                                         self.left_top_point.y + self.image.get_height()) # 右下の座標
 
@@ -55,7 +54,9 @@ class Player:
             self.image = IMAGEDICT['run1']
             # 時間が等間隔で馬の画像を切り替え、走っているように見せる
             if True:
+                # 単位をミリ秒から秒にするために1000倍
                 time_now = time.time() * 1000
+                # ？
                 if int(time_now) % 500 < 250:
                     self.image = IMAGEDICT['run1']
                 else:
