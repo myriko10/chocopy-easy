@@ -12,8 +12,8 @@ def check_collision(player_left_top_point, player_right_bottom_point,
 
     # 矩形の交差判定
     # バックスラッシュを使うか()で囲むことで長い条件文は改行できる
-    if player_left < hurdle_right and hurdle_left < player_right and \
-        player_bottom > hurdle_top:
+    if player_right >= hurdle_left and player_left <= hurdle_right and \
+        player_bottom >= hurdle_top and player_top <= hurdle_bottom:
         return True  # 衝突が発生
     else:
         return False  # 衝突が発生していない
