@@ -22,14 +22,10 @@ from point import Point
 import sys 
 # 障害物のクラス
 from hurdle import Hurdle
-# 雲
-from cloud import Cloud
-
-WIDTH = 700 # 画面の幅ピクセル
-HEIGHT = 450 # 画面の高さピクセル 
-FPS = 30 # flame per second 1秒あたり30回画面を更新する 
-FPSCLOCK = pygame.time.Clock() # フレームレート制御
-PLAYER_DEFAULT_POINT = Point(WIDTH*4/70, HEIGHT*3/7)
+# スコアクラス
+from score import Score
+# ゲームの設定
+from game_settings import *
 
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -57,7 +53,10 @@ def run_game():
     *はリストを展開してx,yの数値(not参照型)ふたつを渡している。
     '''
     # Pointオブジェクトを更新すると
-    player = Player(PLAYER_DEFAULT_POINT)
+    player = Player(PLAYER_DEFAULT_POINT, HEIGHT)
+
+    # スコアクラスを宣言
+    score = Score()
 
     # ハードル生成用の定数
     jumping_frame = -(player.INITIAL_VELOCITY) / player.GRAVITY * 2
@@ -86,9 +85,6 @@ def run_game():
         
         # プレイヤーの画像を切り替え
         player.switch_image(is_game_over)
-        
-        # プレイヤーの画像を描画
-        screen.blit(player.image, player.left_top_point.get_xy())
 
         # ハードルを生成するかしないか
         # 画面にハードルがないときの生成条件
@@ -121,7 +117,7 @@ def run_game():
         if not is_game_over and hurdles:
             # 衝突判定　まるやま
             # 生存しているハードル全てに対して
-            for h in hurdles:
+            for h in hurdles.copy():
                 h.move()
                 if h.left_top_point.x < 0:
                     # 画面外に出たハードルをシーケンスから削除
@@ -156,8 +152,14 @@ def run_game():
         if is_game_over:
             game_over()
 
+        # プレイヤーの画像を描画
+        screen.blit(player.image, player.left_top_point.get_xy())
+        
         # スコアを表示　どもんくん
-        score_display(is_game_over, start_time)
+        score.score_update(is_game_over, start_time)
+        score.display_score(screen)
+        
+        # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
     
         # 画面の更新
         pygame.display.update() 
@@ -237,23 +239,6 @@ def game_over():
     screen.blit(text_press_key, text_press_key_center_point)
     
 # どもんくん用新規関数定義スペース
-# スコア計算
-def score_calc(start_time):
-        score = int(time.time() - start_time) * 100 
-        return score
-        
-# スコア表示
-def score_display(is_game_over, start_time):
-    global score # スコア保持用の変数
-    # ゲームが続く限りスコアを更新
-    if is_game_over == False:
-        score = score_calc(start_time)
-    # スコア表示用のテキストを代入。
-    text_score = BASICFONT20.render("score : " + str(score).zfill(8), True, (0, 0, 0))
-    # スコア表示用の画像位置を取得(テキストの中心座標)
-    text_score_center_point = text_score.get_rect(center = (WIDTH-100, 20))
-    # スコアを描画
-    screen.blit(text_score, text_score_center_point)
 
 # ゲームを終了する
 def terminate():
