@@ -132,21 +132,6 @@ def run_game():
         # ハードルを描画
         for h in hurdles: 
             screen.blit(h.image,h.left_top_point.get_xy())
-
-        # 雲の描画　
-        if random.randint(1,100) == 1:
-            appear = random.randint(1,100)
-            if appear < 40:
-                # print(appear)
-                cloud.append(Cloud("cloud",1))
-        if not is_game_over and cloud:
-            for j in range(len(cloud)):
-                cloud[j].move()
-            if cloud[0].left_top_point.x < 0:
-                # 画面外に出た雲をシーケンスから削除
-                del cloud[0]
-        for j in cloud:
-            screen.blit(j.image,j.left_top_point.get_xy())
             
         # ゲームオーバーなら文字を表示
         if is_game_over:
