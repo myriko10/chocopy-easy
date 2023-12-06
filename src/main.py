@@ -65,7 +65,7 @@ def run_game():
     frame_counter = 0
     state = 1
     step_on_frame = IMAGEDICT['red'].get_height() / Hurdle.speed # 着地の時に踏んでしまう可能性のあるフレーム数の計算
-    COLLISION_MARGIN = IMAGEDICT['red'].get_width() * 3 # 難易度調整用マージン(係数2と3で大分体感が変わる)
+    COLLISION_MARGIN = IMAGEDICT['red'].get_width() * 2 # 難易度調整用マージン(係数2と3で大分体感が変わる)
     collision_area = (player.image.get_width() + step_on_frame + COLLISION_MARGIN) / Hurdle.speed
     creatable_frame = jumping_frame - collision_area
     
@@ -141,7 +141,10 @@ def run_game():
         if random.randint(1,100) == 1:
             appear = random.randint(1,100)
             if appear < 40:
+<<<<<<< HEAD
                 # print(appear)
+=======
+>>>>>>> feature_collision
                 cloud.append(Cloud("cloud",1))
         if not is_game_over and cloud:
             for j in range(len(cloud)):
