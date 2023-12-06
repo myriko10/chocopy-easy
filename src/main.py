@@ -22,10 +22,14 @@ from point import Point
 import sys 
 # 障害物のクラス
 from hurdle import Hurdle
-# スコアクラス
-from score import Score
-# ゲームの設定
-from game_settings import *
+# 雲
+from cloud import Cloud
+
+WIDTH = 700 # 画面の幅ピクセル
+HEIGHT = 450 # 画面の高さピクセル 
+FPS = 30 # flame per second 1秒あたり30回画面を更新する 
+FPSCLOCK = pygame.time.Clock() # フレームレート制御
+PLAYER_DEFAULT_POINT = Point(WIDTH*4/70, HEIGHT*3/7)
 
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -53,10 +57,7 @@ def run_game():
     *はリストを展開してx,yの数値(not参照型)ふたつを渡している。
     '''
     # Pointオブジェクトを更新すると
-    player = Player(PLAYER_DEFAULT_POINT, HEIGHT)
-
-    # スコアクラスを宣言
-    score = Score()
+    player = Player(PLAYER_DEFAULT_POINT)
 
     # ハードル生成用の定数
     jumping_frame = -(player.INITIAL_VELOCITY) / player.GRAVITY * 2
@@ -64,7 +65,7 @@ def run_game():
     frame_counter = 0
     state = 1
     step_on_frame = IMAGEDICT['red'].get_height() / Hurdle.speed # 着地の時に踏んでしまう可能性のあるフレーム数の計算
-    COLLISION_MARGIN = IMAGEDICT['red'].get_width() * 3 # 難易度調整用マージン(係数2と3で大分体感が変わる)
+    COLLISION_MARGIN = IMAGEDICT['red'].get_width() * 2 # 難易度調整用マージン(係数2と3で大分体感が変わる)
     collision_area = (player.image.get_width() + step_on_frame + COLLISION_MARGIN) / Hurdle.speed
     creatable_frame = jumping_frame - collision_area
     
@@ -85,6 +86,9 @@ def run_game():
         
         # プレイヤーの画像を切り替え
         player.switch_image(is_game_over)
+        
+        # プレイヤーの画像を描画
+        screen.blit(player.image, player.left_top_point.get_xy())
 
         # ハードルを生成するかしないか
         # 画面にハードルがないときの生成条件
@@ -117,7 +121,7 @@ def run_game():
         if not is_game_over and hurdles:
             # 衝突判定　まるやま
             # 生存しているハードル全てに対して
-            for h in hurdles.copy():
+            for h in hurdles:
                 h.move()
                 if h.left_top_point.x < 0:
                     # 画面外に出たハードルをシーケンスから削除
@@ -132,16 +136,12 @@ def run_game():
         # ハードルを描画
         for h in hurdles: 
             screen.blit(h.image,h.left_top_point.get_xy())
-<<<<<<< HEAD
 
         # 雲の描画　
         if random.randint(1,100) == 1:
             appear = random.randint(1,100)
             if appear < 40:
-<<<<<<< HEAD
                 # print(appear)
-=======
->>>>>>> feature_collision
                 cloud.append(Cloud("cloud",1))
         if not is_game_over and cloud:
             for j in range(len(cloud)):
@@ -151,21 +151,13 @@ def run_game():
                 del cloud[0]
         for j in cloud:
             screen.blit(j.image,j.left_top_point.get_xy())
-=======
->>>>>>> 617a777528f7191c272435002a6511c329c9dd74
             
         # ゲームオーバーなら文字を表示
         if is_game_over:
             game_over()
 
-        # プレイヤーの画像を描画
-        screen.blit(player.image, player.left_top_point.get_xy())
-        
         # スコアを表示　どもんくん
-        score.score_update(is_game_over, start_time)
-        score.display_score(screen)
-        
-        # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
+        score_display(is_game_over, start_time)
     
         # 画面の更新
         pygame.display.update() 
@@ -245,6 +237,23 @@ def game_over():
     screen.blit(text_press_key, text_press_key_center_point)
     
 # どもんくん用新規関数定義スペース
+# スコア計算
+def score_calc(start_time):
+        score = int(time.time() - start_time) * 100 
+        return score
+        
+# スコア表示
+def score_display(is_game_over, start_time):
+    global score # スコア保持用の変数
+    # ゲームが続く限りスコアを更新
+    if is_game_over == False:
+        score = score_calc(start_time)
+    # スコア表示用のテキストを代入。
+    text_score = BASICFONT20.render("score : " + str(score).zfill(8), True, (0, 0, 0))
+    # スコア表示用の画像位置を取得(テキストの中心座標)
+    text_score_center_point = text_score.get_rect(center = (WIDTH-100, 20))
+    # スコアを描画
+    screen.blit(text_score, text_score_center_point)
 
 # ゲームを終了する
 def terminate():
