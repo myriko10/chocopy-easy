@@ -122,7 +122,7 @@ def run_game():
                     hurdles.remove(h)
 
                 # プレイヤーの右端のx座標をハードルが左に超えていたら
-                if h.left_top_point.x <= player.left_top_point.x + player.image.get_width()-10:
+                if h.left_top_point.x <= player.left_top_point.x + player.image.get_width():
                     # 衝突検知：戻り値は衝突していたらTrue、していなかったらFalse
                     is_game_over = is_collision(player.left_top_point, player.right_bottom_point,
                                     h.left_top_point, h.right_bottom_point)
