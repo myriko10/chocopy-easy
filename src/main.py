@@ -69,14 +69,11 @@ def run_game():
     while True:
         # 背景の描画
         draw_backgroud()
-
-    
         # 無効時間を過ぎており、ゲームオーバーでないならジャンプ
         if not is_game_over:
             # 押されたキーの状態を判定
-            for event in pygame.event.get():
-                if get_key_event(event)=='space' and player.on_ground:
-                    player.init_jump()
+            if get_key_event(event)=='space' and player.on_ground:
+                player.init_jump()
         
         # プレイヤーの座標を更新
         player.jump()
@@ -177,16 +174,8 @@ def title():
         pygame.display.flip()
 
         # イベント(マウスの移動やクリック、キー入力など)を検知
-        for event in pygame.event.get():
-            if get_key_event(event) == 'anykey':
-                break
-        # forのin句が空だったら
-        else:
-            # whileループを続ける
-            continue
-
-        # whileループを抜け、初期画面を閉じる
-        break
+        if get_key_event() == 'anykey':
+            break
 
 # くずめくん用新規関数定義スペース
 def create_hurdle():
@@ -217,20 +206,24 @@ def create_hurdle():
     
     eventを引数にとる。
     """
-def get_key_event(event, is_game_over = True):
+def get_key_event(is_game_over = True):
+    print('queue: ', pygame.event.get())
+    
     # キー入力の場合
-    if event.type == pygame.KEYDOWN:
-        if event.key == K_SPACE and is_game_over:
-            pygame.event.clear()
-            return('space')
-        # その他のキー入力、ゲームオーバーの時はSPACEはこちらを通る
-        else:
-            # イベントキューを空にする
-            pygame.event.clear()
-            return('anykey')
-    # 閉じるボタンを押したら終了
-    elif event.type == QUIT:
-        terminate()
+    for event in pygame.event.get():
+        print('event: ', event)
+        if event.type == pygame.KEYDOWN:
+            if event.key == K_SPACE and is_game_over:
+                pygame.event.clear()
+                return('space')
+            # その他のキー入力、ゲームオーバーの時はSPACEはこちらを通る
+            else:
+                # イベントキューを空にする
+                pygame.event.clear()
+                return('anykey')
+        # 閉じるボタンを押したら終了
+        elif event.type == QUIT:
+            terminate()
 
 # ゲームの初期化
 def init_game():
@@ -243,10 +236,11 @@ def game_over():
     # 画面の中央にテキストを描画。
     screen.blit(text_game_over, text_game_over_center_point)
     screen.blit(text_press_key, text_press_key_center_point)
-    for event in pygame.event.get():
-        if get_key_event(event) == 'anykey':
-            pygame.event.clear()
-            return False
+    # キーが押されたら
+    if get_key_event() == 'anykey':
+        pygame.event.clear()
+        # is_game_over更新用
+        return False
 
 
 # どもんくん用新規関数定義スペース
