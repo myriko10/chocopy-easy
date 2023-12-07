@@ -173,7 +173,6 @@ def title():
 # くずめくん用新規関数定義スペース
 def create_hurdle(hurdles):
     if random.random() < 0.05:
-        num_create = 1 #random.randint(1,3) # ハードルを連続していくつ出すか
         appear = random.randint(1,100)
         if appear < 40:
             pic = 'red'
