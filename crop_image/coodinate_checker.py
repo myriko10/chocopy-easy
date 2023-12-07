@@ -3,7 +3,7 @@ from PIL import Image, ImageTk
 
 # 画像ファイルのパス
 # image_path = '../images/horse_run1.png'
-image_path = "../images/horse_run2.png"
+image_path = "./img/bird.PNG"
 
 if __name__ == '__main__':
     # 画像を開く

@@ -1,63 +1,54 @@
 # ゲームを作りやすくするモジュール
 import pygame
-# QUITために必要
-from pygame.locals import *
-# 乱数生成
+# Pygameの初期化
+pygame.init()
+# キーイベント判定のために必要
+from pygame.locals import QUIT, K_SPACE
+# ハードル生成のための乱数生成
 import random
 # IMAGEDICTを引っ張ってくるためにfrom 拡張子ファイル名 import 引っ張ってきたい名前
 from image_dict import IMAGEDICT
 # 衝突検知
-from check_collision import check_collision
+from is_collision import is_collision
 # 時間を扱う
 import time
-# Pygameの初期化
-pygame.init()
-# テキストのインポート
-from text import *
 # Playerクラス
 from player import Player
 # 座標のクラス
 from point import Point
 # ゲームを終了するのに使う
-import sys 
+import sys
 # 障害物のクラス
 from hurdle import Hurdle
-    
-WIDTH = 700 # 画面の幅ピクセル
-HEIGHT = 450 # 画面の高さピクセル 
-FPS = 30 # flame per second 1秒あたり30回画面を更新する 
-FPSCLOCK = pygame.time.Clock() # フレームレート制御
-PLAYER_DEFAULT_POINT = Point(WIDTH*4/70, HEIGHT*3/7)
-
+# スコアクラス
+from score import Score
+# ゲームの設定
+from game_settings import *
+# テキストのインポート pygame.initされないと実行できない
+from text import *
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('HORSE') # 画面のタイトルかな？
-
-# ハードルのシーケンス
-hurdles = []
+pygame.display.set_caption("HORSE")  # 画面のタイトルかな？
+is_game_over = False # ゲームオーバーならTrue
 
 # ゲームの内容
 def run_game():
-    title()
+    global is_game_over
+    hurdles = [] # ハードルのリストの初期化
 
-    # 時間変数の初期化とセット どもんくん
+    # 時間変数の初期化とセット
     start_time = time.time() # ゲーム開始時の時刻を取得
-    is_game_over = False # ゲームオーバーならTrue
 
-    # Playerをインスタンス化　ひょうくん
+    # Playerをインスタンス化
     # Playerの初期位置の座標を指定
-    '''
-    ここでPointオブジェクトをそのまま引数に渡す仕様にすると、参照渡しになる。
-    Pointオブジェクトをinit関数内でdefault_left_top_pointとleft_top_point属性の両方に代入すると、
-    片方の値を書き替えたらもう一方の値も書き換わってしまう。
-    *はリストを展開してx,yの数値(not参照型)ふたつを渡している。
-    '''
     # Pointオブジェクトを更新すると
-    player = Player(PLAYER_DEFAULT_POINT)
+    player = Player(PLAYER_DEFAULT_POINT, HEIGHT)
+
+    # スコアクラスを宣言
+    score = Score()
 
     # ハードル生成用の定数
-    jumping_frame = -(player.INITIAL_VELOCITY) / player.GRAVITY * 2
-    # collision_area = (player.image.get_width() + IMAGEDICT['red'].get_width()) / Hurdle.speed
+    jumping_frame = -(player.JUMP_HEIGHT) / player.GRAVITY * 2
     frame_counter = 0
     state = 1
     step_on_frame = IMAGEDICT['red'].get_height() / Hurdle.speed # 着地の時に踏んでしまう可能性のあるフレーム数の計算
@@ -68,13 +59,11 @@ def run_game():
     # ゲームスタート
     while True:
         # 背景の描画
-        draw_backgroud()
-
-        keys = pygame.key.get_pressed()
+        draw_background()
         # 無効時間を過ぎており、ゲームオーバーでないならジャンプ
         if not is_game_over:
             # 押されたキーの状態を判定
-            if  keys[pygame.K_SPACE] and player.on_ground:
+            if pressed(K_SPACE) and player.on_ground:
                 player.init_jump()
         
         # プレイヤーの座標を更新
@@ -82,29 +71,15 @@ def run_game():
         
         # プレイヤーの画像を切り替え
         player.switch_image(is_game_over)
-        
-        # プレイヤーの画像を描画
-        screen.blit(player.image, player.left_top_point.get_xy())
 
-        # ハードルを生成するかしないか
-        # 画面にハードルがないときの生成条件
-        # if len(hurdles) == 0: 
-        #     create_hurdle()
-
-        # # 一番新しいハードルが画面の1/3を超えたら
-        # if hurdles:
-        #     if hurdles[-1].left_top_point.x < WIDTH / 3: 
-        #         if random.random() < 0.04:
-        #             create_hurdle()
-
-        # 生成条件
+        # ハードルの生成条件
         frame_counter += 1
         if state == 1:
-            if create_hurdle():
+            if create_hurdle(hurdles):
                 state = 2
                 frame_counter = 0
         elif state == 2:
-            create_hurdle()
+            create_hurdle(hurdles)
             if frame_counter >= creatable_frame:
                 state = 3
                 frame_counter = 0
@@ -113,11 +88,10 @@ def run_game():
                 state = 1
                 frame_counter = 0            
 
-        # ハードルを全部動かして描画
+        # ハードルの表示位置を更新
         if not is_game_over and hurdles:
-            # 衝突判定　まるやま
-            # 生存しているハードル全てに対して
-            for h in hurdles:
+            # 生存しているハードル全てに対して衝突判定
+            for h in hurdles.copy():
                 h.move()
                 if h.left_top_point.x < 0:
                     # 画面外に出たハードルをシーケンスから削除
@@ -126,67 +100,71 @@ def run_game():
                 # プレイヤーの右端のx座標をハードルが左に超えていたら
                 if h.left_top_point.x <= player.left_top_point.x + player.image.get_width():
                     # 衝突検知：戻り値は衝突していたらTrue、していなかったらFalse
-                    is_game_over = check_collision(player.left_top_point, player.right_bottom_point,
+                    is_game_over = is_collision(player.left_top_point, player.right_bottom_point,
                                     h.left_top_point, h.right_bottom_point)
                     
         # ハードルを描画
         for h in hurdles: 
-            screen.blit(h.image,h.left_top_point.get_xy())
+            screen.blit(h.image, h.left_top_point.get_xy())
             
         # ゲームオーバーなら文字を表示
         if is_game_over:
-            game_over()
+            break
 
-        # スコアを表示　どもんくん
-        score_display(is_game_over, start_time)
-    
+        # プレイヤーの画像を描画
+        screen.blit(player.image, player.left_top_point.get_xy())
+        
+        # スコアを表示
+        score.score_update(is_game_over, start_time)
+        score.display_score(screen)
+        
+        # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
+
         # 画面の更新
-        pygame.display.update() 
+        pygame.display.update()
         FPSCLOCK.tick_busy_loop(FPS)
 
         # 閉じるボタンを押したら終了
         for event in pygame.event.get():
             if event.type == QUIT:
                 terminate()
-        
-# 背景の描画
-def draw_backgroud():
-    # 矩形の表示：空　引数(画面, RGBカラー, 矩形領域を座標指定)
-    pygame.draw.rect(screen, (160,255,255), (0,0,WIDTH,HEIGHT*3/5))
-    # 矩形の表示：草原　引数(画面, RGBカラー, 矩形領域を座標指定)
-    pygame.draw.rect(screen, (120,255,0), (0,HEIGHT*3/5,WIDTH,HEIGHT))  
+                
+    return player,hurdles
 
-# なかむらくん用新規関数定義スペース
+# 背景を描画する
+def draw_background():
+    # 矩形の表示：空(水色)　引数(画面, RGBカラー, 矩形領域を座標指定)
+    pygame.draw.rect(screen, (160, 255, 255), (0, 0, WIDTH, HEIGHT * 3 / 5))
+    # 矩形の表示：草原(緑色)　引数(画面, RGBカラー, 矩形領域を座標指定)
+    pygame.draw.rect(screen, (120, 255, 0), (0, HEIGHT * 3 / 5, WIDTH, HEIGHT))
+
+# タイトル画面を表示する
 def title():
-    # 初期画面の表示
+    # キーが押されるまでタイトル画面を表示する
     while True:
-        # blit(表示するテキスト, 座標(テキストの中心位置が配置される)) 
         # 画面の中央に開始方法のテキスト、下の方に操作説明のテキストを描画
         screen.blit(text_title, text_title_center_point)
         screen.blit(text_game_rule, text_game_rule_center_point)
         screen.blit(text_instructions, text_instructions_center_point)
 
         # 画面を更新
-        pygame.display.flip()
+        pygame.display.update()
+        FPSCLOCK.tick_busy_loop(FPS)
 
         # イベント(マウスの移動やクリック、キー入力など)を検知
         for event in pygame.event.get():
-            # イベントがキー入力だったら(=何かしらキーが押されたら)forループを抜ける
-            if event.type == pygame.KEYDOWN:
-                break
-            # 閉じるボタンを押したら終了
-            elif event.type == QUIT:
+            if event.type == QUIT:
                 terminate()
-        else:
-            continue
+        
+        # 
+        if pressed(None):
+            break
 
-        # whileループを抜け、初期画面を閉じる
-        break
-# くずめくん用新規関数定義スペース
-def create_hurdle():
+# ハードルを生成する関数
+def create_hurdle(hurdles):
     if random.random() < 0.05:
         num_create = 1 #random.randint(1,3) # ハードルを連続していくつ出すか
-        appear = random.randint(1,100)
+        appear = random.randint(1,100) # どのハードルを生成するかの判断に使う変数
         if appear < 40:
             pic = 'red'
         elif appear < 70:
@@ -194,49 +172,50 @@ def create_hurdle():
         elif appear < 90:
             pic = 'white'
         else: pic = 'mole'
-        for i in range(num_create):
-            #point_x = WIDTH + (32 * (i-1)) # 32は花のデフォルト画像サイズ、サイズが変わったときこの値も変わるようにしたい
+        for i in range(num_create): 
             hurdles.append(Hurdle(pic,1))
         return True
     else:
         return False
 
-# def judge_create_hurdle():
+# 引数に指定したキーが押されていたらTrueを返す
+def pressed(key):
+    keys = pygame.key.get_pressed()
+    if key == None:
+        if True in keys:
+            return True
+    else:
+        return keys[key] # K_SPACE
+    return None
 
-# ひょうくん用新規関数定義スペース
-
-# まるやまくん用新規関数定義スペース     
-
-
-# ゲームオーバー表示
-def game_over(player, hurdles):
-    # blit(表示するテキスト, 座標(テキストの中心位置が配置される)) 。
-    # 画面の中央にテキストを描画。
-    draw_backgroud()
-    screen.blit(player.image, player.left_top_point.get_xy())
-    for h in hurdles:
-        screen.blit(h.image)
-    screen.blit(text_game_over, text_game_over_center_point)
-    screen.blit(text_press_key, text_press_key_center_point)
-    
-# どもんくん用新規関数定義スペース
-# スコア計算
-def score_calc(start_time):
-        score = int(time.time() - start_time) * 100 
-        return score
+# ゲームオーバーの処理
+def game_over(player,hurdles):
+    # グローバルな変数（ゲームオーバーかどうかのフラグ）を用いることを宣言
+    global is_game_over
+    # キーが押されたらループを抜ける
+    while not pressed(None):
+        # blit(表示するテキスト, 座標(テキストの中心位置が配置される)) 。
+        draw_background()
+        screen.blit(IMAGEDICT['error'], player.left_top_point.get_xy())
+        for h in hurdles:
+            screen.blit(h.image, h.left_top_point.get_xy())
+            
+        # 画面の中央にテキストを描画。
+        # ゲームオーバーの文字の表示
+        screen.blit(text_game_over, text_game_over_center_point)
+        screen.blit(text_press_key, text_press_key_center_point)
         
-# スコア表示
-def score_display(is_game_over, start_time):
-    global score # スコア保持用の変数
-    # ゲームが続く限りスコアを更新
-    if is_game_over == False:
-        score = score_calc(start_time)
-    # スコア表示用のテキストを代入。
-    text_score = BASICFONT20.render("score : " + str(score).zfill(8), True, (0, 0, 0))
-    # スコア表示用の画像位置を取得(テキストの中心座標)
-    text_score_center_point = text_score.get_rect(center = (WIDTH-100, 20))
-    # スコアを描画
-    screen.blit(text_score, text_score_center_point)
+         # 閉じるボタンを押したら終了
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                terminate()
+                
+        # 画面を更新
+        # pygame.display.flip()
+        pygame.display.update()
+        FPSCLOCK.tick_busy_loop(FPS)
+    
+    is_game_over = False    
 
 # ゲームを終了する
 def terminate():
@@ -245,10 +224,13 @@ def terminate():
 
 # 最初に実行される関数
 def main():
-    # ゲームがスタートする
-    run_game()
-    # ゲームを終了する
-    terminate()
+    while True:
+        # タイトル画面の表示
+        title()
+        # ゲームがスタートする
+        player, hurdles = run_game()
+        # ゲームオーバーの処理
+        game_over(player, hurdles)
 
 # モジュールの属性__name__は「python hoge.py」のようにコマンドで自分が実行されたら"__main__"を保持する。
 # 自分が実行されたときという条件なので、このファイルを実行するとこのif文が実行される。
