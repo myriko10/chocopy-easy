@@ -179,7 +179,6 @@ def title():
 # くずめくん用新規関数定義スペース
 def create_hurdle():
     if random.random() < 0.03:
-        num_create = 1 #random.randint(1,3) # ハードルを連続していくつ出すか
         appear = random.randint(1,100)
         if appear < 40:
             pic = 'red'
@@ -188,9 +187,7 @@ def create_hurdle():
         elif appear < 90:
             pic = 'white'
         else: pic = 'mole'
-        for i in range(num_create):
-            #point_x = WIDTH + (32 * (i-1)) # 32は花のデフォルト画像サイズ、サイズが変わったときこの値も変わるようにしたい
-            hurdles.append(Hurdle(pic,1))
+        hurdles.append(Hurdle(pic,1))
         return True
     else:
         return False
