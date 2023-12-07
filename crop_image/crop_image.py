@@ -2,14 +2,14 @@ from coodinate_checker import image_path
 from PIL import Image
 
 input_path = image_path
-# input_path = './img/'+''+'.png'
-output_path = './newimg/'+'horse_run2'+'.png'
+# input_path = './bird/'+''+'.png'
+output_path = './newimg/'+'bird'+'.png'
 
 # clopする領域の座標指定
-left = 10
-top = 15
-right = 135
-bottom = 155
+left = 45
+top = 36
+right = 115
+bottom = 92
 
 def crop_and_save_image(input_path, output_path, left, top, right, bottom):
     """
