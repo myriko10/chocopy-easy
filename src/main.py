@@ -29,16 +29,16 @@ from text import *
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("HORSE")  # 画面のタイトルかな？
+is_game_over = False # ゲームオーバーならTrue
 
 # ゲームの内容
 def run_game():
-    title()
+    global is_game_over
     # ハードルのシーケンス
     hurdles = []
 
     # 時間変数の初期化とセット どもんくん
     start_time = time.time() # ゲーム開始時の時刻を取得
-    is_game_over = False # ゲームオーバーならTrue
 
     # Playerをインスタンス化　ひょうくん
     # Playerの初期位置の座標を指定
@@ -118,7 +118,7 @@ def run_game():
             
         # ゲームオーバーなら文字を表示
         if is_game_over:
-            game_over(player,hurdles)
+            break
 
         # プレイヤーの画像を描画
         screen.blit(player.image, player.left_top_point.get_xy())
@@ -137,6 +137,8 @@ def run_game():
         for event in pygame.event.get():
             if event.type == QUIT:
                 terminate()
+                
+    return player,hurdles
 
 # 背景の描画
 def draw_backgroud():
@@ -204,32 +206,7 @@ def get_key_event(key):
             return True
     else:
         return keys[key]
-    
     return None
-    # a = pygame.event.get()
-    # if not len(a) == 0:
-    #     print('queue: ', a)
-    # キー入力の場合
-    # for event in pygame.event.get():
-        # print('event: ', event)
-        # if event.type == pygame.KEYDOWN:
-        #     if event.key == K_SPACE:
-        #         pygame.event.clear()
-        #         return('space')
-        #     # その他のキー入力、ゲームオーバーの時はSPACEはこちらを通る
-        #     else:
-        #         # イベントキューを空にする
-        #         pygame.event.clear()
-        #         return('anykey')
-        # # 閉じるボタンを押したら終了
-        # elif event.type == QUIT:
-        #     terminate()
-        # elif event is None:
-        #     break
-    
-# ゲームの初期化
-def init_game():
-    pass
 
 # ゲームオーバー表示
 def game_over(player,hurdles):
@@ -255,6 +232,9 @@ def game_over(player,hurdles):
         # pygame.display.flip()
         pygame.display.update()
         FPSCLOCK.tick_busy_loop(FPS)
+    
+    global is_game_over
+    is_game_over = False    
 
 # どもんくん用新規関数定義スペース
 # ゲームを終了する
@@ -268,12 +248,9 @@ def main():
         # タイトル画面
         title()
         # ゲームがスタートする
-        run_game()
+        player, hurdles = run_game()
         # ゲームオーバーの処理
-        game_over()
-    
-    # ゲームを終了する
-    terminate()
+        game_over(player, hurdles)
 
 # モジュールの属性__name__は「python hoge.py」のようにコマンドで自分が実行されたら"__main__"を保持する。
 # 自分が実行されたときという条件なので、このファイルを実行するとこのif文が実行される。
