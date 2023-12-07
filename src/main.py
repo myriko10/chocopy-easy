@@ -55,7 +55,7 @@ def run_game():
     score = Score()
 
     # ハードル生成用の定数
-    jumping_frame = -(player.INITIAL_VELOCITY) / player.GRAVITY * 2
+    jumping_frame = -(player.JUMP_HEIGHT) / player.GRAVITY * 2
     # collision_area = (player.image.get_width() + IMAGEDICT['red'].get_width()) / Hurdle.speed
     frame_counter = 0
     state = 1
@@ -69,10 +69,10 @@ def run_game():
         # 背景の描画
         draw_backgroud()
         # 無効時間を過ぎており、ゲームオーバーでないならジャンプ
-        if not is_game_over:
-            # 押されたキーの状態を判定
-            if get_key_event(K_SPACE) and player.on_ground:
-                player.init_jump()
+        # if not is_game_over:
+        # 押されたキーの状態を判定
+        if get_key_event(K_SPACE) and player.on_ground:
+            player.init_jump()
         
         # プレイヤーの座標を更新
         player.jump()
@@ -205,7 +205,7 @@ def get_key_event(key):
         if True in keys:
             return True
     else:
-        return keys[key]
+        return keys[key] #K_SPACE
     return None
 
 # ゲームオーバー表示
