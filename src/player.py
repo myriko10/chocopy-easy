@@ -35,7 +35,7 @@ class Player:
     def init_jump(self):
 
         # y方向速度を更新
-        self.Y_VELOCITY = self.JUMP_HEIGHT
+        self.y_velocity = self.JUMP_HEIGHT
 
         # 地面にいない状態にする
         self.on_ground = False
@@ -64,7 +64,7 @@ class Player:
             self.left_top_point.y = self.DEFAULT_LEFT_TOP_POINT.y
 
             # ｙ方向の速度を0にして、ジャンプ処理を終了
-            self.Y_VELOCITY = 0
+            self.y_velocity = 0
 
     # 画像を描画
     def switch_image(self, is_game_over):

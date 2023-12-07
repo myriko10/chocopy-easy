@@ -55,7 +55,7 @@ def run_game():
     score = Score()
 
     # ハードル生成用の定数
-    jumping_frame = -(player.INITIAL_VELOCITY) / player.GRAVITY * 2
+    jumping_frame = -(player.JUMP_HEIGHT) / player.GRAVITY * 2
     # collision_area = (player.image.get_width() + IMAGEDICT['red'].get_width()) / Hurdle.speed
     frame_counter = 0
     state = 1
@@ -72,6 +72,7 @@ def run_game():
         if not is_game_over:
             # 押されたキーの状態を判定
             if get_key_event(K_SPACE) and player.on_ground:
+                print('jump')
                 player.init_jump()
         
         # プレイヤーの座標を更新
