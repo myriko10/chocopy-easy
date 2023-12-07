@@ -35,7 +35,7 @@ class Player:
     def init_jump(self):
 
         # y方向速度を更新
-        self.Y_VELOCITY = self.JUMP_HEIGHT
+        self.y_velocity = self.JUMP_HEIGHT
 
         # 地面にいない状態にする
         self.on_ground = False

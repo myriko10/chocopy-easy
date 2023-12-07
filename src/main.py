@@ -55,13 +55,13 @@ def run_game():
     score = Score()
 
     # ハードル生成用の定数
-    jumping_frame = -(player.INITIAL_VELOCITY) / player.GRAVITY * 2
-    # collision_area = (player.image.get_width() + IMAGEDICT['red'].get_width()) / Hurdle.speed
+    jumping_frame = -(player.y_velocity) / player.GRAVITY * 2
+    # collision_area = (player.image.get_width() + IMAGEDICT['red'].get_width()) / Hurdle.SPEED
     frame_counter = 0
     state = 1
-    step_on_frame = IMAGEDICT['red'].get_height() / Hurdle.speed # 着地の時に踏んでしまう可能性のあるフレーム数の計算
+    step_on_frame = IMAGEDICT['red'].get_height() / Hurdle.SPEED # 着地の時に踏んでしまう可能性のあるフレーム数の計算
     COLLISION_MARGIN = IMAGEDICT['red'].get_width() * 3 # 難易度調整用マージン(係数2と3で大分体感が変わる)
-    collision_area = (player.image.get_width() + step_on_frame + COLLISION_MARGIN) / Hurdle.speed
+    collision_area = (player.image.get_width() + step_on_frame + COLLISION_MARGIN) / Hurdle.SPEED
     creatable_frame = jumping_frame - collision_area
     
     # ゲームスタート
@@ -102,8 +102,8 @@ def run_game():
             # 生存しているハードル全てに対して
             for h in hurdles.copy():
                 h.move()
+                # 画面外に出たハードルをシーケンスから削除
                 if h.right_bottom_point.x < 0:
-                    # 画面外に出たハードルをシーケンスから削除
                     hurdles.remove(h)
 
                 # プレイヤーの右端のx座標をハードルが左に超えていたら
@@ -172,7 +172,8 @@ def title():
 
 # くずめくん用新規関数定義スペース
 def create_hurdle(hurdles):
-    if random.random() < 0.05:
+    if random.random() < 0.04:
+        # 出現させるハードルの種類を決定
         appear = random.randint(1,100)
         if appear < 40:
             pic = 'red'
