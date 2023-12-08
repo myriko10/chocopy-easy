@@ -1,11 +1,11 @@
 import time
-from image_dict import IMAGEDICT
+from image_dict import IMAGE_DICT
 from point import Point
 
 class Player:
     def __init__(self, point, HEIGHT):
         # playerの初期画像を設定
-        self.image = IMAGEDICT['run1']
+        self.image = IMAGE_DICT['run1']
 
         # playerのデフォルト位置（着地している位置）を設定
         self.DEFAULT_LEFT_TOP_POINT = Point(*point.get_xy())  
@@ -72,11 +72,11 @@ class Player:
         # 画像の変更
         # ゲームオーバーのとき
         if is_game_over:
-            self.image = IMAGEDICT['error']
+            self.image = IMAGE_DICT['error']
         
         # ゲーム中で着地しているとき
         elif self.on_ground:
-            self.image = IMAGEDICT['run1']
+            self.image = IMAGE_DICT['run1']
             
             # 時間が等間隔で馬の画像を切り替え、走っているように見せる
             if True:
@@ -84,11 +84,11 @@ class Player:
                 time_now = time.time() * 1000
                 # 500ミリ秒ごとに画像を切り替える
                 if int(time_now) % 500 < 250:
-                    self.image = IMAGEDICT['run1']
+                    self.image = IMAGE_DICT['run1']
                 else:
-                    self.image = IMAGEDICT['run2']
+                    self.image = IMAGE_DICT['run2']
 
         # ジャンプしている時
         else:
-            self.image = IMAGEDICT['run2']
+            self.image = IMAGE_DICT['run2']
 

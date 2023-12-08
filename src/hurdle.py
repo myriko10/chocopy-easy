@@ -1,5 +1,5 @@
 import pygame
-from image_dict import IMAGEDICT
+from image_dict import IMAGE_DICT
 from point import Point 
 
 class Hurdle:
@@ -8,7 +8,7 @@ class Hurdle:
 
     # ハードルインスタンスの初期化
     def __init__(self,image_key,scale):  
-        self.image = IMAGEDICT[image_key] # ハードルの画像
+        self.image = IMAGE_DICT[image_key] # ハードルの画像
         self.left_top_point = Point(700,300) # 生成位置
         self.width = self.image.get_width() * scale # 画像の幅
         self.height = self.image.get_height() * scale # 画像の高さ

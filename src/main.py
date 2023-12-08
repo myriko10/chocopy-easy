@@ -1,21 +1,24 @@
+"""ゲームを実行する
+
+mainモジュール。これを実行するとゲームが開始する。
+"""
+
 # ゲームを作りやすくするモジュール
 import pygame
-# Pygameの初期化
-pygame.init()
 # キーイベント判定のために必要
 from pygame.locals import QUIT, K_SPACE
 # ハードル生成のための乱数生成
 import random
 # IMAGEDICTを引っ張ってくるためにfrom 拡張子ファイル名 import 引っ張ってきたい名前
-from image_dict import IMAGEDICT
+from image_dict import IMAGE_DICT
 # 衝突検知
 from is_collision import is_collision
 # 時間を扱う
 import time
 # Playerクラス
 from player import Player
-# 座標のクラス
-from point import Point
+# Pygameの初期化
+pygame.init()
 # ゲームを終了するのに使う
 import sys
 # 障害物のクラス
@@ -51,8 +54,8 @@ def run_game():
     jumping_frame = -(player.JUMP_HEIGHT) / player.GRAVITY * 2
     frame_counter = 0
     state = 1
-    step_on_frame = IMAGEDICT['red'].get_height() / Hurdle.speed # 着地の時に踏んでしまう可能性のあるフレーム数の計算
-    COLLISION_MARGIN = IMAGEDICT['red'].get_width() * 3 # 難易度調整用マージン(係数2と3で大分体感が変わる)
+    step_on_frame = IMAGE_DICT['red'].get_height() / Hurdle.speed # 着地の時に踏んでしまう可能性のあるフレーム数の計算
+    COLLISION_MARGIN = IMAGE_DICT['red'].get_width() * 3 # 難易度調整用マージン(係数2と3で大分体感が変わる)
     collision_area = (player.image.get_width() + step_on_frame + COLLISION_MARGIN) / Hurdle.speed
     creatable_frame = jumping_frame - collision_area
     
@@ -118,7 +121,7 @@ def run_game():
         score.score_update(is_game_over, start_time)
         score.display_score(screen)
         
-        # screen.blit(im.IMAGEDICT['stop'], horse_cordi)
+        # screen.blit(im.IMAGE_DICT['stop'], horse_cordi)
 
         # 画面の更新
         pygame.display.update()
@@ -196,7 +199,7 @@ def game_over(player,hurdles):
     while not pressed(None):
         # blit(表示するテキスト, 座標(テキストの中心位置が配置される)) 。
         draw_background()
-        screen.blit(IMAGEDICT['error'], player.left_top_point.get_xy())
+        screen.blit(IMAGE_DICT['error'], player.left_top_point.get_xy())
         for h in hurdles:
             screen.blit(h.image, h.left_top_point.get_xy())
             
