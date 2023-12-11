@@ -19,6 +19,7 @@ class Hurdle:
         # ハードルのサイズを修正
         self.image = pygame.transform.scale(self.image,(self.width,self.height))
 
+    # ハードルを右から左に動かく関数
     def move(self):
         # xの座標をSPEED分減らす
         self.left_top_point.x -= self.SPEED

@@ -1,6 +1,6 @@
 import time
 from image_dict import IMAGEDICT
-from point import Point 
+from point import Point
 
 class Player:
     def __init__(self, point, HEIGHT):
@@ -31,7 +31,7 @@ class Player:
             self.left_top_point.y + self.image.get_height()
         ) # 右下の座標
 
-    # ジャンプ処理
+    # ジャンプ処理する
     def init_jump(self):
 
         # y方向速度を更新
@@ -43,7 +43,7 @@ class Player:
         # Spaceキーが押された状態を記録
         self.space_pressed = True
 
-    # ジャンプしている間の画像の更新
+    # ジャンプしている間の画像を更新する
     def jump(self):
 
         # ｙ方向の速度に重力を加える
@@ -64,9 +64,9 @@ class Player:
             self.left_top_point.y = self.DEFAULT_LEFT_TOP_POINT.y
 
             # ｙ方向の速度を0にして、ジャンプ処理を終了
-            self.Y_VELOCITY = 0
+            self.y_velocity = 0
 
-    # 画像を描画
+    # 画像を切り替えて表示する
     def switch_image(self, is_game_over):
 
         # 画像の変更

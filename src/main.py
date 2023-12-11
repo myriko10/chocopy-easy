@@ -4,7 +4,7 @@ import pygame
 pygame.init()
 # キーイベント判定のために必要
 from pygame.locals import QUIT, K_SPACE
-# 乱数生成
+# ハードル生成のための乱数生成
 import random
 # IMAGEDICTを引っ張ってくるためにfrom 拡張子ファイル名 import 引っ張ってきたい名前
 from image_dict import IMAGEDICT
@@ -34,20 +34,13 @@ is_game_over = False # ゲームオーバーならTrue
 # ゲームの内容
 def run_game():
     global is_game_over
-    # ハードルのシーケンス
-    hurdles = []
+    hurdles = [] # ハードルのリストの初期化
 
-    # 時間変数の初期化とセット どもんくん
+    # 時間変数の初期化とセット
     start_time = time.time() # ゲーム開始時の時刻を取得
 
-    # Playerをインスタンス化　ひょうくん
+    # Playerをインスタンス化
     # Playerの初期位置の座標を指定
-    '''
-    ここでPointオブジェクトをそのまま引数に渡す仕様にすると、参照渡しになる。
-    Pointオブジェクトをinit関数内でdefault_left_top_pointとleft_top_point属性の両方に代入すると、
-    片方の値を書き替えたらもう一方の値も書き換わってしまう。
-    *はリストを展開してx,yの数値(not参照型)ふたつを渡している。
-    '''
     # Pointオブジェクトを更新すると
     player = Player(PLAYER_DEFAULT_POINT, HEIGHT)
 
@@ -67,11 +60,11 @@ def run_game():
     # ゲームスタート
     while True:
         # 背景の描画
-        draw_backgroud()
+        draw_background()
         # 無効時間を過ぎており、ゲームオーバーでないならジャンプ
         if not is_game_over:
             # 押されたキーの状態を判定
-            if get_key_event(K_SPACE) and player.on_ground:
+            if pressed(K_SPACE) and player.on_ground:
                 player.init_jump()
         
         # プレイヤーの座標を更新
@@ -80,7 +73,7 @@ def run_game():
         # プレイヤーの画像を切り替え
         player.switch_image(is_game_over)
 
-        # 生成条件
+        # ハードルの生成条件
         frame_counter += 1
         if state == 1:
             if create_hurdle(hurdles):
@@ -96,10 +89,9 @@ def run_game():
                 state = 1
                 frame_counter = 0            
 
-        # ハードルを全部動かして描画
+        # ハードルの表示位置を更新
         if not is_game_over and hurdles:
-            # 衝突判定　まるやま
-            # 生存しているハードル全てに対して
+            # 生存しているハードル全てに対して衝突判定
             for h in hurdles.copy():
                 h.move()
                 # 画面外に出たハードルをシーケンスから削除
@@ -114,7 +106,7 @@ def run_game():
                     
         # ハードルを描画
         for h in hurdles: 
-            screen.blit(h.image,h.left_top_point.get_xy())
+            screen.blit(h.image, h.left_top_point.get_xy())
             
         # ゲームオーバーなら文字を表示
         if is_game_over:
@@ -123,7 +115,7 @@ def run_game():
         # プレイヤーの画像を描画
         screen.blit(player.image, player.left_top_point.get_xy())
         
-        # スコアを表示　どもんくん
+        # スコアを表示
         score.score_update(is_game_over, start_time)
         score.display_score(screen)
         
@@ -140,25 +132,23 @@ def run_game():
                 
     return player,hurdles
 
-# 背景の描画
-def draw_backgroud():
-    # 矩形の表示：空　引数(画面, RGBカラー, 矩形領域を座標指定)
+# 背景を描画する
+def draw_background():
+    # 矩形の表示：空(水色)　引数(画面, RGBカラー, 矩形領域を座標指定)
     pygame.draw.rect(screen, (160, 255, 255), (0, 0, WIDTH, HEIGHT * 3 / 5))
-    # 矩形の表示：草原　引数(画面, RGBカラー, 矩形領域を座標指定)
+    # 矩形の表示：草原(緑色)　引数(画面, RGBカラー, 矩形領域を座標指定)
     pygame.draw.rect(screen, (120, 255, 0), (0, HEIGHT * 3 / 5, WIDTH, HEIGHT))
 
-# なかむらくん用新規関数定義スペース
+# タイトル画面を表示する
 def title():
-    # 初期画面の表示
+    # キーが押されるまでタイトル画面を表示する
     while True:
-        # blit(表示するテキスト, 座標(テキストの中心位置が配置される))
         # 画面の中央に開始方法のテキスト、下の方に操作説明のテキストを描画
         screen.blit(text_title, text_title_center_point)
         screen.blit(text_game_rule, text_game_rule_center_point)
         screen.blit(text_instructions, text_instructions_center_point)
 
         # 画面を更新
-        # pygame.display.flip()
         pygame.display.update()
         FPSCLOCK.tick_busy_loop(FPS)
 
@@ -166,11 +156,12 @@ def title():
         for event in pygame.event.get():
             if event.type == QUIT:
                 terminate()
-            
-        if get_key_event(None):
+        
+        # 
+        if pressed(None):
             break
 
-# くずめくん用新規関数定義スペース
+# ハードルを生成する関数
 def create_hurdle(hurdles):
     if random.random() < 0.04:
         # 出現させるハードルの種類を決定
@@ -187,31 +178,24 @@ def create_hurdle(hurdles):
     else:
         return False
 
-# def judge_create_hurdle():
-
-# ひょうくん用新規関数定義スペース
-
-
-# まるやまくん用新規関数定義スペース    
-    """キーイベントを処理する関数
-    
-    eventを引数にとる。
-    """
-def get_key_event(key):
+# 引数に指定したキーが押されていたらTrueを返す
+def pressed(key):
     keys = pygame.key.get_pressed()
     if key == None:
         if True in keys:
             return True
     else:
-        return keys[key]
+        return keys[key] # K_SPACE
     return None
 
-# ゲームオーバー表示
+# ゲームオーバーの処理
 def game_over(player,hurdles):
+    # グローバルな変数（ゲームオーバーかどうかのフラグ）を用いることを宣言
+    global is_game_over
     # キーが押されたらループを抜ける
-    while not get_key_event(None):
+    while not pressed(None):
         # blit(表示するテキスト, 座標(テキストの中心位置が配置される)) 。
-        draw_backgroud()
+        draw_background()
         screen.blit(IMAGEDICT['error'], player.left_top_point.get_xy())
         for h in hurdles:
             screen.blit(h.image, h.left_top_point.get_xy())
@@ -231,10 +215,8 @@ def game_over(player,hurdles):
         pygame.display.update()
         FPSCLOCK.tick_busy_loop(FPS)
     
-    global is_game_over
     is_game_over = False    
 
-# どもんくん用新規関数定義スペース
 # ゲームを終了する
 def terminate():
     pygame.quit()
@@ -243,7 +225,7 @@ def terminate():
 # 最初に実行される関数
 def main():
     while True:
-        # タイトル画面
+        # タイトル画面の表示
         title()
         # ゲームがスタートする
         player, hurdles = run_game()
