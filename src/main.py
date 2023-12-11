@@ -2,24 +2,11 @@
 
 mainモジュール。これを実行するとゲームが開始する。
 """
-
-# ゲームを作りやすくするモジュール
-import pygame
-# キーイベント判定のために必要
-from pygame.locals import QUIT, K_SPACE
 # ハードル生成のための乱数生成
 import random
-# IMAGEDICTを引っ張ってくるためにfrom 拡張子ファイル名 import 引っ張ってきたい名前
-from image_dict import IMAGE_DICT
-# 衝突検知
-from is_collision import is_collision
 # 時間を扱う
 import time
-# Playerクラス
-from player import Player
-# Pygameの初期化
-pygame.init()
-# ゲームを終了するのに使う
+# ゲームを終了するために使う
 import sys
 # 障害物のクラス
 from hurdle import Hurdle
@@ -27,6 +14,18 @@ from hurdle import Hurdle
 from score import Score
 # ゲームの設定
 from game_settings import *
+# ゲームを作りやすくするモジュール
+import pygame
+# キーイベント判定のために必要
+from pygame.locals import QUIT, K_SPACE
+# IMAGEDICTを引っ張ってくるためにfrom 拡張子ファイル名 import 引っ張ってきたい名前
+from image_dict import IMAGE_DICT
+# 衝突検知
+from is_collision import is_collision
+# Playerクラス
+from player import Player
+# Pygameの初期化
+pygame.init()
 # テキストのインポート pygame.initされないと実行できない
 from text import *
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
@@ -146,9 +145,9 @@ def title():
     # キーが押されるまでタイトル画面を表示する
     while True:
         # 画面の中央に開始方法のテキスト、下の方に操作説明のテキストを描画
-        screen.blit(text_title, text_title_center_point)
-        screen.blit(text_game_rule, text_game_rule_center_point)
-        screen.blit(text_instructions, text_instructions_center_point)
+        screen.blit(text_title, text_title_point)
+        screen.blit(text_game_rule, text_game_rule_point)
+        screen.blit(text_instructions, text_instructions_point)
 
         # 画面を更新
         pygame.display.update()
@@ -205,8 +204,8 @@ def game_over(player,hurdles):
             
         # 画面の中央にテキストを描画。
         # ゲームオーバーの文字の表示
-        screen.blit(text_game_over, text_game_over_center_point)
-        screen.blit(text_press_key, text_press_key_center_point)
+        screen.blit(text_game_over, text_game_over_point)
+        screen.blit(text_press_key, text_press_key_point)
         
          # 閉じるボタンを押したら終了
         for event in pygame.event.get():
