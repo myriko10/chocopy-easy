@@ -1,7 +1,7 @@
 # ヒットボックスを小さくするためのマージン        
 MARGIN_FOR_PLAYER = 15 
 
-# chatGPTの出力結果をうのみにしているので確認する必要がある11/09 by まるやま
+# プレイヤーとハードルの矩形が重なっているかどうかを判定する
 def is_collision(player_left_top_point, player_right_bottom_point, 
     hurdle_left_top_point, hurdle_right_bottom_point):
     
@@ -14,7 +14,6 @@ def is_collision(player_left_top_point, player_right_bottom_point,
     hurdle_right, hurdle_bottom = hurdle_right_bottom_point.get_xy()
 
     # 矩形の交差判定
-    # バックスラッシュを使うか()で囲むことで長い条件文は改行できる
     if player_left < hurdle_right and hurdle_left < player_right and \
         player_bottom > hurdle_top and player_top < hurdle_bottom:
         return True  # 衝突が発生
