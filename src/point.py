@@ -1,4 +1,10 @@
 class Point:
+    """
+    プレーヤー位置を管理する
+
+    x、y座標を定義する。
+    """
+
     # プレーヤーの座標を定義する
     def __init__(self, x, y):
         self.x = x
@@ -11,3 +17,4 @@ class Point:
     # 座標をタプルで返す
     def get_xy(self):
         return (self.x, self.y)
+     
