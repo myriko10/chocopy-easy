@@ -261,11 +261,11 @@ def main():
     ウィンドウが閉じられるまで終わらない。
     """
     while True:
-        # タイトル画面の表示
+        # タイトル画面を表示する
         title()
-        # ゲームがスタートする
+        # ゲームをスタートする
         player, hurdles = run_game()
-        # ゲームオーバーの処理
+        # ゲームオーバーの処理を行う
         game_over(player, hurdles)
 
 
