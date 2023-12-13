@@ -118,8 +118,8 @@ def run_game():
         # プレイヤーの画像を描画
         screen.blit(player.image, player.left_top_point.get_xy())
 
-        # スコアを表示
-        score.score_update(is_game_over, start_time)
+        # スコアを更新して表示
+        score.score_update(start_time)
         score.display_score(screen)
 
         # screen.blit(im.IMAGE_DICT['stop'], horse_cordi)
