@@ -64,18 +64,17 @@ def run_game():
     while True:
         # 背景の描画
         draw_background()
-        # 無効時間を過ぎており、ゲームオーバーでないならジャンプ
-        if not is_game_over:
-            # 地面に着地していて、スペースキーが押された
-            if pressed(K_SPACE) and player.on_ground:
-                # ジャンプのための初期化
-                player.init_jump()
+
+        # スペースキーが押された
+        if pressed(K_SPACE) and player.on_ground:
+            # ジャンプのための初期化
+            player.init_jump()
 
         # プレイヤーの座標を更新
         player.jump()
 
         # プレイヤーの画像を切り替え
-        player.switch_image(is_game_over)
+        player.switch_image()
 
         # ハードルの生成条件
         frame_counter += 1
