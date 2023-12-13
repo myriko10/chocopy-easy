@@ -6,9 +6,8 @@ def is_collision(player_left_top_point, player_right_bottom_point,
     hurdle_left_top_point, hurdle_right_bottom_point):
 
     
-    """
-    プレイヤーとハードルの矩形の衝突を判定する。
-    
+    """ プレイヤーとハードルの矩形の衝突を判定する。
+   
     player_left_top_point, player_right_bottom_point: プレイヤーの左上と右下の座標
     hurdle_left_top_point, hurdle_right_bottom_point: ハードルの左上と右下の座標
     プレイヤーの矩形にはマージンが適用されている。
