@@ -2,41 +2,42 @@
 
 mainモジュール。これを実行するとゲームが開始する。
 """
-# ハードル生成のための乱数生成
-from score import Score
-from text import *
-import random
+# ゲームを終了するために必要
+import sys
 # 時間を扱う
 import time
-# ゲームを終了するために使う
-import sys
+# ハードル生成のための乱数生成
+import random
 # ゲームを作りやすくするモジュール
 import pygame
 # キーイベント判定のために必要
 from pygame.locals import QUIT, K_SPACE
-# 障害物のクラス
-from hurdle import Hurdle
-# ゲームの設定
-from game_settings import *
-# IMAGEDICTを引っ張ってくるためにfrom 拡張子ファイル名 import 引っ張ってきたい名前
-from image_dict import IMAGE_DICT
-# 衝突検知
-from is_collision import is_collision
 # Playerクラス
 from player import Player
-# Pygameの初期化
-pygame.init()
+# 衝突検知
+from is_collision import is_collision
+# IMAGEDICTを引っ張ってくる
+from image_dict import IMAGE_DICT
+# ゲームの設定
+from game_settings import *
+# 障害物のクラス
+from hurdle import Hurdle
 # テキストのインポート pygame.initされないと実行できない
+from text import *
 # スコアクラス
+from score import Score
+
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("HORSE")  # 画面のタイトルかな？
 is_game_over = False  # ゲームオーバーならTrue
 
-# ゲームの内容
-
-
 def run_game():
+    """ゲームのメインの処理
+
+    Returns:
+        tuple(Player, list): player, hurdlesを次に実行されるgame_over()に渡すために返す
+    """
     global is_game_over
     hurdles = []  # ハードルのリストの初期化
 
@@ -45,8 +46,7 @@ def run_game():
 
     # Playerをインスタンス化
     # Playerの初期位置の座標を指定
-    # Pointオブジェクトを更新すると
-    player = Player(PLAYER_DEFAULT_POINT, HEIGHT)
+    player = Player(PLAYER_DEFAULT_POINT)
 
     # スコアクラスを宣言
     score = Score()
@@ -66,8 +66,9 @@ def run_game():
         draw_background()
         # 無効時間を過ぎており、ゲームオーバーでないならジャンプ
         if not is_game_over:
-            # 押されたキーの状態を判定
+            # 地面に着地していて、スペースキーが押された
             if pressed(K_SPACE) and player.on_ground:
+                # ジャンプのための初期化
                 player.init_jump()
 
         # プレイヤーの座標を更新
@@ -135,23 +136,23 @@ def run_game():
 
     return player, hurdles
 
-# 背景を描画する
-
-
 def draw_background():
+    """背景を描画する
+    
+    画面の上下で領域を2分割するように、色付きの矩形を二つ表示する。
+    空と草原を表現している。まるでアイルランドの景色のようだ。
+    """
     # 矩形の表示：空(水色)　引数(画面, RGBカラー, 矩形領域を座標指定)
     pygame.draw.rect(screen, (160, 255, 255), (0, 0, WIDTH, HEIGHT * 3 / 5))
     # 矩形の表示：草原(緑色)　引数(画面, RGBカラー, 矩形領域を座標指定)
     pygame.draw.rect(screen, (120, 255, 0), (0, HEIGHT * 3 / 5, WIDTH, HEIGHT))
 
 
-"""タイトル画面を表示する
-
-main関数で最初に実行される。
-"""
-
-
 def title():
+    """タイトル画面を表示する
+
+    main関数で最初に実行される。
+    """
     # キーが押されるまでタイトル画面を表示する
     while True:
         # 画面の中央に開始方法のテキスト、下の方に操作説明のテキストを描画
@@ -168,7 +169,7 @@ def title():
             if event.type == QUIT:
                 terminate()
 
-        #
+        # キーの指定なしで、何かキーが押されたかを取得する
         if pressed(None):
             break
 
@@ -190,8 +191,7 @@ def create_hurdle(hurdles):
         for i in range(num_create):
             hurdles.append(Hurdle(pic, 1))
         return True
-    else:
-        return False
+    return False
 
 # 引数に指定したキーが押されていたらTrueを返す
 
@@ -205,13 +205,19 @@ def pressed(key):
         return keys[key]  # K_SPACE
     return None
 
-# ゲームオーバーの処理
-
-
 def game_over(player, hurdles):
+    """ゲームオーバー時の処理
+
+    Args:
+        player (Player): プレイヤーオブジェクト
+        hurdles (list): 現在画面に存在するハードルのリスト
+    ゲームオーバーの時、テキストを表示し、
+    ゲームオーバー時のスコアやプレイヤー位置、ハードル位置をそのまま表示し続ける。
+    なにかキーが押されたらループを抜けて終了する。
+    """
     # グローバルな変数（ゲームオーバーかどうかのフラグ）を用いることを宣言
     global is_game_over
-    # キーが押されたらループを抜ける
+    # なにかキーが押されたらループを抜ける
     while not pressed(None):
         # blit(表示するテキスト, 座標(テキストの中心位置が配置される)) 。
         draw_background()
@@ -236,17 +242,20 @@ def game_over(player, hurdles):
 
     is_game_over = False
 
-# ゲームを終了する
-
 
 def terminate():
+    """ウィンドウを閉じてゲームを終了する
+    
+    画面右上の×ボタンが押されたらウィンドウを閉じる。
+    """
     pygame.quit()
     sys.exit()
 
-# 最初に実行される関数
-
-
 def main():
+    """最初に実行される関数
+    
+    ウィンドウが閉じられるまで終わらない。
+    """
     while True:
         # タイトル画面の表示
         title()

@@ -7,7 +7,8 @@ pygame.init()の後にimportする。
 import pygame
 # ゲームウィンドウの横幅、縦幅を取得
 from game_settings import WIDTH, HEIGHT
-
+# Pygameの初期化
+pygame.init()
 # フォントの代入　pygame.init()の後でないと定義できない
 BASICFONT20 = pygame.font.Font('freesansbold.ttf', 20)
 BASICFONT25 = pygame.font.Font('freesansbold.ttf', 25)
