@@ -2,35 +2,37 @@
 
 mainモジュール。これを実行するとゲームが開始する。
 """
-# ゲームを終了するために必要
+# Pythonのシステムを操作できるモジュール。ゲームを終了するために必要
 import sys
-# 時間を扱う
+# 時間を扱うモジュール
 import time
-# ハードル生成のための乱数生成
+# 乱数生成のモジュール。ハードル生成のために必要
 import random
-# ゲームを作りやすくするモジュール
+# ゲーム開発のためのモジュール
 import pygame
 # キーイベント判定のために必要
 from pygame.locals import QUIT, K_SPACE
-# Playerクラス
+# プレイヤーのクラス
 from player import Player
-# 衝突検知
+# 障害物のクラス
+from hurdle import Hurdle
+# スコアのクラス
+from score import Score
+# 衝突を検知する関数
 from is_collision import is_collision
-# IMAGEDICTを引っ張ってくる
+# 使用する画像のデータ。辞書型なのでdict
 from image_dict import IMAGE_DICT
 # ゲームの設定
 from game_settings import *
-# 障害物のクラス
-from hurdle import Hurdle
-# テキストのインポート pygame.initされないと実行できない
+# テキストの設定
 from text import *
-# スコアクラス
-from score import Score
+
 
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("HORSE")  # 画面のタイトルかな？
 is_game_over = False  # ゲームオーバーならTrue
+
 
 def run_game():
     """ゲームのメインの処理
@@ -135,9 +137,10 @@ def run_game():
 
     return player, hurdles
 
+
 def draw_background():
     """背景を描画する
-    
+
     画面の上下で領域を2分割するように、色付きの矩形を二つ表示する。
     空と草原を表現している。まるでアイルランドの景色のようだ。
     """
@@ -204,6 +207,7 @@ def pressed(key):
         return keys[key]  # K_SPACE
     return None
 
+
 def game_over(player, hurdles):
     """ゲームオーバー時の処理
 
@@ -244,15 +248,16 @@ def game_over(player, hurdles):
 
 def terminate():
     """ウィンドウを閉じてゲームを終了する
-    
+
     画面右上の×ボタンが押されたらウィンドウを閉じる。
     """
     pygame.quit()
     sys.exit()
 
+
 def main():
     """最初に実行される関数
-    
+
     ウィンドウが閉じられるまで終わらない。
     """
     while True:
