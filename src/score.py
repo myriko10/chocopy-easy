@@ -19,8 +19,10 @@ class Score:
 
     """
 
-    # スコア初期化
     def __init__(self):
+        """ スコアを初期化する
+        
+        """
         self.score = 0
 
     def score_update(self, start_time):
