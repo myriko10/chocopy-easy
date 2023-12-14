@@ -11,7 +11,7 @@ def is_collision(player_left_top_point, player_right_bottom_point,
     player_left_top_point, player_right_bottom_point: プレイヤーの左上と右下の座標
     hurdle_left_top_point, hurdle_right_bottom_point: ハードルの左上と右下の座標
     プレイヤーの矩形にはマージンが適用されている。
-    矩形が重なる場合にはTrue衝突あり、そうでない場合にはFalse衝突なしを返す。
+    矩形が重なる場合にはTrue衝突あり、そうでない場合にはFalse衝突なしを返す。 
     """     
     
     # プレイヤーの矩形の左上座標と右下座標、marginあり
