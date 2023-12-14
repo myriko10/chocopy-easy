@@ -109,10 +109,7 @@ def run_game():
                     is_game_over = is_collision(player.left_top_point, player.right_bottom_point,
                                                 h.left_top_point, h.right_bottom_point)
 
-                                                h.left_top_point, h.right_bottom_point)
-
         # ハードルを描画
-        for h in hurdles:
         for h in hurdles:
             screen.blit(h.image, h.left_top_point.get_xy())
 
@@ -202,10 +199,7 @@ def create_hurdle(hurdles):
             pic = 'white'
         else:
             pic = 'mole'
-        for i in range(num_create):
-            hurdles.append(Hurdle(pic, 1))
-        else:
-            pic = 'mole'
+
         for i in range(num_create):
             hurdles.append(Hurdle(pic, 1))
         return True

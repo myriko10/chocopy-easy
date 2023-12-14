@@ -9,7 +9,7 @@ class Player:
     """プレイヤーのキャラクターを表すクラス
     """
     def __init__(self, point):
-        """_summary_
+        """プレイヤーを初期化
 
         Args:
             point (Point): プレイヤーの初期位置。画像の左上の座標。
