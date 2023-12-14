@@ -188,9 +188,11 @@ def create_hurdle(hurdles):
     Retruns:
         boolean: ハードルが生成されたかどうかを返す
     """
+    # 確率でハードルを生成する
     if random.random() < 0.05:
-        num_create = 1  # ハードルを連続していくつ出すか
-        appear = random.randint(1, 100)  # どのハードルを生成するかの判断に使う変数
+        # 生成する場合
+        # どのハードルを生成するか乱数の範囲で決定する
+        appear = random.randint(1, 100)
         if appear < 40:
             pic = 'red'
         elif appear < 70:
@@ -199,12 +201,11 @@ def create_hurdle(hurdles):
             pic = 'white'
         else:
             pic = 'mole'
-
-        for i in range(num_create):
-            hurdles.append(Hurdle(pic, 1))
+        hurdles.append(Hurdle(pic, 1))
+        # ハードルが生成されたのでTrueを返す
         return True
+    # ハードルが生成されない場合Falseを返す
     return False
-
 
 def pressed(key):
     """ キーが押されたか判断する関数
