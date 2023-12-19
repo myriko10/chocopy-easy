@@ -31,8 +31,6 @@ from text import *
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("HORSE")  # 画面のタイトルかな？
-is_game_over = False  # ゲームオーバーならTrue
-
 
 def run_game():
     """ゲームのメインの処理
@@ -40,7 +38,6 @@ def run_game():
     Returns:
         tuple(Player, list): player, hurdlesを次に実行されるgame_over()に渡すために返す
     """
-    global is_game_over
     hurdles = []  # ハードルのリストの初期化
 
     # 時間変数の初期化とセット
@@ -61,7 +58,7 @@ def run_game():
     COLLISION_MARGIN = IMAGE_DICT['red'].get_width() * 3  # 難易度調整用マージン(係数2と3で大分体感が変わる)
     collision_area = (player.image.get_width() + step_on_frame + COLLISION_MARGIN) / Hurdle.speed
     creatable_frame = jumping_frame - collision_area
-
+    is_game_over = False
     # ゲームスタート
     while True:
         # 背景の描画
@@ -95,7 +92,7 @@ def run_game():
                 frame_counter = 0
 
         # ハードルの表示位置を更新
-        if not is_game_over and hurdles:
+        if hurdles:
             # 生存しているハードル全てに対して衝突判定
             for h in hurdles.copy():
                 h.move()
@@ -106,18 +103,19 @@ def run_game():
                 # プレイヤーの右端のx座標をハードルが左に超えていたら
                 if h.left_top_point.x <= player.left_top_point.x + player.image.get_width():
                     # 衝突検知：戻り値は衝突していたらTrue、していなかったらFalse
-                    is_game_over = is_collision(player.left_top_point, player.right_bottom_point,
-                                                h.left_top_point, h.right_bottom_point)
+                    if is_collision(player.left_top_point, player.right_bottom_point,
+                                                h.left_top_point, h.right_bottom_point):
+                        is_game_over = True
+                        break
+
+        # ゲームオーバーならrun_game関数を終了する
+        if is_game_over:
+            break
 
         # ハードルを描画
         for h in hurdles:
             screen.blit(h.image, h.left_top_point.get_xy())
-
-
-        # ゲームオーバーなら文字を表示
-        if is_game_over:
-            break
-
+            
         # プレイヤーの画像を描画
         screen.blit(player.image, player.left_top_point.get_xy())
 
@@ -238,8 +236,6 @@ def game_over(player, hurdles):
     ゲームオーバー時のスコアやプレイヤー位置、ハードル位置をそのまま表示し続ける。
     なにかキーが押されたらループを抜けて終了する。
     """
-    # グローバルな変数（ゲームオーバーかどうかのフラグ）を用いることを宣言
-    global is_game_over
     # なにかキーが押されたらループを抜ける
     while not pressed(None):
         # blit(表示するテキスト, 座標(テキストの中心位置が配置される)) 。
@@ -263,9 +259,6 @@ def game_over(player, hurdles):
         pygame.display.update()
         FPSCLOCK.tick_busy_loop(FPS)
 
-    is_game_over = False
-
-
 def terminate():
     """ウィンドウを閉じてゲームを終了する
 
@@ -281,6 +274,7 @@ def main():
     ウィンドウが閉じられるまで終わらない。
     """
     while True:
+        
         # タイトル画面を表示する
         title()
         # ゲームをスタートする
