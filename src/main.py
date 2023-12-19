@@ -115,7 +115,7 @@ def run_game():
         # ハードルを描画
         for h in hurdles:
             screen.blit(h.image, h.left_top_point.get_xy())
-            
+
         # プレイヤーの画像を描画
         screen.blit(player.image, player.left_top_point.get_xy())
 
@@ -238,9 +238,13 @@ def game_over(player, hurdles):
     """
     # なにかキーが押されたらループを抜ける
     while not pressed(None):
-        # blit(表示するテキスト, 座標(テキストの中心位置が配置される)) 。
+        # 背景を表示
         draw_background()
+        # ゲームオーバー用のプレイヤー画像を表示
         screen.blit(IMAGE_DICT['error'], player.left_top_point.get_xy())
+        # スコアを表示
+        screen.blit(text_, player.left_top_point.get_xy())
+        # ハードルを表示
         for h in hurdles:
             screen.blit(h.image, h.left_top_point.get_xy())
 
