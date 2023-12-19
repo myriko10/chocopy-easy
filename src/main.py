@@ -25,12 +25,14 @@ from image_dict import IMAGE_DICT
 # ゲームの設定
 from game_settings import *
 # テキストの設定
-from text import *
+from text import Text
 
 
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("HORSE")  # 画面のタイトルかな？
+# テキストクラスをインスタンス化
+text = Text()
 
 def run_game():
     """ゲームのメインの処理
@@ -120,8 +122,11 @@ def run_game():
         screen.blit(player.image, player.left_top_point.get_xy())
 
         # スコアを更新して表示
-        score.score_update(start_time)
-        score.display_score(screen)
+        score.update_score(start_time)
+        # なぜupdate_scoreはself部分を引数に含めないといけないかわからない
+        # たとえばscore.update_scoreは含めていない。
+        text.update_score(score.value)
+        screen.blit(text.text_score, text.text_score_center_point)
 
         # screen.blit(im.IMAGE_DICT['stop'], horse_cordi)
 
@@ -157,9 +162,9 @@ def title():
     # キーが押されるまでタイトル画面を表示する
     while True:
         # 画面の中央に開始方法のテキスト、下の方に操作説明のテキストを描画
-        screen.blit(text_title, text_title_point)
-        screen.blit(text_game_rule, text_game_rule_point)
-        screen.blit(text_instructions, text_instructions_point)
+        screen.blit(text.text_title, text.text_title_point)
+        screen.blit(text.text_game_rule, text.text_game_rule_point)
+        screen.blit(text.text_instructions, text.text_instructions_point)
 
         # 画面を更新
         pygame.display.update()
@@ -173,7 +178,6 @@ def title():
         # キーの指定なしで、何かキーが押されたかを取得する
         if pressed(None):
             break
-
 
 def create_hurdle(hurdles):
     """ ハードルを生成する関数
@@ -243,15 +247,15 @@ def game_over(player, hurdles):
         # ゲームオーバー用のプレイヤー画像を表示
         screen.blit(IMAGE_DICT['error'], player.left_top_point.get_xy())
         # スコアを表示
-        screen.blit(text_, player.left_top_point.get_xy())
+        screen.blit(text.text_score, text.text_score_center_point)
         # ハードルを表示
         for h in hurdles:
             screen.blit(h.image, h.left_top_point.get_xy())
 
         # 画面の中央にテキストを描画。
         # ゲームオーバーの文字の表示
-        screen.blit(text_game_over, text_game_over_point)
-        screen.blit(text_press_key, text_press_key_point)
+        screen.blit(text.text_game_over, text.text_game_over_point)
+        screen.blit(text.text_press_key, text.text_press_key_point)
 
         # 閉じるボタンを押したら終了
         for event in pygame.event.get():
@@ -278,7 +282,6 @@ def main():
     ウィンドウが閉じられるまで終わらない。
     """
     while True:
-        
         # タイトル画面を表示する
         title()
         # ゲームをスタートする
