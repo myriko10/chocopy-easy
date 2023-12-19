@@ -23,10 +23,9 @@ from is_collision import is_collision
 # 使用する画像のデータ。辞書型なのでdict
 from image_dict import IMAGE_DICT
 # ゲームの設定
-from game_settings import *
+from game_settings import (WIDTH,HEIGHT,FPS,FPSCLOCK,PLAYER_DEFAULT_POINT)
 # テキストの設定
 from text import Text
-
 
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -53,13 +52,15 @@ def run_game():
     score = Score()
 
     # ハードル生成用の定数
+    STEP_ON_FRAME = IMAGE_DICT['red'].get_height() / Hurdle.speed  # 着地の時に踏んでしまう可能性のあるフレーム数の計算
+    COLLISION_MARGIN = IMAGE_DICT['red'].get_width() * 3  # 難易度調整用マージン(係数2と3で大分体感が変わる)
+    collision_area = (player.image.get_width() + STEP_ON_FRAME + COLLISION_MARGIN) / Hurdle.speed
     jumping_frame = -(player.JUMP_HEIGHT) / player.GRAVITY * 2
+    creatable_frame = jumping_frame - collision_area
     frame_counter = 0
     state = 1
-    step_on_frame = IMAGE_DICT['red'].get_height() / Hurdle.speed  # 着地の時に踏んでしまう可能性のあるフレーム数の計算
-    COLLISION_MARGIN = IMAGE_DICT['red'].get_width() * 3  # 難易度調整用マージン(係数2と3で大分体感が変わる)
-    collision_area = (player.image.get_width() + step_on_frame + COLLISION_MARGIN) / Hurdle.speed
-    creatable_frame = jumping_frame - collision_area
+
+    # ゲームオーバーのフラグをセット、False:ゲームオーバーでない。
     is_game_over = False
     # ゲームスタート
     while True:
@@ -77,7 +78,7 @@ def run_game():
         # プレイヤーの画像を切り替え
         player.switch_image()
 
-        # ハードルの生成条件
+        # ハードルの生成
         frame_counter += 1
         if state == 1:
             if create_hurdle(hurdles):
@@ -128,8 +129,6 @@ def run_game():
         text.update_score(score.value)
         screen.blit(text.text_score, text.text_score_center_point)
 
-        # screen.blit(im.IMAGE_DICT['stop'], horse_cordi)
-
         # 画面の更新
         pygame.display.update()
         FPSCLOCK.tick_busy_loop(FPS)
@@ -140,7 +139,6 @@ def run_game():
                 terminate()
 
     return player, hurdles
-
 
 def draw_background():
     """背景を描画する
@@ -229,7 +227,6 @@ def pressed(key):
         return keys[key]  # スペースキーが押されたか判定
     return None
 
-
 def game_over(player, hurdles):
     """ゲームオーバー時の処理
 
@@ -275,7 +272,6 @@ def terminate():
     pygame.quit()
     sys.exit()
 
-
 def main():
     """最初に実行される関数
 
@@ -288,7 +284,6 @@ def main():
         player, hurdles = run_game()
         # ゲームオーバーの処理を行う
         game_over(player, hurdles)
-
 
 # モジュールの属性__name__は「python hoge.py」のようにコマンドで自分が実行されたら"__main__"を保持する。
 # 自分が実行されたときという条件なので、このファイルを実行するとこのif文が実行される。
