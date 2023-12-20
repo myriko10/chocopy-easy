@@ -170,7 +170,7 @@ def create_state_constants(player):
     collision_area = (player.image.get_width() + STEP_ON_FRAME + COLLISION_MARGIN) / Hurdle.speed
     jumping_frame = -(player.JUMP_HEIGHT) / player.GRAVITY * 2
     creatable_frame = jumping_frame - collision_area
-    return creatable_frame,collision_area
+    return creatable_frame, collision_area
 
 def create_hurdle(hurdles):
     """ ハードルを生成する関数
@@ -203,34 +203,43 @@ def create_hurdle(hurdles):
     return False
 
 def transition_hurdles_state(hurdles, state, frame_counter, creatable_frame, collision_area):
-    """_summary_
+    """ハードル生成用のステートマシンをあらわす
 
+    状態stateは1->2->3->...と遷移する。初期状態は1
+    frame_counterは関数の呼び出し元で毎フレームでカウントアップされるものとする
+    stateは関数の呼び出し元で
     Args:
-        hurdles (_type_): _description_
-        state (_type_): _description_
-        frame_counter (_type_): _description_
-        creatable_frame (_type_): _description_
-        collision_area (_type_): _description_
+        hurdles (_type_): 生成されたハードルのリスト
+        state (_type_): ハードル生成を制御するための状態
+        frame_counter (_type_): フレームをリセットしてから現在までの経過時間を表すフレーム数
+        creatable_frame (_type_): 生成可能状態の時間を表すフレーム数
+        collision_area (_type_): 衝突してしまう時間を表すフレーム数
 
     Returns:
-        _type_: _description_
+        int: state 状態を呼び出し元に反映させるため返す
+        int: frame_counter カウンタを呼び出し元に反映させるため返す
     """
+    # 生成可能(未生成)状態
     if state == 1:
+        # ハードルが生成されたら状態2に遷移する
         if create_hurdle(hurdles):
             state = 2
             frame_counter = 0
+    # 生成可能(1つ以上生成済み)状態
     elif state == 2:
         create_hurdle(hurdles)
+        # frame_counterは関数の外側で
         if frame_counter >= creatable_frame:
             state = 3
             frame_counter = 0
+    # 生成禁止状態
     elif state == 3:
         if frame_counter >= collision_area:
             state = 1
             frame_counter = 0
     return state, frame_counter
 
-def title():
+def display_title():
     """タイトル画面を表示する
 
     main関数で最初に実行される。
@@ -255,7 +264,7 @@ def title():
         if pressed(None):
             break
 
-def game_over(player, hurdles):
+def display_game_over(player, hurdles):
     """ゲームオーバー時の処理
 
     Args:
@@ -307,11 +316,11 @@ def main():
     """
     while True:
         # タイトル画面を表示する
-        title()
+        display_title()
         # ゲームをスタートする
         player, hurdles = run_game()
         # ゲームオーバーの処理を行う
-        game_over(player, hurdles)
+        display_game_over(player, hurdles)
 
 # モジュールの属性__name__は「python hoge.py」のようにコマンドで自分が実行されたら"__main__"を保持する。
 # 自分が実行されたときという条件なので、このファイルを実行するとこのif文が実行される。
