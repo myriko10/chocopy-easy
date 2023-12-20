@@ -51,12 +51,8 @@ def run_game():
     # スコアクラスを宣言
     score = Score()
 
-    # ハードル生成用の定数
-    STEP_ON_FRAME = IMAGE_DICT['red'].get_height() / Hurdle.speed  # 着地の時に踏んでしまう可能性のあるフレーム数の計算
-    COLLISION_MARGIN = IMAGE_DICT['red'].get_width() * 3  # 難易度調整用マージン(係数2と3で大分体感が変わる)
-    collision_area = (player.image.get_width() + STEP_ON_FRAME + COLLISION_MARGIN) / Hurdle.speed
-    jumping_frame = -(player.JUMP_HEIGHT) / player.GRAVITY * 2
-    creatable_frame = jumping_frame - collision_area
+    # ハードル生成用の変数
+    creatable_frame,collision_area = create_state_constants(player)
     frame_counter = 0
     state = 1
 
@@ -80,19 +76,7 @@ def run_game():
 
         # ハードルの生成
         frame_counter += 1
-        if state == 1:
-            if create_hurdle(hurdles):
-                state = 2
-                frame_counter = 0
-        elif state == 2:
-            create_hurdle(hurdles)
-            if frame_counter >= creatable_frame:
-                state = 3
-                frame_counter = 0
-        else:
-            if frame_counter >= collision_area:
-                state = 1
-                frame_counter = 0
+        state, frame_counter = transition_hurdles_state(hurdles, state, frame_counter, creatable_frame, collision_area)
 
         # ハードルの表示位置を更新
         if hurdles:
@@ -151,31 +135,42 @@ def draw_background():
     # 矩形の表示：草原(緑色)　引数(画面, RGBカラー, 矩形領域を座標指定)
     pygame.draw.rect(screen, (120, 255, 0), (0, HEIGHT * 3 / 5, WIDTH, HEIGHT))
 
+def pressed(key):
+    """ キーが押されたか判断する関数
 
-def title():
-    """タイトル画面を表示する
+    引数に指定したキーが押されていたらTrueを返す
 
-    main関数で最初に実行される。
+    Args:
+        key: 押されたか判断したいキー
+
+    Returns:
+        boolen: 引数で指定したキーが押されたかを返す
     """
-    # キーが押されるまでタイトル画面を表示する
-    while True:
-        # 画面の中央に開始方法のテキスト、下の方に操作説明のテキストを描画
-        screen.blit(text.text_title, text.text_title_point)
-        screen.blit(text.text_game_rule, text.text_game_rule_point)
-        screen.blit(text.text_instructions, text.text_instructions_point)
+    # このフレームで押されたすべてのキーのリストを取得
+    keys = pygame.key.get_pressed()
+    if key is None:
+        if True in keys:
+            return True
+    else:
+        return keys[key]  # スペースキーが押されたか判定
+    return None
 
-        # 画面を更新
-        pygame.display.update()
-        FPSCLOCK.tick_busy_loop(FPS)
+def create_state_constants(player):
+    """ハードル生成の状態遷移のための定数を生成して返す
 
-        # イベント(マウスの移動やクリック、キー入力など)を検知
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                terminate()
+    Args:
+        player (_type_): Playerインスタンス
 
-        # キーの指定なしで、何かキーが押されたかを取得する
-        if pressed(None):
-            break
+    Returns:
+        float?: 生成可能時間を表すフレーム数
+        float?: 滞空時間が過ぎた後に衝突してしまう時間を表すフレーム数?
+    """
+    STEP_ON_FRAME = IMAGE_DICT['red'].get_height() / Hurdle.speed  # 着地の時に踏んでしまう可能性のあるフレーム数の計算
+    COLLISION_MARGIN = IMAGE_DICT['red'].get_width() * 3  # 難易度調整用マージン(係数2と3で大分体感が変わる)
+    collision_area = (player.image.get_width() + STEP_ON_FRAME + COLLISION_MARGIN) / Hurdle.speed
+    jumping_frame = -(player.JUMP_HEIGHT) / player.GRAVITY * 2
+    creatable_frame = jumping_frame - collision_area
+    return creatable_frame,collision_area
 
 def create_hurdle(hurdles):
     """ ハードルを生成する関数
@@ -207,25 +202,58 @@ def create_hurdle(hurdles):
     # ハードルが生成されない場合Falseを返す
     return False
 
-def pressed(key):
-    """ キーが押されたか判断する関数
-
-    引数に指定したキーが押されていたらTrueを返す
+def transition_hurdles_state(hurdles, state, frame_counter, creatable_frame, collision_area):
+    """_summary_
 
     Args:
-        key: 押されたか判断したいキー
+        hurdles (_type_): _description_
+        state (_type_): _description_
+        frame_counter (_type_): _description_
+        creatable_frame (_type_): _description_
+        collision_area (_type_): _description_
 
     Returns:
-        boolen: 引数で指定したキーが押されたかを返す
+        _type_: _description_
     """
-    # このフレームで押されたすべてのキーのリストを取得
-    keys = pygame.key.get_pressed()
-    if key is None:
-        if True in keys:
-            return True
-    else:
-        return keys[key]  # スペースキーが押されたか判定
-    return None
+    if state == 1:
+        if create_hurdle(hurdles):
+            state = 2
+            frame_counter = 0
+    elif state == 2:
+        create_hurdle(hurdles)
+        if frame_counter >= creatable_frame:
+            state = 3
+            frame_counter = 0
+    elif state == 3:
+        if frame_counter >= collision_area:
+            state = 1
+            frame_counter = 0
+    return state, frame_counter
+
+def title():
+    """タイトル画面を表示する
+
+    main関数で最初に実行される。
+    """
+    # キーが押されるまでタイトル画面を表示する
+    while True:
+        # 画面の中央に開始方法のテキスト、下の方に操作説明のテキストを描画
+        screen.blit(text.text_title, text.text_title_point)
+        screen.blit(text.text_game_rule, text.text_game_rule_point)
+        screen.blit(text.text_instructions, text.text_instructions_point)
+
+        # 画面を更新
+        pygame.display.update()
+        FPSCLOCK.tick_busy_loop(FPS)
+
+        # イベント(マウスの移動やクリック、キー入力など)を検知
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                terminate()
+
+        # キーの指定なしで、何かキーが押されたかを取得する
+        if pressed(None):
+            break
 
 def game_over(player, hurdles):
     """ゲームオーバー時の処理
