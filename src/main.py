@@ -27,9 +27,13 @@ from game_settings import (WIDTH,HEIGHT,FPS,FPSCLOCK,PLAYER_DEFAULT_POINT)
 # テキストの設定
 from text import Text
 
+# Pygameの初期化
+pygame.init()
+
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("HORSE")  # 画面のタイトルかな？
+# 画面のタイトル
+pygame.display.set_caption("HORSE")
 # テキストクラスをインスタンス化
 text = Text()
 
@@ -58,6 +62,7 @@ def run_game():
 
     # ゲームオーバーのフラグをセット、False:ゲームオーバーでない。
     is_game_over = False
+
     # ゲームスタート
     while True:
         # 背景の描画
@@ -68,32 +73,32 @@ def run_game():
             # ジャンプのための初期化
             player.init_jump()
 
-        # プレイヤーの座標を更新
-        player.jump()
-
-        # プレイヤーの画像を切り替え
-        player.switch_image()
+        # プレイヤーの更新
+        player.update()
 
         # ハードルの生成
         frame_counter += 1
         state, frame_counter = transition_hurdles_state(hurdles, state, frame_counter, creatable_frame, collision_area)
 
-        # ハードルの表示位置を更新
+        # ハードルリストに一つ以上要素があったら
         if hurdles:
-            # 生存しているハードル全てに対して衝突判定
+            # 生存しているハードル全てに対して
             for h in hurdles.copy():
+                # ハードルの座標を更新する
                 h.move()
-                if h.left_top_point.x < 0:
+                # ハードルが画面外(左)に出ていたら
+                if h.left_top_point.x + h.width < 0:
                     # 画面外に出たハードルをシーケンスから削除
                     hurdles.remove(h)
-
                 # プレイヤーの右端のx座標をハードルが左に超えていたら
-                if h.left_top_point.x <= player.left_top_point.x + player.image.get_width():
-                    # 衝突検知：戻り値は衝突していたらTrue、していなかったらFalse
-                    if is_collision(player.left_top_point, player.right_bottom_point,
-                                                h.left_top_point, h.right_bottom_point):
-                        is_game_over = True
-                        break
+                # if h.left_top_point.x <= player.left_top_point.x + player.image.get_width():
+                # 衝突判定：戻り値は衝突していたらTrue、していなかったらFalse
+                if is_collision(player.left_top_point, player.right_bottom_point,
+                                            h.left_top_point, h.right_bottom_point):
+                    # ゲームオーバーフラグを立てる
+                    is_game_over = True
+                    # 全ハードルに対するループを抜ける
+                    break
 
         # ゲームオーバーならrun_game関数を終了する
         if is_game_over:
@@ -139,18 +144,22 @@ def pressed(key):
     """ キーが押されたか判断する関数
 
     引数に指定したキーが押されていたらTrueを返す
-
+    どのキーでも押されたら検知したいときはNoneを渡す
+    None以外はキーを表す数字(K_SPACEとか)が渡される想定
     Args:
         key: 押されたか判断したいキー
 
     Returns:
         boolen: 引数で指定したキーが押されたかを返す
     """
-    # このフレームで押されたすべてのキーのリストを取得
+    pygame.event.pump()
+    # 押されたすべてのキーのリストを取得
     keys = pygame.key.get_pressed()
+    # どのキーでも押されたら検知したいとき
     if key is None:
         if True in keys:
             return True
+    # None以外はキーを表す数字(K_SPACEとか)が渡される想定
     else:
         return keys[key]  # スペースキーが押されたか判定
     return None

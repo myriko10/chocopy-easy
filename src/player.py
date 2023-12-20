@@ -35,9 +35,6 @@ class Player:
         # ジャンプの高さ(負の値にすることで上に移動する)
         self.JUMP_HEIGHT = -(HEIGHT / 40)
 
-        # ジャンプ中にさらにジャンプしないためのフラグ
-        self.space_pressed = False
-
         # 衝突判定のための画像右下の座標を設定
         self.right_bottom_point = Point(
             self.left_top_point.x + self.image.get_width(),
@@ -54,14 +51,15 @@ class Player:
         # 地面にいない状態にする
         self.on_ground = False
 
-        # Spaceキーが押された状態を記録
-        self.space_pressed = True
-
     def jump(self):
         """ジャンプしている間の処理
         
-        毎フレームで実行され、徐々に速度を変化させる、着地したか判別して処理を分岐する
+        毎フレームで実行され、徐々に速度を変化させる
         """
+        # 地面にいたらjump処理をしない
+        if self.on_ground:
+            return
+
         # ｙ方向の速度に重力を加える
         self.y_velocity += self.GRAVITY
 
@@ -72,7 +70,6 @@ class Player:
 
         # 地面に着地したか判定
         if self.left_top_point.y > self.DEFAULT_LEFT_TOP_POINT.y:
-
             # 着地フラッグの状態を切り替える
             self.on_ground = True
 
@@ -85,12 +82,9 @@ class Player:
     def switch_image(self):
         """画像を切り替えて表示する
 
-        Args:
-            is_game_over (bool): 
+        プレイヤーが着地しているとき等間隔の時間で馬の画像を切り替え、走っているように見せる
         """
-        # ゲーム中で着地しているとき等間隔の時間で馬の画像を切り替え、走っているように見せる
         if self.on_ground:
-            # self.image = IMAGE_DICT['run1']
             # 現在の時間をミリ秒で取得
             time_now = time.time() * 1000
             # 500ミリ秒ごとに画像を切り替える
@@ -101,3 +95,11 @@ class Player:
         # ジャンプしている時の画像を指定
         else:
             self.image = IMAGE_DICT['run2']
+
+    def update(self):
+        """プレイヤーのパラメータの変更をする
+        
+        ジャンプによる位置の更新と、地上にいるとき走るアニメを表示する
+        """
+        self.jump()
+        self.switch_image()
