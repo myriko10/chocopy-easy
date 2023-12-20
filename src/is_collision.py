@@ -11,16 +11,16 @@ MARGIN_FOR_PLAYER = 15
 # プレイヤーとハードルの矩形が重なっているかどうかを判定する
 def is_collision(player_left_top_point, player_right_bottom_point, 
     hurdle_left_top_point, hurdle_right_bottom_point):
-    """_summary_
+    """衝突判定をする
 
     Args:
-        player_left_top_point (_type_): _description_
-        player_right_bottom_point (_type_): _description_
-        hurdle_left_top_point (_type_): _description_
-        hurdle_right_bottom_point (_type_): _description_
+        player_left_top_point (Point): プレイヤー画像の左上座標
+        player_right_bottom_point (Point): プレイヤーが象の右下座標
+        hurdle_left_top_point (Point): ハードル画像の左上座標
+        hurdle_right_bottom_point (Point): ハードル画像の右下座標
 
     Returns:
-        _type_: _description_
+        bool: 衝突したらTrue
     """
     # プレイヤーの矩形の左上座標と右下座標、marginあり
     player_left, player_top = [p + MARGIN_FOR_PLAYER for p in player_left_top_point.get_xy()]
