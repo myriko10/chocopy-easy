@@ -56,7 +56,7 @@ def run_game():
     score = Score()
 
     # ハードル生成用の変数
-    creatable_frame,collision_area = create_state_constants(player)
+    creatable_frame, collision_area = create_state_constants(player)
     frame_counter = 0
     state = 1
 
@@ -68,8 +68,9 @@ def run_game():
         # 背景の描画
         draw_background()
 
+        # イベント(マウスの移動やクリック、キー入力など)を検知
         # スペースキーが押された
-        if pressed(K_SPACE) and player.on_ground:
+        if proceed_event_with_key(K_SPACE) and player.on_ground:
             # ジャンプのための初期化
             player.init_jump()
 
@@ -122,11 +123,6 @@ def run_game():
         pygame.display.update()
         FPSCLOCK.tick_busy_loop(FPS)
 
-        # 閉じるボタンを押したら終了
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                terminate()
-
     return player, hurdles
 
 def draw_background():
@@ -140,29 +136,36 @@ def draw_background():
     # 矩形の表示：草原(緑色)　引数(画面, RGBカラー, 矩形領域を座標指定)
     pygame.draw.rect(screen, (120, 255, 0), (0, HEIGHT * 3 / 5, WIDTH, HEIGHT))
 
-def pressed(key):
-    """ キーが押されたか判断する関数
-
-    引数に指定したキーが押されていたらTrueを返す
-    どのキーでも押されたら検知したいときはNoneを渡す
+def proceed_event_with_key(key):
+    """ 引数に渡されたキーが押されたか判断する関数
+    
+    どのキーでも押されたことを検知したいときはNoneを渡す
     None以外はキーを表す数字(K_SPACEとか)が渡される想定
+    引数に指定したキーが押されていたらTrueを返す
     Args:
         key: 押されたか判断したいキー
 
     Returns:
         boolen: 引数で指定したキーが押されたかを返す
     """
-    pygame.event.pump()
-    # 押されたすべてのキーのリストを取得
-    keys = pygame.key.get_pressed()
-    # どのキーでも押されたら検知したいとき
-    if key is None:
-        if True in keys:
-            return True
-    # None以外はキーを表す数字(K_SPACEとか)が渡される想定
-    else:
-        return keys[key]  # スペースキーが押されたか判定
-    return None
+    # イベント処理
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            terminate()
+        elif event.type == pygame.KEYDOWN:
+            if key is None:
+                return True
+            if event.key == key:
+                return True
+    return False
+
+def terminate():
+    """ウィンドウを閉じてゲームを終了する
+
+    画面右上の×ボタンが押されたらウィンドウを閉じる。
+    """
+    pygame.quit()
+    sys.exit()
 
 def create_state_constants(player):
     """ハードル生成の状態遷移のための定数を生成して返す
@@ -256,6 +259,7 @@ def display_title():
     # キーが押されるまでタイトル画面を表示する
     while True:
         # 画面の中央に開始方法のテキスト、下の方に操作説明のテキストを描画
+        screen.fill((0, 0, 0))
         screen.blit(text.text_title, text.text_title_point)
         screen.blit(text.text_game_rule, text.text_game_rule_point)
         screen.blit(text.text_instructions, text.text_instructions_point)
@@ -265,12 +269,8 @@ def display_title():
         FPSCLOCK.tick_busy_loop(FPS)
 
         # イベント(マウスの移動やクリック、キー入力など)を検知
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                terminate()
-
         # キーの指定なしで、何かキーが押されたかを取得する
-        if pressed(None):
+        if proceed_event_with_key(None):
             break
 
 def display_game_over(player, hurdles):
@@ -283,8 +283,9 @@ def display_game_over(player, hurdles):
     ゲームオーバー時のスコアやプレイヤー位置、ハードル位置をそのまま表示し続ける。
     なにかキーが押されたらループを抜けて終了する。
     """
+    # イベント(マウスの移動やクリック、キー入力など)を検知
     # なにかキーが押されたらループを抜ける
-    while not pressed(None):
+    while not proceed_event_with_key(None):
         # 背景を表示
         draw_background()
         # ゲームオーバー用のプレイヤー画像を表示
@@ -300,23 +301,10 @@ def display_game_over(player, hurdles):
         screen.blit(text.text_game_over, text.text_game_over_point)
         screen.blit(text.text_press_key, text.text_press_key_point)
 
-        # 閉じるボタンを押したら終了
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                terminate()
-
         # 画面を更新
         # pygame.display.flip()
         pygame.display.update()
         FPSCLOCK.tick_busy_loop(FPS)
-
-def terminate():
-    """ウィンドウを閉じてゲームを終了する
-
-    画面右上の×ボタンが押されたらウィンドウを閉じる。
-    """
-    pygame.quit()
-    sys.exit()
 
 def main():
     """最初に実行される関数

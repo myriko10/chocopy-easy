@@ -13,7 +13,7 @@ class Hurdle:
     単体のハードルの定義するクラス
     """
     # ハードルが移動する速度
-    speed = 5
+    speed = 8
 
     # ハードルインスタンスの初期化
     def __init__(self, image_key, scale):

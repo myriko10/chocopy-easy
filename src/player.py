@@ -33,7 +33,7 @@ class Player:
         self.GRAVITY = 0.5
 
         # ジャンプの高さ(負の値にすることで上に移動する)
-        self.JUMP_HEIGHT = -(HEIGHT / 40)
+        self.JUMP_HEIGHT = -(HEIGHT / 38)
 
         # 衝突判定のための画像右下の座標を設定
         self.right_bottom_point = Point(
