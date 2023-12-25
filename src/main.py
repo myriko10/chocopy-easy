@@ -13,52 +13,43 @@ import pygame
 # キーイベント判定のために使用する。
 from pygame.locals import QUIT, K_SPACE
 # プレイヤーのクラス
-from player import Player
+
 # 障害物のクラス
-from hurdle import Hurdle
+
 # スコアのクラス
-from score import Score
+
 # 衝突を検知する関数
-from is_collision import is_collision
+
 # 使用する画像のデータ。辞書型。
 from image_dict import IMAGE_DICT
 # ゲームの設定
 from game_settings import (WIDTH,HEIGHT,FPS,FPSCLOCK,PLAYER_DEFAULT_POINT)
 # テキストのクラス
 from text import Text
-
 # Pygameの初期化
 pygame.init()
-
-# 表示される画面　引数((横幅pixel, 縦幅pixel))
+# ゲーム画面
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 # 画面のタイトル
 pygame.display.set_caption("HORSE")
 # テキストクラスをインスタンス化
 text = Text()
-
 def run_game():
     """ゲームのメインの処理
 
     Returns:
         tuple(Player, list): player, hurdlesを次に実行されるgame_over()に渡すために返す
     """
-    hurdles = []  # ハードルのリストの初期化
+    # ハードルのリストの初期化
 
-    # 時間変数の初期化とセット
-    start_time = time.time()  # ゲーム開始時の時刻を取得
+    # ゲーム開始時の時刻を取得
 
     # Playerをインスタンス化
     # Playerの初期位置の座標を指定
-    player = Player(PLAYER_DEFAULT_POINT)
 
     # スコアクラスを宣言
-    score = Score()
 
     # ハードル生成用の変数
-    creatable_frame, collision_area = create_state_constants(player)
-    frame_counter = 0
-    state = 1
 
     # ゲームオーバーのフラグをセット、False:ゲームオーバーでない。
     is_game_over = False
@@ -67,58 +58,35 @@ def run_game():
     while True:
         # 背景の描画
         draw_background()
-
         # イベント(マウスの移動やクリック、キー入力など)を検知
         # スペースキーが押された
-        if proceed_event_with_key(K_SPACE) and player.on_ground:
-            # ジャンプのための初期化
-            player.init_jump()
-
+        proceed_event_with_key(K_SPACE)
+        #if proceed_event_with_key(K_SPACE) and player.on_ground:
         # プレイヤーの更新
-        player.update()
 
         # ハードルの生成
-        frame_counter += 1
-        state, frame_counter = transition_hurdles_state(hurdles, state, frame_counter, creatable_frame, collision_area)
+        # frame_counter += 1
+        # state, frame_counter = transition_hurdles_state(hurdles, state, frame_counter, creatable_frame, collision_area)
 
         # 生存しているハードル全てに対して
-        for h in hurdles.copy():
-            # ハードルの座標を更新する
-            h.move()
-            # ハードルが画面外(左)に出ていたら
-            if h.left_top_point.x + h.width < 0:
-                # 画面外に出たハードルをリストから削除
-                hurdles.remove(h)
-            # 衝突判定：戻り値は衝突していたらTrue、していなかったらFalse
-            if is_collision(player.left_top_point, player.right_bottom_point,
-                                        h.left_top_point, h.right_bottom_point):
-                # ゲームオーバーフラグを立てる
-                is_game_over = True
-                # 全ハードルに対するループを抜ける
-                break
 
         # ゲームオーバーならrun_game関数を終了する
         if is_game_over:
             break
-
         # ハードルを描画
-        for h in hurdles:
-            screen.blit(h.image, h.left_top_point.get_xy())
 
         # プレイヤーの画像を描画
-        screen.blit(player.image, player.left_top_point.get_xy())
 
         # スコアを更新
-        score.update_score(start_time)
-        text.update_score(score.value)
+
         # スコアを表示
-        screen.blit(text.text_score, text.text_score_center_point)
 
         # 画面の更新
         pygame.display.update()
         FPSCLOCK.tick_busy_loop(FPS)
 
-    return player, hurdles
+    # ゲームオーバー関数に渡すため返す
+    # return player, hurdles
 
 def draw_background():
     """背景を描画する
@@ -320,11 +288,12 @@ def main():
         # タイトル画面を表示する
         display_title()
         # ゲームをスタートする
-        player, hurdles = run_game()
+        # player, hurdles = 
+        run_game()
         # ゲームオーバーの処理を行う
-        display_game_over(player, hurdles)
+        # display_game_over(player, hurdles)
 
-# モジュールの属性__name__は「python hoge.py」のようにコマンドで自分が実行されたら"__main__"を保持する。
-# 自分が実行されたときという条件なので、このファイルを実行するとこのif文が実行される。
+# 「python hoge.py」のようにコマンドで自分が実行されたらモジュールの属性__name__は"__main__"を保持する。
+# 自分が実行されたときだけこのif文が実行される。
 if __name__ == '__main__':
     main()
