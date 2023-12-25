@@ -5,6 +5,7 @@ class: Score
     func score_update : スコアの値を更新する
 
 """
+# プレイ時間を計算するために使用
 import time
 
 class Score:
@@ -24,8 +25,8 @@ class Score:
 
         ゲーム開始時の時刻を引数として受け取り
         現在の時刻との差分からスコアを計算、更新する
-
-        :param start_time: ゲーム開始時の時刻
+        param: 
+            start_time: ゲーム開始時の時刻
         """
         self.value = int(time.time() - start_time) * 100  # スコア計算
         

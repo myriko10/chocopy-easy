@@ -2,15 +2,15 @@
 
 mainモジュール。これを実行するとゲームが開始する。
 """
-# Pythonのシステムを操作できるモジュール。ゲームを終了するために必要
+# Pythonのシステムを操作できるモジュール。ゲームを終了するために使用する。
 import sys
 # 時間を扱うモジュール
 import time
-# 乱数生成のモジュール。ハードル生成のために必要
+# 乱数生成のモジュール。ハードル生成のために使用する。
 import random
 # ゲーム開発のためのモジュール
 import pygame
-# キーイベント判定のために必要
+# キーイベント判定のために使用する。
 from pygame.locals import QUIT, K_SPACE
 # プレイヤーのクラス
 from player import Player
@@ -20,11 +20,11 @@ from hurdle import Hurdle
 from score import Score
 # 衝突を検知する関数
 from is_collision import is_collision
-# 使用する画像のデータ。辞書型なのでdict
+# 使用する画像のデータ。辞書型。
 from image_dict import IMAGE_DICT
 # ゲームの設定
 from game_settings import (WIDTH,HEIGHT,FPS,FPSCLOCK,PLAYER_DEFAULT_POINT)
-# テキストの設定
+# テキストのクラス
 from text import Text
 
 # Pygameの初期化
@@ -81,25 +81,21 @@ def run_game():
         frame_counter += 1
         state, frame_counter = transition_hurdles_state(hurdles, state, frame_counter, creatable_frame, collision_area)
 
-        # ハードルリストに一つ以上要素があったら
-        if hurdles:
-            # 生存しているハードル全てに対して
-            for h in hurdles.copy():
-                # ハードルの座標を更新する
-                h.move()
-                # ハードルが画面外(左)に出ていたら
-                if h.left_top_point.x + h.width < 0:
-                    # 画面外に出たハードルをシーケンスから削除
-                    hurdles.remove(h)
-                # プレイヤーの右端のx座標をハードルが左に超えていたら
-                # if h.left_top_point.x <= player.left_top_point.x + player.image.get_width():
-                # 衝突判定：戻り値は衝突していたらTrue、していなかったらFalse
-                if is_collision(player.left_top_point, player.right_bottom_point,
-                                            h.left_top_point, h.right_bottom_point):
-                    # ゲームオーバーフラグを立てる
-                    is_game_over = True
-                    # 全ハードルに対するループを抜ける
-                    break
+        # 生存しているハードル全てに対して
+        for h in hurdles.copy():
+            # ハードルの座標を更新する
+            h.move()
+            # ハードルが画面外(左)に出ていたら
+            if h.left_top_point.x + h.width < 0:
+                # 画面外に出たハードルをリストから削除
+                hurdles.remove(h)
+            # 衝突判定：戻り値は衝突していたらTrue、していなかったらFalse
+            if is_collision(player.left_top_point, player.right_bottom_point,
+                                        h.left_top_point, h.right_bottom_point):
+                # ゲームオーバーフラグを立てる
+                is_game_over = True
+                # 全ハードルに対するループを抜ける
+                break
 
         # ゲームオーバーならrun_game関数を終了する
         if is_game_over:
@@ -112,11 +108,10 @@ def run_game():
         # プレイヤーの画像を描画
         screen.blit(player.image, player.left_top_point.get_xy())
 
-        # スコアを更新して表示
+        # スコアを更新
         score.update_score(start_time)
-        # なぜupdate_scoreはself部分を引数に含めないといけないかわからない
-        # たとえばscore.update_scoreは含めていない。
         text.update_score(score.value)
+        # スコアを表示
         screen.blit(text.text_score, text.text_score_center_point)
 
         # 画面の更新
@@ -140,10 +135,10 @@ def proceed_event_with_key(key):
     """ 引数に渡されたキーが押されたか判断する関数
     
     どのキーでも押されたことを検知したいときはNoneを渡す
-    None以外はキーを表す数字(K_SPACEとか)が渡される想定
+    None以外はキーを表す数字(K_SPACEなど)が渡される想定
     引数に指定したキーが押されていたらTrueを返す
     Args:
-        key: 押されたか判断したいキー
+        key: 押されたか判断したいキー(Noneかint)
 
     Returns:
         boolen: 引数で指定したキーが押されたかを返す
@@ -154,9 +149,12 @@ def proceed_event_with_key(key):
             terminate()
         elif event.type == pygame.KEYDOWN:
             if key is None:
-                return True
-            if event.key == key:
-                return True
+                # スペースで画面遷移しないようにする。
+                # ジャンプのつもりで押して間に合わずゲームオーバーになったときすぐにタイトルに戻ってしまうことがあるため。
+                if event.key == K_SPACE:
+                    return False
+            # if event.key == key:
+            return True
     return False
 
 def terminate():
@@ -168,7 +166,8 @@ def terminate():
     sys.exit()
 
 def create_state_constants(player):
-    """ハードル生成の状態遷移のための定数を生成して返す
+    """ハードル生成の状態遷移のための定数を生成して返す。
+    プレイヤーが、ハードルの小さい群の先頭にぎりぎりぶつかる前に飛べば、ゲームオーバーにならないようにする。
 
     Args:
         player (_type_): Playerインスタンス
@@ -177,11 +176,17 @@ def create_state_constants(player):
         float?: 生成可能時間を表すフレーム数
         float?: 滞空時間が過ぎた後に衝突してしまう時間を表すフレーム数?
     """
-    STEP_ON_FRAME = IMAGE_DICT['red'].get_height() / Hurdle.speed  # 着地の時に踏んでしまう可能性のあるフレーム数の計算
-    COLLISION_MARGIN = IMAGE_DICT['red'].get_width() * 3  # 難易度調整用マージン(係数2と3で大分体感が変わる)
+    # 着地の時に踏んでしまう可能性のあるフレーム数の計算
+    STEP_ON_FRAME = IMAGE_DICT['red'].get_height() / Hurdle.speed
+    # 難易度調整用マージン(係数2と3で大分体感が変わる)
+    COLLISION_MARGIN = IMAGE_DICT['red'].get_width() * 3
+    # プレイヤーの滞空時間が過ぎた後に衝突してしまう時間を表すフレーム数?
     collision_area = (player.image.get_width() + STEP_ON_FRAME + COLLISION_MARGIN) / Hurdle.speed
+    # プレイヤーがジャンプしている間に経過する時間を表すフレーム数
     jumping_frame = -(player.JUMP_HEIGHT) / player.GRAVITY * 2
+    # ハードルを生成してもよい時間を表すフレーム数
     creatable_frame = jumping_frame - collision_area
+    # 生成した定数を返す。
     return creatable_frame, collision_area
 
 def create_hurdle(hurdles):
@@ -307,7 +312,7 @@ def display_game_over(player, hurdles):
         FPSCLOCK.tick_busy_loop(FPS)
 
 def main():
-    """最初に実行される関数
+    """実行する関数
 
     ウィンドウが閉じられるまで終わらない。
     """

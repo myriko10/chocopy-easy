@@ -2,9 +2,10 @@
 
 使用する画像のデータを辞書型で保持する。
 """
+# ゲーム開発のためのモジュール
 import pygame
 
-# 画像を保持する辞書型。
+# 画像を保持する辞書。
 IMAGE_DICT = {'bird': pygame.image.load('../images/bird.png'),
               'calrun1': pygame.image.load('../images/callot_horse_run1.png'),
               'calrun2': pygame.image.load('../images/callot_horse_run2.png'),

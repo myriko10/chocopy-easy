@@ -23,6 +23,10 @@ def is_collision(player_left_top_point, player_right_bottom_point,
         bool: 衝突したらTrue
     """
     # プレイヤーの矩形の左上座標と右下座標、marginあり
+    # これでもいい
+    # (player_left, player_top) = player_left_top_point.get_xy()
+    # player_left += MARGIN_FOR_PLAYER
+    # player_top += MARGIN_FOR_PLAYER
     player_left, player_top = [p + MARGIN_FOR_PLAYER for p in player_left_top_point.get_xy()]
     player_right, player_bottom = [p - MARGIN_FOR_PLAYER for p in player_right_bottom_point.get_xy()]
 
@@ -30,10 +34,7 @@ def is_collision(player_left_top_point, player_right_bottom_point,
     hurdle_left, hurdle_top = hurdle_left_top_point.get_xy()
     hurdle_right, hurdle_bottom = hurdle_right_bottom_point.get_xy()
 
-    # 矩形の交差判定
-    if player_left < hurdle_right and hurdle_left < player_right and \
-        player_bottom > hurdle_top and player_top < hurdle_bottom:
-        return True  # 衝突が発生
-    else:
-        return False  # 衝突が発生していない
+    # 矩形の交差判定->交差していたら衝突:True, していなかったら衝突していない:False
+    return player_left < hurdle_right and hurdle_left < player_right and \
+        player_bottom > hurdle_top and player_top < hurdle_bottom
     

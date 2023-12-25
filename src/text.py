@@ -62,3 +62,4 @@ class Text:
         self.text_score = self.BASICFONT20.render("score : " + str(value).zfill(8), True, (0, 0, 0))
         # スコア表示用の画像位置を取得(テキストの中心座標)。
         self.text_score_center_point = self.text_score.get_rect(center=(WIDTH - 100, 20))
+        

@@ -4,7 +4,9 @@
 - FPSCLOCKは、pygameのtime.Clock()を用いてフレームレートを制御するため、ゲームのアニメーションの速度が一定に保たれます。
 - PLAYER_DEFAULT_POINTは、プレイヤーのデフォルトの位置で、画面の幅の4/70、高さの3/7に設定されている。
 """
+# ゲーム開発のためのモジュール
 import pygame
+# プレイヤーのデフォルト位置のために使用
 import point
 
 # 画面のサイズ
@@ -16,5 +18,5 @@ HEIGHT = 450
 FPS = 30
 # フレームレート制御
 FPSCLOCK = pygame.time.Clock()
-# デフォルトのプレイヤーの位置(地上を走るとき)
-PLAYER_DEFAULT_POINT = point.Point(WIDTH*4/70, HEIGHT*3/7)
+# デフォルトのプレイヤー位置(地上を走るとき)。画像の左上の座標。
+PLAYER_DEFAULT_POINT = point.Point(WIDTH * 4/70, HEIGHT * 3/7)
