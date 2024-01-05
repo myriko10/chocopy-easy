@@ -213,7 +213,7 @@ def create_hurdle(hurdles):
             pic = 'white'
         else:
             pic = 'mole'
-        hurdles.append(Hurdle(pic, 1))
+        hurdles.append(Hurdle(pic))
         # ハードルが生成されたのでTrueを返す
         return True
     # ハードルが生成されない場合Falseを返す
