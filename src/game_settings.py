@@ -19,5 +19,5 @@ FPS = 30
 # フレームレート制御
 FPSCLOCK = pygame.time.Clock()
 # デフォルトのプレイヤー位置(地上を走るとき)。画像の左上の座標。
-PLAYER_DEFAULT_POINT = 0
+PLAYER_DEFAULT_POINT = point.Point()
 # point.Point(WIDTH * 4/70, HEIGHT * 3/7)

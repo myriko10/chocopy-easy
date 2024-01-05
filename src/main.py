@@ -2,13 +2,13 @@
 
 mainモジュール。これを実行するとゲームが開始する。
 """
-# Pythonのシステムを操作できるモジュール。ゲームを終了するために使用する。
+# Pythonのシステムを操作できるライブラリ。ゲームを終了するために使用する。
 import sys
-# 時間を扱うモジュール
+# 時間を扱うライブラリ
 import time
-# 乱数生成のモジュール。ハードル生成のために使用する。
+# 乱数生成のライブラリ。ハードル生成のために使用する。
 import random
-# ゲーム開発のためのモジュール
+# ゲーム開発のためのライブラリ
 import pygame
 # キーイベント判定のために使用する。
 from pygame.locals import QUIT, K_SPACE
@@ -40,16 +40,6 @@ def run_game():
     Returns:
         tuple(Player, list): player, hurdlesを次に実行されるgame_over()に渡すために返す
     """
-    # ハードルのリストの初期化
-
-    # ゲーム開始時の時刻を取得
-
-    # Playerをインスタンス化
-    # Playerの初期位置の座標を指定
-
-    # スコアクラスを宣言
-
-    # ハードル生成用の変数
 
     # ゲームオーバーのフラグをセット、False:ゲームオーバーでない。
     is_game_over = False
@@ -62,24 +52,14 @@ def run_game():
         # スペースキーが押された
         proceed_event_with_key(K_SPACE)
         #if proceed_event_with_key(K_SPACE) and player.on_ground:
-        # プレイヤーの更新
 
         # ハードルの生成
         # frame_counter += 1
         # state, frame_counter = transition_hurdles_state(hurdles, state, frame_counter, creatable_frame, collision_area)
 
-        # 生存しているハードル全てに対して
-
         # ゲームオーバーならrun_game関数を終了する
         if is_game_over:
             break
-        # ハードルを描画
-
-        # プレイヤーの画像を描画
-
-        # スコアを更新
-
-        # スコアを表示
 
         # 画面の更新
         pygame.display.update()
