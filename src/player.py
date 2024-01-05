@@ -27,6 +27,7 @@ class Player:
         # playerの初期位置を着地している位置に設定
         self.left_top_point = Point(*point.get_xy())
 
+        # 以下ジャンプに使用するインスタンス変数----
         # playerのy方向の速度
         self.y_velocity = 0
 
