@@ -44,10 +44,10 @@ def run_game():
         tuple(Player, list): player, hurdlesを次に実行されるgame_over()に渡すために返す
     """
     # ハードルのリストの初期化
-    hurdles = []  
+    hurdles = []
 
     # ゲーム開始時の時刻を取得
-    start_time = time.time()  
+    start_time = time.time()
 
     # Playerをインスタンス化
     # Playerの初期位置の座標を指定
