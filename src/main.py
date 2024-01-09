@@ -43,15 +43,15 @@ def run_game():
     Returns:
         tuple(Player, list): player, hurdlesを次に実行されるgame_over()に渡すために返す
     """
+    # Playerをインスタンス化
+    # Playerの初期位置の座標を指定
+    player = Player(PLAYER_DEFAULT_POINT)
+
     # ハードルのリストの初期化
     hurdles = []
 
     # ゲーム開始時の時刻を取得
     start_time = time.time()
-
-    # Playerをインスタンス化
-    # Playerの初期位置の座標を指定
-    player = Player(PLAYER_DEFAULT_POINT)
 
     # スコアクラスを宣言
     score = Score()
@@ -72,7 +72,7 @@ def run_game():
         # イベント(マウスの移動やクリック、キー入力など)を検知
         # スペースキーが押された
         if proceed_event_with_key(K_SPACE) and player.on_ground:
-            # ジャンプのための初期化
+            # プレイヤーがジャンプの準備をする
             player.init_jump()
 
         # プレイヤーの更新
@@ -88,7 +88,7 @@ def run_game():
             h.move()
             # ハードルが画面から消えた
             if h.left_top_point.x + h.width < 0:
-                # ハードルをリストから削除
+                # ハードルが画面から消えた
                 hurdles.remove(h)
             # 衝突判定：戻り値は衝突していたらTrue、していなかったらFalse
             if is_collision(player.left_top_point, player.right_bottom_point,
