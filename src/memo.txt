@@ -1,4 +1,6 @@
-
+難易度を上げるポイント
+安地の計算用のマージン、衝突検知のマージン、ハードルのスピード
+COLLISION_MARGIN, MARGIN_FOR_PLAYER, Hurdleクラスのspeed
 
 screen.blit(text_title, text_title_center_point)
 # blit(表示するオブジェクト, オブジェクトの左上の座標)
