@@ -43,6 +43,9 @@ def run_game():
     Returns:
         tuple(Player, list): player, hurdlesを次に実行されるgame_over()に渡すために返す
     """
+    # ゲームオーバーのフラグをセット、False:ゲームオーバーでない。
+    is_game_over = False
+
     # Playerをインスタンス化
     # Playerの初期位置の座標を指定
     player = Player(PLAYER_DEFAULT_POINT)
@@ -61,8 +64,6 @@ def run_game():
     frame_counter = 0
     state = 1
 
-    # ゲームオーバーのフラグをセット、False:ゲームオーバーでない。
-    is_game_over = False
 
     # ゲームスタート
     while True:
