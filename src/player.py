@@ -27,6 +27,11 @@ class Player:
         # playerの初期位置を着地している位置に設定
         self.left_top_point = Point(*point.get_xy())
 
+        # 衝突判定のための画像右下の座標を設定
+        self.right_bottom_point = Point(
+            self.left_top_point.x + self.image.get_width(),
+            self.left_top_point.y + self.image.get_height()
+        )
         # 以下ジャンプに使用するインスタンス変数----
         # playerのy方向の速度
         self.y_velocity = 0
@@ -40,11 +45,22 @@ class Player:
         # ジャンプの高さ(負の値にすることで上に移動する)
         self.JUMP_HEIGHT = -(HEIGHT / 38)
 
-        # 衝突判定のための画像右下の座標を設定
-        self.right_bottom_point = Point(
-            self.left_top_point.x + self.image.get_width(),
-            self.left_top_point.y + self.image.get_height()
-        )
+    def switch_image(self):
+        """画像を切り替えて表示する
+
+        プレイヤーが着地しているとき等間隔の時間で馬の画像を切り替え、走っているように見せる
+        """
+        if self.on_ground:
+            # 現在の時間をミリ秒で取得
+            time_now = time.time() * 1000
+            # 500ミリ秒ごとに画像を切り替える
+            if int(time_now) % 500 < 250:
+                self.image = IMAGE_DICT['run1']
+            else:
+                self.image = IMAGE_DICT['run2']
+        # ジャンプしている時の画像を指定
+        else:
+            self.image = IMAGE_DICT['run2']
 
     def init_jump(self):
         """ジャンプのための初期化
@@ -83,23 +99,6 @@ class Player:
 
             # ｙ方向の速度を0にして、ジャンプ処理を終了
             self.y_velocity = 0
-
-    def switch_image(self):
-        """画像を切り替えて表示する
-
-        プレイヤーが着地しているとき等間隔の時間で馬の画像を切り替え、走っているように見せる
-        """
-        if self.on_ground:
-            # 現在の時間をミリ秒で取得
-            time_now = time.time() * 1000
-            # 500ミリ秒ごとに画像を切り替える
-            if int(time_now) % 500 < 250:
-                self.image = IMAGE_DICT['run1']
-            else:
-                self.image = IMAGE_DICT['run2']
-        # ジャンプしている時の画像を指定
-        else:
-            self.image = IMAGE_DICT['run2']
 
     def update(self):
         """プレイヤーのパラメータの変更をする
