@@ -43,27 +43,25 @@ def run_game():
     Returns:
         tuple(Player, list): player, hurdlesを次に実行されるgame_over()に渡すために返す
     """
-    # ゲームオーバーのフラグをセット、False:ゲームオーバーでない。
-    is_game_over = False
-
-    # Playerをインスタンス化
-    # Playerの初期位置の座標を指定
-    player = Player(PLAYER_DEFAULT_POINT)
-
-    # ハードルのリストの初期化
-    hurdles = []
-
     # ゲーム開始時の時刻を取得
     start_time = time.time()
 
     # スコアクラスを宣言
     score = Score()
 
-    # ハードル生成用の変数
+    # ゲームオーバーのフラグをセット、False:ゲームオーバーでない。
+    is_game_over = False
+
+    # Playerをインスタンス化 初期位置の座標を指定
+    player = Player(PLAYER_DEFAULT_POINT)
+
+    # ハードルのリストの初期化
+    hurdles = []
+
+    # ハードル生成用アルゴリズムの変数
     creatable_frame, collision_area = create_state_constants(player)
     frame_counter = 0
     state = 1
-
 
     # ゲームスタート
     while True:
