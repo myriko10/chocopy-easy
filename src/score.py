@@ -14,14 +14,14 @@ class Score:
     """
 
     def __init__(self):
-        """ スコアを初期化する
+        """スコアを初期化する
         
         valueにスコアの値を持つ
         """
         self.value = 0
 
     def update_score(self, start_time):
-        """ スコアを更新する
+        """スコアを更新する
 
         ゲーム開始時の時刻を引数として受け取り
         現在の時刻との差分からスコアを計算、更新する

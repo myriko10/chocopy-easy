@@ -10,7 +10,7 @@ from point import Point
 from game_settings import WIDTH, HEIGHT
 
 class Hurdle:
-    """ ハードルクラス
+    """ハードルクラス
 
     単体のハードルを定義するクラス
     """
@@ -32,7 +32,7 @@ class Hurdle:
             self.left_top_point.x + self.width, self.left_top_point.y + self.height)
 
     def move(self):
-        """ ハードルを動かす関数
+        """ハードルを動かす
 
         自分自身の座標を右から左に移動する
         """

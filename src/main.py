@@ -133,7 +133,7 @@ def draw_background():
     pygame.draw.rect(screen, (120, 255, 0), (0, HEIGHT * 3 / 5, WIDTH, HEIGHT))
 
 def proceed_event_with_key(key):
-    """ 引数に渡されたキーが押されたか判断する関数
+    """引数に渡されたキーが押されたか判断する関数
     
     どのキーでも押されたことを検知したいときはNoneを渡す
     None以外はキーを表す数字(K_SPACEなど)が渡される想定
@@ -191,7 +191,7 @@ def create_state_constants(player):
     return creatable_frame, collision_area
 
 def create_hurdle(hurdles):
-    """ ハードルを生成する関数
+    """ハードルを生成する関数
 
     乱数からハードルをランダムな間隔で生成する
 
@@ -225,7 +225,7 @@ def transition_hurdles_state(hurdles, state, frame_counter, creatable_frame, col
 
     状態stateは1->2->3->...と遷移する。初期状態は1
     frame_counterは関数の呼び出し元で毎フレームでカウントアップされるものとする
-    stateは関数の呼び出し元で
+    stateは関数の呼び出し元で保持する
     Args:
         hurdles (_type_): 生成されたハードルのリスト
         state (_type_): ハードル生成を制御するための状態
