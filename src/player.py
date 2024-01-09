@@ -52,11 +52,14 @@ class Player:
         """
         if self.on_ground:
             # 現在の時間をミリ秒で取得
-            time_now = time.time() * 1000
-            # 500ミリ秒ごとに画像を切り替える
-            if int(time_now) % 500 < 250:
+            current_time_millisec = int(time.time() * 1000)
+            # intervalの時間ごとに画像を切り替える
+            interval = 350
+            if (current_time_millisec // interval) % 2 == 0:
+                # 偶数回目
                 self.image = IMAGE_DICT['run1']
             else:
+                # 奇数回目
                 self.image = IMAGE_DICT['run2']
         # ジャンプしている時の画像を指定
         else:
