@@ -78,17 +78,17 @@ def run_game():
         # プレイヤーの更新
         player.update()
 
-        # ハードルの生成
+        # ハードル生成用のアルゴリズムを実行
         frame_counter += 1
         state, frame_counter = transition_hurdles_state(hurdles, state, frame_counter, creatable_frame, collision_area)
 
-        # 生存しているハードル全てに対して
+        # ハードルリストの要素全てに対してループ
         for h in hurdles.copy():
             # ハードルの座標を更新する
             h.move()
-            # ハードルが画面外(左)に出ていたら
+            # ハードルが画面から消えた
             if h.left_top_point.x + h.width < 0:
-                # 画面外に出たハードルをリストから削除
+                # ハードルをリストから削除
                 hurdles.remove(h)
             # 衝突判定：戻り値は衝突していたらTrue、していなかったらFalse
             if is_collision(player.left_top_point, player.right_bottom_point,
@@ -106,14 +106,14 @@ def run_game():
         for h in hurdles:
             screen.blit(h.image, h.left_top_point.get_xy())
 
-        # プレイヤーの画像を描画
-        screen.blit(player.image, player.left_top_point.get_xy())
-
         # スコアを更新
         score.update_score(start_time)
         text.update_score(score.value)
         # スコアを表示
         screen.blit(text.text_score, text.text_score_center_point)
+
+        # プレイヤーの画像を描画
+        screen.blit(player.image, player.left_top_point.get_xy())
 
         # 画面の更新
         pygame.display.update()
