@@ -26,10 +26,8 @@ from image_dict import IMAGE_DICT
 from game_settings import (WIDTH,HEIGHT,FPS,FPSCLOCK,PLAYER_DEFAULT_POINT)
 # テキストのクラス
 from text import Text
-
 # Pygameの初期化
 pygame.init()
-
 # 表示される画面　引数((横幅pixel, 縦幅pixel))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 # 画面のタイトル
