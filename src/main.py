@@ -62,7 +62,7 @@ def run_game():
     state = 1
 
     # ゲームスタート
-    while True:
+    while not is_game_over:
         # 背景の描画
         draw_background()
 
@@ -96,8 +96,8 @@ def run_game():
                 break
 
         # ゲームオーバーならrun_game関数を終了する
-        if is_game_over:
-            break
+        # if is_game_over:
+            # break
 
         # ハードルを描画
         for h in hurdles:
