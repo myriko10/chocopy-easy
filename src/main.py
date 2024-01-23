@@ -61,7 +61,7 @@ def run_game():
     frame_counter = 0
     state = 1
 
-    # ゲームスタート
+    # ゲームスタート ゲームオーバーでない限りループ
     while not is_game_over:
         # 背景の描画
         draw_background()
@@ -85,7 +85,7 @@ def run_game():
             h.move()
             # ハードルが画面から消えた
             if h.left_top_point.x + h.width < 0:
-                # ハードルが画面から消えた
+                # ハードルをリストから削除
                 hurdles.remove(h)
             # 衝突判定：戻り値は衝突していたらTrue、していなかったらFalse
             if is_collision(player.left_top_point, player.right_bottom_point,
@@ -116,6 +116,7 @@ def run_game():
         pygame.display.update()
         FPSCLOCK.tick_busy_loop(FPS)
 
+    # ゲームオーバー関数に渡すため返す
     return player, hurdles
 
 def draw_background():
@@ -323,6 +324,7 @@ def main():
         display_game_over(player, hurdles)
 
 # モジュールの属性__name__は「python hoge.py」のようにコマンドで自分が実行されたら"__main__"を保持する。
-# 自分が実行されたときという条件なので、このファイルを実行するとこのif文が実行される。
+# それ以外ではhogeのようにモジュール名を保持する。
+# このファイルを実行するとこのif文内が実行される。
 if __name__ == '__main__':
     main()
