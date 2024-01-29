@@ -84,7 +84,7 @@ def run_game():
             # ハードルの座標を更新する
             h.move()
             # ハードルが画面から消えた
-            if h.left_top_point.x + h.width < 0:
+            if h.right_bottom_point.x < 0:
                 # ハードルをリストから削除
                 hurdles.remove(h)
             # 衝突判定：戻り値は衝突していたらTrue、していなかったらFalse

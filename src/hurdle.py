@@ -39,4 +39,4 @@ class Hurdle:
         # ハードルのxの座標をspeed分動かす。
         self.left_top_point.x -= self.speed
         # 衝突検知のためのハードル画像の右下座標を更新する
-        self.right_bottom_point.x = self.left_top_point.x + self.width
+        self.right_bottom_point.x -= self.speed
