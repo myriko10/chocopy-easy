@@ -89,7 +89,6 @@ class Player:
 
         # player位置を更新
         self.left_top_point.y += self.y_velocity
-        self.right_bottom_point.x = self.left_top_point.x + self.image.get_width()
         self.right_bottom_point.y = self.left_top_point.y + self.image.get_height()
 
         # 地面に着地したか判定
@@ -99,9 +98,6 @@ class Player:
 
             # 地面に着地したときの位置に矯正
             self.left_top_point.y = self.DEFAULT_LEFT_TOP_POINT.y
-
-            # ｙ方向の速度を0にして、ジャンプ処理を終了
-            self.y_velocity = 0
 
     def update(self):
         """プレイヤーのパラメータの変更をする
