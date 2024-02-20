@@ -16,7 +16,7 @@ class Point:
 
     # 座標を文字列で返す
     def __str__(self):
-        return f"({self.x}, {self.y})"
+        return f"座標({self.x}, {self.y})"
 
     # 座標をタプルで返す
     def get_xy(self):
@@ -27,3 +27,9 @@ class Point:
         """
         return (self.x, self.y)
      
+if __name__ == '__main__':
+    p1 = Point(100,200)
+    p1 = Point(100,200)
+    p2 = Point(500,200)
+    print(p1,p2)
+
