@@ -152,8 +152,10 @@ def proceed_event_with_key(key):
                 # ジャンプのつもりで押して間に合わずゲームオーバーになったときすぐにタイトルに戻ってしまうことがあるため。
                 if event.key == K_SPACE:
                     return False
-            # if event.key == key:
-            return True
+                else:
+                    return True
+            if event.key == key:
+                return True
     return False
 
 def terminate():
